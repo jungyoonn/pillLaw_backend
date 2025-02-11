@@ -17,6 +17,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  logging:
+    level:
+      jdbc.audit: WARN
+      jdbc.connection: WARN
+      jdbc.resultset: INFO
+      jdbc.sqltiming: INFO
+      com.zaxxer.hikari: WARN
+      org.hibernate: WARN
   devtools:
     restart:
       enabled: true

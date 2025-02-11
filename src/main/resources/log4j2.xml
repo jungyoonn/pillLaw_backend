@@ -1,21 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration status="WARN">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%highlight{[%-5level]} %d{yyyy-MM-dd HH:mm:ss.SSS} %c{3} - %msg%n"/>
         </Console>
     </Appenders>
+
     <Loggers>
-        <Root level="warn">
+        <!-- 전체 프로젝트의 기본 로그 레벨 (INFO) -->
+        <Root level="info">
             <AppenderRef ref="Console"/>
         </Root>
+
+        <!-- JDBC 관련 로그 설정 -->
+        <Logger level="warn" name="jdbc.audit" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger level="warn" name="jdbc.connection" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
         <Logger level="info" name="jdbc.resultsettable" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
         <Logger level="info" name="jdbc.sqltiming" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger level="info" name="com.eeerrorcode" additivity="false">
+
+        <!-- Hibernate 및 HikariCP 로그 설정 -->
+        <Logger level="warn" name="org.hibernate" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger level="warn" name="com.zaxxer.hikari" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
     </Loggers>
