@@ -24,6 +24,9 @@ repositories {
 }
 
 dependencies {
+	testImplementation 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -35,6 +38,17 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// https://mvnrepository.com/artifact/org.bgee.log4jdbc-log4j2/log4jdbc-log4j2-jdbc4.1
+	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
+
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
+		// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
+	// implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.4.1'
+
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+	// implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.6'
 }
 
 tasks.named('test') {
