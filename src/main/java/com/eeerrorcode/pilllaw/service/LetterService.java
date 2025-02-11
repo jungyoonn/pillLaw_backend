@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.eeerrorcode.pilllaw.entity.LetterEntity;
+import com.eeerrorcode.pilllaw.entity.Letter;
 import com.eeerrorcode.pilllaw.repository.FollowLetterRepository;
 
 import jakarta.transaction.Transactional;
@@ -22,8 +22,8 @@ public class LetterService {
         this.letterRepository = letterRepository; // 주입
     }
     @Transactional
-    public LetterEntity sendLetter(String sender, String receiver, String content){
-        LetterEntity letter = new LetterEntity();
+    public Letter sendLetter(String sender, String receiver, String content){
+        Letter letter = new Letter();
         letter.setSender(sender);
         letter.setReceiver(receiver);
         letter.setContent(content);
@@ -36,8 +36,8 @@ public class LetterService {
 //         return letterRepository.findByReceiver(receiver);
 //     }
 // }
-public List<LetterEntity> getReceivedLetters(String receiver) {
-    List<LetterEntity> letters = letterRepository.findByReceiver(receiver);
+public List<Letter> getReceivedLetters(String receiver) {
+    List<Letter> letters = letterRepository.findByReceiver(receiver);
     if (letters.isEmpty()) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No letters found for receiver: " + receiver);
     }

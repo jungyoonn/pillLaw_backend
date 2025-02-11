@@ -2,7 +2,7 @@ package com.eeerrorcode.pilllaw.dto;
 
 import java.time.LocalDateTime;
 
-import com.eeerrorcode.pilllaw.entity.LetterEntity;
+import com.eeerrorcode.pilllaw.entity.Letter;
 
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ public class LetterResponseDto {
     private String contet;
     private LocalDateTime sentAt;
 
-    public LetterResponseDto(LetterEntity letter) {
+    public LetterResponseDto(Letter letter) {
         this.id = letter.getLetter();
         this.sender = letter.getSender();
         this.receiver = letter.getReceiver();

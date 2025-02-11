@@ -3,7 +3,7 @@ package com.eeerrorcode.pilllaw.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eeerrorcode.pilllaw.dto.LetterRequestDto;
-import com.eeerrorcode.pilllaw.entity.LetterEntity;
+import com.eeerrorcode.pilllaw.entity.Letter;
 import com.eeerrorcode.pilllaw.service.LetterService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,25 +34,25 @@ public class LetterController {
         this.letterService = letterService;
     }
     // @GetMapping("/send/{send}")
+    // @GetMapping("/send")
     // public ResponseEntity<String> testSendLetter() {
     //     letterService.sendLetter("딸기쿠키", "치킨", "안녕?");
     //     return ResponseEntity.ok(" 쪽지가 전송되었습니다.");
     // }
     @GetMapping("/{receiver}")
-    public ResponseEntity<List<LetterEntity>> getReceivedLetters(@PathVariable String receiver) {
+    public ResponseEntity<List<Letter>> getReceivedLetters(@PathVariable String receiver) {
         // System.out.println("Received request for receiver: " + receiver);
-        List<LetterEntity> letters = letterService.getReceivedLetters(receiver);
+        List<Letter> letters = letterService.getReceivedLetters(receiver);
+        if (letters.isEmpty()) {
+            // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // ✅ 결과가 없을 경우 404 반환
+        }
         return ResponseEntity.ok(letterService.getReceivedLetters(receiver));
 }
-    //     if (letters.isEmpty()) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // ✅ 결과가 없을 경우 404 반환
-    //     }
-    //     return ResponseEntity.ok(letters);
     // }
 
-    @PostMapping("/send")
-    public ResponseEntity<LetterEntity> sendLetter(@RequestBody LetterRequestDto letterDto) {
-        LetterEntity savedLetter = letterService.sendLetter(
+    @PostMapping("/send/post")
+    public ResponseEntity<Letter> sendLetter(@RequestBody LetterRequestDto letterDto) {
+        Letter savedLetter = letterService.sendLetter(
             letterDto.getSender(), letterDto.getReceiver(), letterDto.getContent()
         );
         return ResponseEntity.ok(savedLetter);

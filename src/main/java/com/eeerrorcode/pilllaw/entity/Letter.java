@@ -20,7 +20,7 @@ import lombok.Setter;
 // @Setter
 // @AllArgsConstructor
 // @NoArgsConstructor
-public class LetterEntity {
+public class Letter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long letter;
