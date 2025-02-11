@@ -19,7 +19,7 @@ import lombok.Data;
 @Table(name = "tbl_follow")
 public class Follow extends BaseEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long followId;
     private String senderFollowId; //보낸 사람
     private String receiverFollowId; //받는 사람
