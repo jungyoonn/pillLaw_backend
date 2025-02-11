@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: pilllaw
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 10MB
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mariadb://np.eeerrorcode.com:3306/pilllaw
+    username: 
+    password: 
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  devtools:
+    restart:
+      enabled: true
+      additional-paths:
+      - src/main/java
+      - src/main/resources
+      - templates
+  # security:
+  #   user:
+  #     name: user1
+  #     password: $2a$10$.JMquKR6u49eIKcQhbVLiuruKllowii8v0EdgET3qfyhljt/LOI3K #1234
+  #     roles:
+  #     - USER
