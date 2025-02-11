@@ -42,13 +42,17 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.bgee.log4jdbc-log4j2/log4jdbc-log4j2-jdbc4.1
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 
-	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	// implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
 		// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
 	// implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.4.1'
 
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
 	// implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.6'
+
+	implementation ('org.springframework.boot:spring-boot-starter') {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	}
 }
 
 tasks.named('test') {
