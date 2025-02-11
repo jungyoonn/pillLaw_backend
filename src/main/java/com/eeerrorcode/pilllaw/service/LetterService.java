@@ -3,6 +3,7 @@ package com.eeerrorcode.pilllaw.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,7 +18,7 @@ import jakarta.transaction.Transactional;
 // @RequiredArgsConstructor
 public class LetterService {
     private final FollowLetterRepository letterRepository;
-    // @Autowired
+    @Autowired
     public LetterService(FollowLetterRepository letterRepository) { 
         this.letterRepository = letterRepository; // 주입
     }

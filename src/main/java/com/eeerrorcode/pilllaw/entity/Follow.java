@@ -10,15 +10,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-@Builder
+// @Getter
+// @Setter
+// @Builder
+@Data
 @Entity
-@Table(name = "tbl_follow_entity")
-public class FollowEntity {
+@Table(name = "tbl_follow")
+public class Follow extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long followId;
