@@ -2,7 +2,7 @@ package com.eeerrorcode.pilllaw.entity.order;
 
 
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
-import com.eeerrorcode.pilllaw.entity.Product;
+import com.eeerrorcode.pilllaw.entity.product.Product;
 
 import jakarta.persistence.*;
 import lombok.Getter;
