@@ -5,13 +5,24 @@ import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import com.eeerrorcode.pilllaw.entity.product.Product;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@Entity(name = "tbl_cart_item")
+@Entity
+@Table(name = "tbl_cart_item", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "cno", "pno", "subday" }) // Cart 내에서 같은 상품+구독기간이 중복되지 않도록 설정
+})
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Setter
-public class CartItem extends BaseEntity {
+@ToString(exclude = { "cart", "product" })
+public class CartItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long cino;
@@ -23,7 +34,11 @@ public class CartItem extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "pno", nullable = false)
   private Product product;
-
+  private Double price;
   private long subday;
-  private long quantity;
+
+  @Builder.Default
+  private long quantity = 1L;
+  
+
 }
