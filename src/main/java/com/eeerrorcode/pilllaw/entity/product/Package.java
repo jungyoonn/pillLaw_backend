@@ -7,6 +7,8 @@ import com.eeerrorcode.pilllaw.entity.BaseEntity;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,10 +19,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "tbl_package")
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class Package extends BaseEntity{
   
   @Id
@@ -33,6 +35,7 @@ public class Package extends BaseEntity{
 
   @Builder.Default
   @ElementCollection(fetch = FetchType.LAZY)
+  @Enumerated(EnumType.STRING)
   private Set<PackageType> typeSet = new HashSet<>();
 
   public void addProductType(PackageType pt){
