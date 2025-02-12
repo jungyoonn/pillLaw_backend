@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.eeerrorcode.pilllaw.entity.member.Member;
 
 import jakarta.persistence.Entity;
@@ -34,10 +36,13 @@ public class Follow extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "sender_follow_id", nullable = false)
     private Member sender;
-    // @ManyToOne
-    // private String senderFollowId; //보낸 사람
-    private String receiverFollowId; //받는 사람
+    @ManyToOne
+    @JoinColumn(name = "receiver_follow_id", nullable = false)
+    private Member receiver;////받는사람
+
+    @CreationTimestamp
     private LocalDate createdAt;
+
     private Boolean isFollowBack;
 
 }
