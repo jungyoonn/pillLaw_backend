@@ -1,9 +1,9 @@
-package com.pilllaw.pilllaw.entity.order;
+package com.eeerrorcode.pilllaw.entity.order;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import com.pilllaw.pilllaw.entity.BaseEntity;
+import com.eeerrorcode.pilllaw.entity.BaseEntity;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;

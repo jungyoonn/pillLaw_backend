@@ -1,6 +1,7 @@
-package com.pilllaw.pilllaw.entity.order;
+package com.eeerrorcode.pilllaw.entity.order;
 
-import com.pilllaw.pilllaw.entity.product.Product;
+
+import com.eeerrorcode.pilllaw.entity.Product;
 
 import jakarta.persistence.*;
 import lombok.Getter;
