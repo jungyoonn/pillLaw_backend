@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
-import com.eeerrorcode.pilllaw.entity.Member;
+import com.eeerrorcode.pilllaw.entity.member.Member;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

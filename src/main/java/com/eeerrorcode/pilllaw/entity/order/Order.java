@@ -1,7 +1,7 @@
 package com.eeerrorcode.pilllaw.entity.order;
 
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
-import com.eeerrorcode.pilllaw.entity.Member;
+import com.eeerrorcode.pilllaw.entity.member.Member;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
