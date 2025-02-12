@@ -4,17 +4,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eeerrorcode.pilllaw.dto.LetterRequestDto;
 import com.eeerrorcode.pilllaw.entity.Letter;
-import com.eeerrorcode.pilllaw.entity.member.Member;
 import com.eeerrorcode.pilllaw.service.LetterService;
 
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,22 +36,19 @@ public class LetterController {
     //     letterService.sendLetter("딸기쿠키", "치킨", "안녕?");
     //     return ResponseEntity.ok(" 쪽지가 전송되었습니다.");
     // }
-    @GetMapping("/{receiver}")
-    public ResponseEntity<List<Letter>> getReceivedLetters(@PathVariable Member receiver) {
-        // System.out.println("Received request for receiver: " + receiver);
-        List<Letter> letters = letterService.getReceivedLetters(receiver);
-        if (letters.isEmpty()) {
-            // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // ✅ 결과가 없을 경우 404 반환
-        }
-        return ResponseEntity.ok(letterService.getReceivedLetters(receiver));
-}
+    @GetMapping("/{receiverId}")
+    public ResponseEntity<List<Letter>> getReceivedLetters(@PathVariable Long receiverId) {
+        List<Letter> letters = letterService.getReceivedLetters(receiverId);
+        return ResponseEntity.ok(letters);
+    }
+    
     // }
 
     @PostMapping("/send/post")
-    public ResponseEntity<Letter> sendLetter(@RequestParam Long senderId,@RequestParam Long receiverId, @RequestParam String content) {
-        Letter savedLetter = letterService.sendLetter(senderId, receiverId, content);
-        //     letterDto.getSender(), letterDto.getReceiver(), letterDto.getContent()
-        // );
+    public ResponseEntity<Letter> sendLetter(@RequestBody LetterRequestDto letterDto) {
+        Letter savedLetter = letterService.sendLetter(
+            letterDto.getSenderId(), letterDto.getReceiverId(), letterDto.getContent()
+        );
         return ResponseEntity.ok(savedLetter);
     }
 }

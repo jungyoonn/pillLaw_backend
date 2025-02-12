@@ -44,6 +44,7 @@ public class ChatMessage {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Builder.Default
     private boolean isDeleted = false;
 }
 

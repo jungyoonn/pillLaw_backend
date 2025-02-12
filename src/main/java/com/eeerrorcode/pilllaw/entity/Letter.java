@@ -23,7 +23,7 @@ import lombok.Setter;
 
 
 @Entity
-@Data
+// @Data
 @Table(name = "tbl_letter")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor

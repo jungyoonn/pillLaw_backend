@@ -1,18 +1,14 @@
 package com.eeerrorcode.pilllaw.entity;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.eeerrorcode.pilllaw.entity.member.Member;
 
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.eeerrorcode.pilllaw.entity.InviteStatus;
 
 @Entity
 @Table(name = "tbl_chat_participant")
@@ -45,9 +42,10 @@ public class ChatParticipant extends BaseEntity {
     private LocalDateTime joinedAt;
 
     private LocalDateTime leftAt;
-
+    @Builder.Default
     private boolean isActive = true;
-
+    
+    @Builder.Default
     private boolean isMuted = false;
 
     @Enumerated(EnumType.STRING)

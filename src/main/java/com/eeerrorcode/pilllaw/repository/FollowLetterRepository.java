@@ -14,6 +14,8 @@ public interface FollowLetterRepository extends JpaRepository<Member, Long> {
 
     List<Letter> findByReceiver(Member receiver);
 
+    Letter save(Letter letter);
+
 }
     // 추가적인 커스텀 쿼리가 필요하다면 여기에 정의
     

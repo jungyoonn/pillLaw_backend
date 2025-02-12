@@ -8,8 +8,8 @@ spring:
   datasource:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     url: jdbc:log4jdbc:mariadb://np.eeerrorcode.com:3306/pilllaw
-    username: madmin
-    password: 1234
+    username: 
+    password: 
   jpa:
     hibernate:
       ddl-auto: update
