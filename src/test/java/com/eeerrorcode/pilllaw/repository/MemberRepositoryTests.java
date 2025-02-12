@@ -6,10 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 
-import com.eeerrorcode.pilllaw.entity.Member;
-import com.eeerrorcode.pilllaw.entity.MemberAccount;
-import com.eeerrorcode.pilllaw.entity.MemberRole;
-import com.eeerrorcode.pilllaw.entity.MemberStatus;
+import com.eeerrorcode.pilllaw.entity.member.Member;
+import com.eeerrorcode.pilllaw.entity.member.MemberAccount;
+import com.eeerrorcode.pilllaw.entity.member.MemberRole;
+import com.eeerrorcode.pilllaw.entity.member.MemberStatus;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
