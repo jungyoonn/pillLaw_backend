@@ -30,7 +30,6 @@ public class Payment extends BaseEntity {
   @OneToOne
   @JoinColumn(name = "ono", nullable = false)
   private Order order;
-
   private int amount;
   private String method;
   private String cardName;
