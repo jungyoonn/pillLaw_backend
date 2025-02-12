@@ -19,8 +19,8 @@ public class LetterResponseDto {
 
     public LetterResponseDto(Letter letter) {
         this.id = letter.getLetterId(); 
-        this.sender = letter.getSender();
-        this.receiver = letter.getReceiver();
+        this.sender = letter.getSenderId();
+        this.receiver = letter.getReceiverId();
         this.content = letter.getContent();
         this.sentAt = letter.getSentAt();
 

@@ -4,8 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eeerrorcode.pilllaw.dto.LetterRequestDto;
 import com.eeerrorcode.pilllaw.entity.follow.Letter;
-import com.eeerrorcode.pilllaw.service.LetterService;
-
+import com.eeerrorcode.pilllaw.service.letter.LetterService;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -36,21 +35,21 @@ public class LetterController {
     //     letterService.sendLetter("딸기쿠키", "치킨", "안녕?");
     //     return ResponseEntity.ok(" 쪽지가 전송되었습니다.");
     // }
-    @GetMapping("/{receiverId}")
-    public ResponseEntity<List<Letter>> getReceivedLetters(@PathVariable Long receiverId) {
-        List<Letter> letters = letterService.getReceivedLetters(receiverId);
-        return ResponseEntity.ok(letters);
-    }
+    // @GetMapping("/{receiverId}")
+    // public ResponseEntity<List<Letter>> getReceivedLetters(@PathVariable Long receiverId) {
+    //     List<Letter> letters = letterService.getReceivedLetters(receiverId);
+    //     return ResponseEntity.ok(letters);
+    // }
     
     // }
 
-    @PostMapping("/send/post")
-    public ResponseEntity<Letter> sendLetter(@RequestBody LetterRequestDto letterDto) {
-        Letter savedLetter = letterService.sendLetter(
-            letterDto.getSenderId(), letterDto.getReceiverId(), letterDto.getContent()
-        );
-        return ResponseEntity.ok(savedLetter);
-    }
+    // @PostMapping("/send/post")
+    // public ResponseEntity<Letter> sendLetter(@RequestBody LetterRequestDto letterDto) {
+    //     Letter savedLetter = letterService.sendLetter(
+    //         letterDto.getSenderId(), letterDto.getReceiverId(), letterDto.getContent()
+    //     );
+    //     return ResponseEntity.ok(savedLetter);
+    // }
 }
     
     // @GetMapping

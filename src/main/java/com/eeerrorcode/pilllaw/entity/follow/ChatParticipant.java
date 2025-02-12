@@ -30,7 +30,6 @@ public class ChatParticipant extends BaseEntity {
     @Id
     private Long chatId;
     
-    
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
