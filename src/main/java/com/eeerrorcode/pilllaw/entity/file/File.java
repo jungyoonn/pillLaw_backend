@@ -4,7 +4,10 @@ import com.eeerrorcode.pilllaw.entity.board.Notice;
 import com.eeerrorcode.pilllaw.entity.board.ProductReview;
 import com.eeerrorcode.pilllaw.entity.product.ProductDetail;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,6 +43,10 @@ public class File extends BaseEntity{
   private String ext;
 
   private String url;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private FileType type;  
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "pdno")
