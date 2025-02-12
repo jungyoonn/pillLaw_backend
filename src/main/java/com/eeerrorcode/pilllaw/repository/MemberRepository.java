@@ -2,7 +2,7 @@ package com.eeerrorcode.pilllaw.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.eeerrorcode.pilllaw.entity.Member;
+import com.eeerrorcode.pilllaw.entity.member.Member;
 
 
 public interface MemberRepository  extends JpaRepository<Member, Long>{

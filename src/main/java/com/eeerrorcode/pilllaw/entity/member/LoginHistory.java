@@ -1,6 +1,8 @@
-package com.eeerrorcode.pilllaw.entity;
+package com.eeerrorcode.pilllaw.entity.member;
 
 import java.time.LocalDateTime;
+
+import com.eeerrorcode.pilllaw.entity.BaseEntity;
 
 import jakarta.persistence.*;
 import lombok.*;

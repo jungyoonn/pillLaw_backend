@@ -1,7 +1,9 @@
-package com.eeerrorcode.pilllaw.entity;
+package com.eeerrorcode.pilllaw.entity.member;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import com.eeerrorcode.pilllaw.entity.BaseEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
