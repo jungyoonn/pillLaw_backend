@@ -17,7 +17,7 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "tbl_letter")
-public class Letter {
+public class Letter extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long letter;

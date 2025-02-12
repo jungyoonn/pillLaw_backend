@@ -16,6 +16,7 @@ public class Chatroom {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long chatRoomId;
+  
   private String chreatorId;
   private LocalDateTime chatCreatedAt;
   private LocalDateTime lastMessage;
