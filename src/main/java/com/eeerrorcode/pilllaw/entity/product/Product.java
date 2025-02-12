@@ -9,6 +9,8 @@ import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,14 +25,21 @@ import lombok.NoArgsConstructor;
 public class Product extends BaseEntity{
   
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long pno;
+
   private String pname;
+  
   private String company;
+  
   private LocalDateTime bestBefore;
+  
   private String effect;
+  
   private String precautions;
+  
   private String keep;
-  // private Category cname;
+  
   private boolean state;
   
   @Builder.Default
@@ -40,6 +49,5 @@ public class Product extends BaseEntity{
   public void addProductType(ProductType pt){
     typeSet.add(pt);
   }
-
 
 }
