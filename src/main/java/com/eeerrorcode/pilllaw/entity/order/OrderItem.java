@@ -1,6 +1,7 @@
 package com.eeerrorcode.pilllaw.entity.order;
 
 
+import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import com.eeerrorcode.pilllaw.entity.Product;
 
 import jakarta.persistence.Entity;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @Entity(name = "tbl_order_item")
 @Getter
 @Setter
-public class OrderItem {
+public class OrderItem extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long oino;

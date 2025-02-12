@@ -1,6 +1,7 @@
 package com.eeerrorcode.pilllaw.entity.order;
 
 
+import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import com.eeerrorcode.pilllaw.entity.Product;
 
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ import lombok.Setter;
 @Entity(name = "tbl_cart_item")
 @Getter
 @Setter
-public class CartItem {
+public class CartItem extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long cino;
