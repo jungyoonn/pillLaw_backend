@@ -1,5 +1,7 @@
 package com.eeerrorcode.pilllaw.entity.product;
 
+import com.eeerrorcode.pilllaw.entity.id.ProductPackageId;
+
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,11 +15,12 @@ import lombok.NoArgsConstructor;
 
 
 @Entity(name = "tbl_product_package")
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class ProductPackage {
+    
     @EmbeddedId
     private ProductPackageId id;
 
@@ -31,5 +34,5 @@ public class ProductPackage {
     @JoinColumn(name = "pno", nullable = false)
     private Product product;
 
-    private Integer quantity;  // ✅ 패키지 내 상품 수량
+    private Integer quantity; 
 }
