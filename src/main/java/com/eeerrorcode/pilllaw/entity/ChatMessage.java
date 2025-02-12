@@ -16,31 +16,34 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Data
-@Table(name = "tbl_chat_room")
+@Table(name = "tbl_chat_message")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
-public class Chatroom {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long chatRoomId;
-  
+public class ChatMessage {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long messageId;
+
     @ManyToOne
-    @JoinColumn(name = "creator_id", nullable = false)
-    private Member creator;
+    @JoinColumn(name = "chat_room_id", nullable = false)
+    private Chatroom chatRoom;
+
+    @ManyToOne
+    @JoinColumn(name = "sender_id", nullable = false)
+    private Member sender;
 
     @CreationTimestamp
-    private LocalDateTime chatCreatedAt;
+    private LocalDateTime sentAt;
 
-    private LocalDateTime lastMessage;
+    @Column(columnDefinition = "TEXT")
+    private String content;
 
-    @Column(length = 250)
-    private String lastMsgContent;
+    private boolean isDeleted = false;
 }
+
