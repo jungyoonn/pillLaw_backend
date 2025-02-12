@@ -20,7 +20,7 @@ public class LetterRepositoryTest {
   @Transactional
   @Rollback(false)
   public void listTest() {
-    repository.findByReceiverId(2L);
+    // repository.findByReceiverId(2L);
     
   }
 }

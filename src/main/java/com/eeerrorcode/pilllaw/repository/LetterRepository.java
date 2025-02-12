@@ -11,7 +11,7 @@ import com.eeerrorcode.pilllaw.entity.follow.Letter;
 @Repository
 public interface LetterRepository extends JpaRepository<Letter, Long> {
 
-    List<Letter> findByReceiverId(Long receiverid);
+    // List<Letter> findByReceiverId(Long receiverid);
 
 
 }

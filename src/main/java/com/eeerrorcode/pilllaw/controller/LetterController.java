@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/letter")
 public class LetterController {
     
-    private final LetterService letterService;
+    // private final LetterService letterService;
 
-    public LetterController(LetterService letterService) {
-        this.letterService = letterService;
-    }
+    // public LetterController(LetterService letterService) {
+    //     this.letterService = letterService;
+    // }
     // @GetMapping("/send/{send}")
     // @GetMapping("/send")
     // public ResponseEntity<String> testSendLetter() {

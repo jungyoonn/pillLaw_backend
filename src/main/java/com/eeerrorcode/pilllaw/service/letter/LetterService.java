@@ -23,15 +23,15 @@ public interface LetterService {
     // LetterService(LetterRepository letterRepository, MemberRepository memberRepository);
     
     // @Transactional
-    // public List<Letter> getReceivedLetters(Long receiverId) {
-    //     // receiverId(Long)를 받아서 Member 객체 조회
-    //     // Member receiver = memberRepository.findById(receiverId)
-    //     //     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receiver not found"));
-    
-    //     // Member 객체를 기준으로 검색
-    //     // 
-    //     return letterRepository.findByReceiverId(receiverId);
-    // }
+    //     public default List<Letter> getReceivedLetters(Long receiverId) {
+    //         // receiverId(Long)를 받아서 Member 객체 조회
+    //         // Member receiver = memberRepository.findById(receiverId)
+    //         //     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receiver not found"));
+        
+    //         // Member 객체를 기준으로 검색
+    //         // 
+    //         return letterRepository.findByReceiverId(receiverId);
+    //     }
 
     // public Letter sendLetter(Long senderId, Long receiverId, String content) {
     //   throw new UnsupportedOperationException("Unimplemented method 'sendLetter'");
