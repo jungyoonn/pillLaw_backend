@@ -15,7 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "tbl_review_like")
+@Entity(name = "tbl_product_review_like")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -27,12 +27,12 @@ public class ProductReviewLike extends BaseEntity{
 
   @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("mno")  
-  @JoinColumn(name = "mno", nullable = false)
+  @JoinColumn(name = "mno", insertable = false, updatable = false)
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("prno")  
-  @JoinColumn(name = "prno", nullable = false)
+  @JoinColumn(name = "prno", insertable = false, updatable = false)
   private ProductReview productReview;
   
 }

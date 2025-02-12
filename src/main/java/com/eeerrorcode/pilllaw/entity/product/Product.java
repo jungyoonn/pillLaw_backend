@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,6 +15,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,6 +48,7 @@ public class Product extends BaseEntity{
   
   @Builder.Default
   @ElementCollection(fetch = FetchType.LAZY)
+  @CollectionTable(name = "tbl_product_type_set", joinColumns = @JoinColumn(name = "pno"))
   @Enumerated(EnumType.STRING)
   private Set<ProductType> typeSet = new HashSet<>();
 

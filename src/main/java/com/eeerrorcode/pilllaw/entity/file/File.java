@@ -50,7 +50,7 @@ public class File extends BaseEntity{
   private ProductReview productReview;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "prno")
+  @JoinColumn(name = "nno")
   private Notice notice;
   
 }

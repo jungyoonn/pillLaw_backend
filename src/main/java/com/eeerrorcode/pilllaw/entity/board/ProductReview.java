@@ -31,22 +31,22 @@ public class ProductReview extends BaseEntity{
   private Long prno;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "pno", nullable = false)
+  @JoinColumn(name = "pno")
   private Product product;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "mno", nullable = false)
+  @JoinColumn(name = "mno")
   private Member member;
 
   @Lob  
   @Column(nullable = false)
   private String content;
 
-  @Column(nullable = false, columnDefinition = "TINYINT CHECK (rating BETWEEN 1 AND 5)")
+  @Column(columnDefinition = "TINYINT CHECK (rating BETWEEN 1 AND 5)")
   private Integer rating;
 
 
-  @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+  @Column(columnDefinition = "BIGINT DEFAULT 0")
   private Long count;
 
 }
