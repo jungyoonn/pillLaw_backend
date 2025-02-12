@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eeerrorcode.pilllaw.dto.LetterRequestDto;
 import com.eeerrorcode.pilllaw.entity.Letter;
+import com.eeerrorcode.pilllaw.entity.member.Member;
 import com.eeerrorcode.pilllaw.service.LetterService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class LetterController {
     //     return ResponseEntity.ok(" 쪽지가 전송되었습니다.");
     // }
     @GetMapping("/{receiver}")
-    public ResponseEntity<List<Letter>> getReceivedLetters(@PathVariable String receiver) {
+    public ResponseEntity<List<Letter>> getReceivedLetters(@PathVariable Member receiver) {
         // System.out.println("Received request for receiver: " + receiver);
         List<Letter> letters = letterService.getReceivedLetters(receiver);
         if (letters.isEmpty()) {
@@ -51,10 +52,10 @@ public class LetterController {
     // }
 
     @PostMapping("/send/post")
-    public ResponseEntity<Letter> sendLetter(@RequestBody LetterRequestDto letterDto) {
-        Letter savedLetter = letterService.sendLetter(
-            letterDto.getSender(), letterDto.getReceiver(), letterDto.getContent()
-        );
+    public ResponseEntity<Letter> sendLetter(@RequestParam Long senderId,@RequestParam Long receiverId, @RequestParam String content) {
+        Letter savedLetter = letterService.sendLetter(senderId, receiverId, content);
+        //     letterDto.getSender(), letterDto.getReceiver(), letterDto.getContent()
+        // );
         return ResponseEntity.ok(savedLetter);
     }
 }

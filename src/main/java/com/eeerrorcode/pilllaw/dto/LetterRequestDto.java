@@ -8,9 +8,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+// @AllArgsConstructor
 public class LetterRequestDto {
-    private String sender;
-    private String receiver;
+    private Long senderId;
+    private Long receiverId;
     private String content;
+
+    public LetterRequestDto(Long senderId, Long receiverId, String content) {
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.content = content;
+    }
+
+    public Long getSenderId() { return senderId; }
+    public Long getReceiverId() { return receiverId; }
+    public String getContent() { return content; }
 }

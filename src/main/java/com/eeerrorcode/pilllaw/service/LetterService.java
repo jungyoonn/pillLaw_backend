@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.eeerrorcode.pilllaw.entity.Letter;
+import com.eeerrorcode.pilllaw.entity.member.Member;
 import com.eeerrorcode.pilllaw.repository.FollowLetterRepository;
 
 import jakarta.transaction.Transactional;
@@ -23,7 +24,7 @@ public class LetterService {
         this.letterRepository = letterRepository; // 주입
     }
     @Transactional
-    public Letter sendLetter(String sender, String receiver, String content){
+    public Letter sendLetter(Member sender, Member receiver, String content){
         Letter letter = new Letter();
         letter.setSender(sender);
         letter.setReceiver(receiver);
@@ -37,11 +38,16 @@ public class LetterService {
 //         return letterRepository.findByReceiver(receiver);
 //     }
 // }
-public List<Letter> getReceivedLetters(String receiver) {
+
+public List<Letter> getReceivedLetters(Member receiver) {
     List<Letter> letters = letterRepository.findByReceiver(receiver);
     if (letters.isEmpty()) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No letters found for receiver: " + receiver);
     }
     return letters;
 }
+// public Letter sendLetter(Long senderId, Long receiverId, String content) {
+//     // TODO Auto-generated method stub
+//     throw new UnsupportedOperationException("Unimplemented method 'sendLetter'");
+// }
 }
