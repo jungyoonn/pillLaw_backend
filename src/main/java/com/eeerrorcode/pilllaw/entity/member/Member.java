@@ -1,5 +1,6 @@
 package com.eeerrorcode.pilllaw.entity.member;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Member extends BaseEntity{
+public class Member extends BaseEntity implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long mno;
