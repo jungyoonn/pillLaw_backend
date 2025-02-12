@@ -13,10 +13,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "tbl_product_price")
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class ProductPrice extends BaseEntity{
   
   @Id
