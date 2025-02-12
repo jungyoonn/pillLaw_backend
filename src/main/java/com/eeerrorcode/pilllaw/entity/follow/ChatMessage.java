@@ -1,9 +1,10 @@
-package com.eeerrorcode.pilllaw.entity;
+package com.eeerrorcode.pilllaw.entity.follow;
 
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 
 import jakarta.persistence.Column;
@@ -25,7 +26,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
-public class ChatMessage {
+public class ChatMessage extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long messageId;

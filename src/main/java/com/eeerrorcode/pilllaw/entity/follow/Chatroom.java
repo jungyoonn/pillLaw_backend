@@ -1,9 +1,10 @@
-package com.eeerrorcode.pilllaw.entity;
+package com.eeerrorcode.pilllaw.entity.follow;
 
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 
 import jakarta.persistence.Column;
@@ -16,18 +17,18 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+// import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Data
+// @Data
 @Table(name = "tbl_chat_room")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
-public class Chatroom {
+public class Chatroom extends BaseEntity{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long chatRoomId;

@@ -1,4 +1,4 @@
-package com.eeerrorcode.pilllaw.entity;
+package com.eeerrorcode.pilllaw.entity.follow;
 
 
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 
 import jakarta.persistence.Entity;

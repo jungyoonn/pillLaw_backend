@@ -1,6 +1,6 @@
 package com.eeerrorcode.pilllaw.service;
 
-import java.time.LocalDateTime;
+// import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +8,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.eeerrorcode.pilllaw.entity.Letter;
+import com.eeerrorcode.pilllaw.entity.follow.Letter;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 import com.eeerrorcode.pilllaw.repository.FollowLetterRepository;
 import com.eeerrorcode.pilllaw.repository.MemberRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.Builder;
 
 @Service
+@Builder
 public class LetterService {
     private final FollowLetterRepository letterRepository;
     private final MemberRepository memberRepository;
@@ -42,7 +44,6 @@ public class LetterService {
     }
 
     public Letter sendLetter(Long senderId, Long receiverId, String content) {
-      // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'sendLetter'");
     }
     

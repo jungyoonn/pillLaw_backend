@@ -1,9 +1,10 @@
-package com.eeerrorcode.pilllaw.entity;
+package com.eeerrorcode.pilllaw.entity.follow;
 
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 
 import jakarta.persistence.Column;
@@ -16,15 +17,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+// import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tbl_block")
-@Data
+// @Data
 @NoArgsConstructor @AllArgsConstructor
 @Builder
-public class Block {
+public class Block extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long blockId;

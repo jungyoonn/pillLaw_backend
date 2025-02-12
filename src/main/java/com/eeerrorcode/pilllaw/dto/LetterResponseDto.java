@@ -2,12 +2,14 @@ package com.eeerrorcode.pilllaw.dto;
 
 import java.time.LocalDateTime;
 
-import com.eeerrorcode.pilllaw.entity.Letter;
+import com.eeerrorcode.pilllaw.entity.follow.Letter;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class LetterResponseDto {
     private Long id;
     private Member sender;

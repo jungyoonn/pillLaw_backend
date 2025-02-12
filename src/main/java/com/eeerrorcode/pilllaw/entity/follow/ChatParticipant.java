@@ -1,9 +1,11 @@
-package com.eeerrorcode.pilllaw.entity;
+package com.eeerrorcode.pilllaw.entity.follow;
 
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.eeerrorcode.pilllaw.entity.BaseEntity;
+import com.eeerrorcode.pilllaw.entity.follow.InviteStatus;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 
 import jakarta.persistence.Entity;
@@ -18,7 +20,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.eeerrorcode.pilllaw.entity.InviteStatus;
 
 @Entity
 @Table(name = "tbl_chat_participant")
@@ -52,4 +53,4 @@ public class ChatParticipant extends BaseEntity {
     private InviteStatus inviteStatus;
 }
 
-enum InviteStatus { PENDING, ACCEPTED, DECLINED }
+// enum InviteStatus { PENDING, ACCEPTED, DECLINED }
