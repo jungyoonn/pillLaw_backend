@@ -23,8 +23,9 @@ public class LoginHistory extends BaseEntity{
   private String ip;
 
   private String device;
-
-  private boolean success;
+  
+  @Enumerated(EnumType.STRING)
+  private LoginResult loginResult;
 
   private String failureReason;
 
