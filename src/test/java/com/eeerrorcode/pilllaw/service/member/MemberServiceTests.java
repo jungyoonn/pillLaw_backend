@@ -30,7 +30,7 @@ public class MemberServiceTests {
   @Rollback(false)
   public void insertTest() {
     MemberDto dto = MemberDto.builder()
-      .email("delTest@test.com")
+      .email("modTest@test.com")
       .password(encoder.encode("1234"))
       .name("삭제 테스트")
       .nickname("삭제될 예정임")
@@ -71,7 +71,7 @@ public class MemberServiceTests {
   
   @Test
   public void modifyTest() {
-    MemberDto dto = service.getByEmail("modTest@test.com");
+    MemberDto dto = service.getByEmail("modTest@test.com").orElse(null);
 
     dto.setName("유비빔");
     dto.setNickname("비빔박자");
@@ -86,8 +86,13 @@ public class MemberServiceTests {
 
   @Test
   public void removeTest() {
-    MemberDto dto = service.getByEmail("delTest@test.com");
+    MemberDto dto = service.getByEmail("delTest@test.com").orElse(null);
 
     service.remove(dto);
+  }
+
+  @Test
+  public void loginTest() {
+    log.info(service.login("modTest@test.com", "1"));
   }
 }
