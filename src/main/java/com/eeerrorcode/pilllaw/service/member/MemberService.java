@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import com.eeerrorcode.pilllaw.dto.member.EmailDto;
 import com.eeerrorcode.pilllaw.dto.member.MemberDto;
 import com.eeerrorcode.pilllaw.entity.member.LoginResult;
 import com.eeerrorcode.pilllaw.entity.member.Member;
@@ -24,7 +25,7 @@ public interface MemberService {
 
   LoginResult login(String email, String pw);
 
-  MemberDto sendCodeToEmail(String email);
+  EmailDto sendCodeToEmail(String email);
 
   boolean checkDuplicatedEmail(String email);
 
