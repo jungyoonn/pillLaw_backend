@@ -1,4 +1,6 @@
 package com.eeerrorcode.pilllaw.entity.file;
+import java.util.UUID;
+
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import com.eeerrorcode.pilllaw.entity.board.Notice;
 import com.eeerrorcode.pilllaw.entity.board.ProductReview;
@@ -9,17 +11,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "tbl_file")
+@Entity
+@Table(name = "tbl_file")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,7 +30,7 @@ import lombok.NoArgsConstructor;
 public class File extends BaseEntity{
   
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
+  // @GeneratedValue(strategy = GenerationType.UUID)
   private String uuid;
 
   private String origin;
@@ -59,5 +62,10 @@ public class File extends BaseEntity{
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "nno")
   private Notice notice;
+
+  @PrePersist
+  public void prePersistMakeUUID() {
+    this.uuid = (this.uuid == null) ? UUID.randomUUID().toString() : this.uuid;
+  }
   
 }

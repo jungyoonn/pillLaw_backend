@@ -12,12 +12,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "tbl_notice")
+@Entity
+@Table(name = "tbl_notice")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -39,7 +42,12 @@ public class Notice extends BaseEntity{
   @Column(nullable = false)
   private String content;
   
-  @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+  @Column(nullable = false)
   private Long count;
+
+  @PrePersist
+  public void PrePersistSetCountByZero(){
+    this.count = (this.count == null) ? 0 : this.count;
+  }
 
 }

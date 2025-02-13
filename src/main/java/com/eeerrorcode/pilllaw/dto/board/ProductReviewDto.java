@@ -44,10 +44,11 @@ public class ProductReviewDto {
     this.pno = pno;
     this.mno = mno;
     this.content = content;
-    this.rating = (rating != null) ? rating : 0; 
-    this.count = count; 
+    this.rating = (rating != null && rating >= 1 && rating <= 5) ? rating : 1; 
+    this.count = (count != null) ? count : 0;
     this.regDate = regDate;
     this.modDate = modDate;
     this.fileDtos = (fileDtos != null) ? fileDtos : new ArrayList<>(); 
   }
+
 }
