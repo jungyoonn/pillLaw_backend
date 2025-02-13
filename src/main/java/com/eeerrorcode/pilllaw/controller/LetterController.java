@@ -2,7 +2,7 @@ package com.eeerrorcode.pilllaw.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eeerrorcode.pilllaw.dto.LetterRequestDto;
+import com.eeerrorcode.pilllaw.dto.letter.LetterRequestDto;
 import com.eeerrorcode.pilllaw.entity.follow.Letter;
 import com.eeerrorcode.pilllaw.service.letter.LetterService;
 

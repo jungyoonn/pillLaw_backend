@@ -1,4 +1,4 @@
-package com.eeerrorcode.pilllaw.dto;
+package com.eeerrorcode.pilllaw.dto.letter;
 
 import java.time.LocalDateTime;
 
