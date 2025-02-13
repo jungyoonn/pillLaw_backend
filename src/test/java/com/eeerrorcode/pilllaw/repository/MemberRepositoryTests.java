@@ -47,7 +47,7 @@ public class MemberRepositoryTests {
   @Transactional
   @Rollback(false)
   public void updateTest() {
-    Member member = repository.findByEmail("test@test.com");
+    Member member = repository.findByEmail("test@test.com").orElse(null);
     member = Member.builder()
       .mno(member.getMno())
       .email(member.getEmail())
@@ -73,7 +73,7 @@ public class MemberRepositoryTests {
   @Transactional
   @Rollback(false)
   public void deleteTest() {
-    Member member = repository.findByEmail("test2@test.com");
+    Member member = repository.findByEmail("test2@test.com").orElse(null);
     repository.delete(member);
     log.info(repository.findAll());
   }
