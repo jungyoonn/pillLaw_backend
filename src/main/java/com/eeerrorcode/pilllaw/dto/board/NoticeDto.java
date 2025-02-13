@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.eeerrorcode.pilllaw.dto.file.FileDto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,6 @@ import lombok.Builder.Default;
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class NoticeDto {
 
   private Long nno;
@@ -27,5 +25,16 @@ public class NoticeDto {
   
   @Default
   private List<FileDto> fileDtos = new ArrayList<>();
+
+  public NoticeDto(Long nno, Long mno, String title, String content, Long count, LocalDateTime regDate, LocalDateTime modDate, List<FileDto> fileDtos) {
+    this.nno = nno;
+    this.mno = mno;
+    this.title = title;
+    this.content = content;
+    this.count = count; 
+    this.regDate = regDate;
+    this.modDate = modDate;
+    this.fileDtos = (fileDtos != null) ? fileDtos : new ArrayList<>(); 
+  }
 
 }
