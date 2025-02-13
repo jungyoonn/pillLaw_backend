@@ -11,21 +11,25 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LetterResponseDto {
-    private Long id;
-    private Member sender;
-    private Member receiver;
+    private long letterId;
+    private Member senderId;  // Member 객체 포함
+    private Member receiverId; // Member 객체 포함
     private String content;
     private LocalDateTime sentAt;
-
-    public LetterResponseDto(Letter letter) {
-        this.id = letter.getLetterId(); 
-        this.sender = letter.getSenderId();
-        this.receiver = letter.getReceiverId();
-        this.content = letter.getContent();
-        this.sentAt = letter.getSentAt();
+    private LocalDateTime readAt;
+    private boolean deletedBySender;
+    private boolean deletedByReceiver;
 
 
+    // public LetterResponseDto(Letter letter) {
+    //     this.id = letter.getLetterId(); 
+    //     this.sender = letter.getSenderId();
+    //     this.receiver = letter.getReceiverId();
+    //     this.content = letter.getContent();
+    //     this.sentAt = letter.getSentAt();
 
-    }
+
+
+    // }
     
 }

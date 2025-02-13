@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.eeerrorcode.pilllaw.dto.letter.LetterRequestDto;
+import com.eeerrorcode.pilllaw.dto.letter.LetterResponseDto;
 import com.eeerrorcode.pilllaw.entity.follow.Letter;
 import com.eeerrorcode.pilllaw.repository.LetterRepository;
 import com.eeerrorcode.pilllaw.repository.MemberRepository;
@@ -15,6 +17,14 @@ import lombok.Builder;
 @Service
 // @Builder
 public interface LetterService {
+    LetterResponseDto sendLetter(LetterRequestDto letterRequestDto);
+    List<LetterResponseDto> getReceivedLetters(long receiverId);
+    List<LetterResponseDto> getSentLetters(long senderId);
+    void deleteLetter(long letterId, long userId);  // userId는 삭제하는 사용자 (발신자 또는 수신자)
+
+
+}
+
     // @Autowired
     // private final LetterRepository letterRepository;
     // @Autowired
@@ -37,4 +47,4 @@ public interface LetterService {
     //   throw new UnsupportedOperationException("Unimplemented method 'sendLetter'");
     // }
     
-}
+

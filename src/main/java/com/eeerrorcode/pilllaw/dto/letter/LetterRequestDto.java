@@ -13,13 +13,13 @@ public class LetterRequestDto {
     private long receiverId;
     private String content;
 
-    public LetterRequestDto(long senderId, long receiverId, String content) {
-        this.senderId = senderId;
-        this.receiverId = receiverId;
-        this.content = content;
-    }
+    // public LetterRequestDto(long senderId, long receiverId, String content) {
+    //     this.senderId = senderId;
+    //     this.receiverId = receiverId;
+    //     this.content = content;
+    // }
 
-    public long getSenderId() { return senderId; }
-    public long getReceiverId() { return receiverId; }
-    public String getContent() { return content; }
+    // public long getSenderId() { return senderId; }
+    // public long getReceiverId() { return receiverId; }
+    // public String getContent() { return content; }
 }
