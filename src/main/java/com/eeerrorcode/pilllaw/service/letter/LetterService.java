@@ -17,8 +17,9 @@ import lombok.Builder;
 @Service
 // @Builder
 public interface LetterService {
-    void sendLetter(LetterRequestDto letterRequestDto);
-    List<LetterResponseDto> getReceivedLetters(long mno);
+    void sendLetter(LetterRequestDto letterDto);
+    Letter sendLetter(Long senderId, Long receiverId, String content);
+    List<Letter> getReceivedLetters(long mno);
     void deleteLetter(long letterId, long mno);
 }
 

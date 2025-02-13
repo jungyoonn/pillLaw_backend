@@ -23,6 +23,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/api/letter")
 public class LetterController {
+    private final LetterService letterService;
+
+    public LetterController(LetterService letterService) {
+        this.letterService = letterService;
+    }
+
+    // 1. 기본 API 테스트 엔드포인트
+    @GetMapping
+    public ResponseEntity<String> getLetterApiStatus() {
+        return ResponseEntity.ok("Letter API OK");
+    }
+
+    // // 2. 쪽지 전송 (테스트용)
+    // @GetMapping("/send")
+    // public ResponseEntity<String> testSendLetter() {
+    //     letterService.sendLetter("딸기쿠키", "치킨", "안녕?");
+    //     return ResponseEntity.ok("쪽지가 전송되었습니다.");
+    // }
+
+    // 3. 받은 쪽지 조회
+    @GetMapping("/{receiverId}")
+    public ResponseEntity<List<Letter>> getReceivedLetters(@PathVariable Long receiverId) {
+        List<Letter> letters = letterService.getReceivedLetters(receiverId);
+        return ResponseEntity.ok(letters);
+    }
+
+    // 4. 쪽지 전송 (POST 방식)
+    @PostMapping("/send")
+    public ResponseEntity<Letter> sendLetter(@RequestBody LetterRequestDto letterDto) {
+        Letter savedLetter = letterService.sendLetter(
+            letterDto.getSenderId(), 
+            letterDto.getReceiverId(), 
+            letterDto.getContent()
+        );
+        return ResponseEntity.ok(savedLetter);
+    }
     
     // private final LetterService letterService;
 
