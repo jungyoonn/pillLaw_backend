@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.eeerrorcode.pilllaw.dto.member.MemberDto;
+import com.eeerrorcode.pilllaw.entity.member.LoginResult;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 
 public interface MemberService {
@@ -17,9 +18,11 @@ public interface MemberService {
 
   Optional<MemberDto> get(Long mno);
 
-  MemberDto getByEmail(String email);
+  Optional<MemberDto> getByEmail(String email);
 
   List<MemberDto> listAll();
+
+  LoginResult login(String email, String pw);
 
   default Member toEntity(MemberDto dto) {
     Member member = Member.builder()
@@ -53,5 +56,26 @@ public interface MemberService {
       .build();
 
     return dto;
+  }
+
+  default Optional<MemberDto> toOptionalDto(Member member) {
+    if (member == null) {
+      return Optional.empty();
+    }
+
+    MemberDto dto = MemberDto.builder()
+      .mno(member.getMno())
+      .email(member.getEmail())
+      .password(member.getPassword())
+      .name(member.getName())
+      .nickname(member.getNickname())
+      .tel(member.getTel())
+      .firstLogin(member.isFirstLogin())
+      .roles(new ArrayList<>(member.getRoleSet()))
+      .accounts(new ArrayList<>(member.getAccountSet()))
+      .status(new ArrayList<>(member.getStatusSet()))
+      .build();
+
+    return Optional.of(dto);
   }
 }
