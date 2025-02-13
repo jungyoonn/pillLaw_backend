@@ -55,4 +55,5 @@ public class Member extends BaseEntity implements Serializable {
   public void addMemberAccount(MemberAccount memberAccount) {
     accountSet.add(memberAccount);
   }
+  
 }
