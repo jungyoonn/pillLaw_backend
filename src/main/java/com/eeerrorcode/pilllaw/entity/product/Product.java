@@ -28,34 +28,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Builder
-public class Product extends BaseEntity{
+public class Product extends BaseEntity {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long pno;
 
   private String pname;
-  
   private String company;
-  
   private LocalDateTime bestBefore;
-  
   private String effect;
-  
   private String precautions;
-  
   private String keep;
-  
   private boolean state;
   
   @Builder.Default
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(name = "tbl_product_type_set", joinColumns = @JoinColumn(name = "pno"))
   @Enumerated(EnumType.STRING)
+  @org.hibernate.annotations.Cascade(org.hibernate.annotations.CascadeType.PERSIST)
   private Set<ProductType> typeSet = new HashSet<>();
 
-  public void addProductType(ProductType pt){
+  public void addProductType(ProductType pt) {
     typeSet.add(pt);
   }
-
 }
