@@ -1,6 +1,7 @@
 package com.eeerrorcode.pilllaw.service.order;
 
 import com.eeerrorcode.pilllaw.dto.order.CartDto;
+import com.eeerrorcode.pilllaw.dto.order.CartItemDto;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 import com.eeerrorcode.pilllaw.entity.order.Cart;
 import com.eeerrorcode.pilllaw.entity.order.CartItem;
@@ -16,8 +17,11 @@ public interface CartService {
     // 회원의 장바구니 조회
     Optional<CartDto> getCartByMember(Long mno);
 
-    // 회원의 장바구니의 아이템 리스트 조회
-    public List<CartItem> getItemsByMemberMno(Long mno);
+    // mno를 통해 아이템 리스트 조회
+    public List<CartItemDto> getItemsByMemberMno(Long mno);
+
+    // cno를 통해 아이템 리스트 조회
+    public List<CartItemDto> getItemsByCartCno(Long cno);
 
     // 장바구니 삭제
     int removeCart(Long cno);
