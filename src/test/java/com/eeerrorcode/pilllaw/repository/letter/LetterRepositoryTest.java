@@ -14,11 +14,11 @@ public class LetterRepositoryTest {
   @Autowired
   LetterRepository repository;
 
-  @Test
-  @Transactional
-  @Rollback(false)
-  public void listTest() {
-    // repository.findByReceiverId(2L);
+  // @Test
+  // @Transactional
+  // @Rollback(false)
+  // public void listTest() {
+  //   // repository.findByReceiverId(1L);
     
-  }
+  // }
 }
