@@ -1,32 +1,58 @@
 package com.eeerrorcode.pilllaw.service.letter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.eeerrorcode.pilllaw.dto.letter.LetterRequestDto;
+import com.eeerrorcode.pilllaw.dto.letter.LetterResponseDto;
 import com.eeerrorcode.pilllaw.entity.follow.Letter;
-import com.eeerrorcode.pilllaw.repository.LetterRepository;
+import com.eeerrorcode.pilllaw.entity.member.Member;
+import com.eeerrorcode.pilllaw.repository.letter.LetterRepository;
 
-public class LetterServiceImpl {
-  LetterRepository repository;
-  public void deleteLetter(long letterId) {
-     repository.findById(letterId)
-    .orElseThrow(() -> new RuntimeException("쪽지를 찾지 못했습니다."));
-//
-    // if (letter.getSenderId().getMno() == ) {
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class LetterServiceImpl implements LetterService{
+    private final LetterRepository repository;
+
+  @Override
+  public void deleteLetter(long letterId, long memberId) {
+      // letterId로 해당 쪽지를 찾음
+      Letter letter = repository.findById(letterId)
+              .orElseThrow(() -> new RuntimeException("Letter not found"));
+
+      // 요청한 사용자가 발신자인 경우
+      if (letter.getSenderId().getMno() == memberId) {
+          letter.setDeletedBySender(true);  // 발신자 삭제 처리
+      }
+      // 요청한 사용자가 수신자인 경우
+      else if (letter.getReceiverId().getMno() == memberId) {
+          letter.setDeletedByReceiver(true);  // 수신자 삭제 처리
+      } else {
+          throw new RuntimeException("User is neither sender nor receiver of this letter");
+      }
       
-    // }
+      
+      // 변경된 상태를 DB에 저장
+      repository.save(letter);
+    }
+
+    @Override
+    public List<LetterResponseDto> getReceivedLetters(long mno) {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public void sendLetter(LetterRequestDto letterRequestDto) {
+      // TODO Auto-generated method stub
+      
+    }
+
+
   }
-// implements LetterService{
 
-  // @Override
-  // public List<Letter> getReceivedLetters(Long receiverId) {
-  //   // TODO Auto-generated method stub
-  //   return null;
-  // }
-
-  // @Override
-  // public Letter sendLetter(Long senderId, Long receiverId, String content) {
-  //   // TODO Auto-generated method stub
-  //   return null;
-  // }
-  
-}
