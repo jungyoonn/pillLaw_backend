@@ -18,7 +18,7 @@ public class CartItemDto {
   private Long cino;
   private Long cno;
   private Long pno;
-  private Double price;
+  private Long price;
   private long subday;
   private long quantity;
 }

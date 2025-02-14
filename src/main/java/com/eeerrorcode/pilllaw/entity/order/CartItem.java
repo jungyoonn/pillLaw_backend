@@ -34,7 +34,7 @@ public class CartItem {
   @ManyToOne
   @JoinColumn(name = "pno", nullable = false)
   private Product product;
-  private Double price;
+  private Long price;
   private long subday;
 
   @Builder.Default
