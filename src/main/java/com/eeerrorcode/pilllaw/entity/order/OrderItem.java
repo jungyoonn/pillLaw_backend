@@ -16,6 +16,10 @@ import lombok.Setter;
 @Entity(name = "tbl_order_item")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(exclude = "product")
 public class OrderItem extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
