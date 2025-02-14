@@ -44,6 +44,7 @@ public class LetterController {
     // }
 
     // 3. 받은 쪽지 조회
+    // @GetMapping("/{receiverId}")
     @GetMapping("/{receiverId}")
     public ResponseEntity<?> getReceivedLetters(@PathVariable Long receiverId) {
         List<LetterResponseDto> letters = letterService.getReceivedLetters(receiverId);

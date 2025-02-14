@@ -2,6 +2,7 @@ package com.eeerrorcode.pilllaw.service.letter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,13 @@ public class LetterServiceImpl implements LetterService{
     }
     @Override
     public List<LetterResponseDto> getReceivedLetters(long mno) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'getReceivedLetters'");
+      List<Letter> letters = repository.findByReceiverId(memberRepository.findById(mno).orElse(null));
+      List<LetterResponseDto> responseDtos = letters.stream()
+      .map(letter -> entityToResponseDto(letter)) // entity -> dto 변환
+      .collect(Collectors.toList());
+
+    return responseDtos;
+        
     }
     @Override
     public void deleteReceivedLetter(LetterResponseDto letterDto) {
