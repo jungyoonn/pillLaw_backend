@@ -37,7 +37,7 @@ public class OrderItem extends BaseEntity {
   @JoinColumn(name = "pno", nullable = false)
   private Product product;
 
-  private long price;
+  private Long price;
   private long subday;
   private long quantity;
 }

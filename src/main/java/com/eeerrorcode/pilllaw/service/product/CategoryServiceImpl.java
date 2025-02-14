@@ -18,12 +18,13 @@ public class CategoryServiceImpl implements CategoryService{
 
   private final CategoryRepository categoryRepository;
 
+  // 테스트 완료!
   @Override
   @Transactional
   public List<CategoryDto> listCategoryByType(CategoryType type) {
       List<Category> categoryList = categoryRepository.findByType(type);
       if (categoryList.isEmpty()) {
-          throw new RuntimeException("No categories found for type: " + type);
+          throw new RuntimeException("타입 없음 에러::::" + type);
       }
       return categoryList.stream()
           .map(CategoryDto::new)

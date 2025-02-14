@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Service;
-
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
 import com.eeerrorcode.pilllaw.entity.product.Product;
 import com.eeerrorcode.pilllaw.entity.product.ProductType;
@@ -22,9 +20,9 @@ public interface ProductService {
 
   List<ProductDto> listAllProduct();
 
-  List<ProductDto> listProductByCategory(String Category);
+  List<ProductDto> listProductByCategoryName(String Category);
 
-  List<ProductDto> listProductByCategoryAndType(String CategoryName, String CategoryType);
+  List<ProductDto> listProductByCategoryNameAndCategoryType(String CategoryName, String CategoryType);
   
   default Product toEntity(ProductDto dto){
     Product product = Product

@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
+import com.eeerrorcode.pilllaw.repository.product.ProductCategoryRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductRepository;
 
 import jakarta.transaction.Transactional;
@@ -24,6 +25,9 @@ public class ProductServiceTests {
 
   @Autowired
   private ProductRepository productRepository;
+
+  @Autowired
+  private ProductCategoryRepository productCategoryRepository;
 
   @Test
   @DisplayName("상품 등록 테스트 / ProductRegister Test")
@@ -70,9 +74,10 @@ public class ProductServiceTests {
   @DisplayName("상품 개별 삭제 테스트 / ProductView Test")
   @Rollback(false)
   public void testDeleteProduct(){
-    Long pno = 14L;
+    Long pno = 15L;
     log.info("========================================");
     log.info("삭제 동작시작");
+    productCategoryRepository.deleteByProductPno(pno);
     productService.deleteProduct(pno);
     log.info("삭제 동작완료");
     log.info("========================================");
@@ -85,13 +90,13 @@ public class ProductServiceTests {
     log.info("========================================");
     productService.modifyProduct(ProductDto
     .builder()
-      .pno(15L)
-      .pname("TEST 패키지 영양제 수정3")
-      .company("TEST 수정3 제조사")
+      .pno(13L)
+      .pname("Pillaw Sample 영양제")
+      .company("Pillaw Sample 제조사")
       .bestBefore(LocalDateTime.now().plusYears(100))
-      .keep("TEST 수정3 보관법")
-      .effect("TEST 수정3 효과")
-      .precautions("TEST 수정3 복용 전 유의사항")
+      .keep("Pillaw Sample 보관법")
+      .effect("Pillaw Sample 효과")
+      .precautions("Pillaw Sample 복용 전 유의사항")
       .type(List.of("NORMAL"))
     .build());
     log.info("========================================");
@@ -100,7 +105,14 @@ public class ProductServiceTests {
 
   @Test
   @DisplayName("카테고리로 상품 조회 리스트 테스트 / CategoryFindByProductList")
-  public void testListProductByCategory(){
-    productService.listProductByCategory(null);
+  public void testListProductByCategoryName(){
+    productService.listProductByCategoryName("피로");
   }
+
+  @Test
+  @DisplayName("카테고리타입 + 카테고리 이름으로 상품 조회 리스트 테스트 / CategoryFindByNameAndTypeProductList")
+  public void testListProductByCategoryNameAndCategoryType(){
+    productService.listProductByCategoryNameAndCategoryType("갱년기 남", "생리활성");
+  }
+
 }
