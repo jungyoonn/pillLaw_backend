@@ -10,7 +10,6 @@ import com.eeerrorcode.pilllaw.dto.product.ProductDto;
 import com.eeerrorcode.pilllaw.entity.product.Product;
 import com.eeerrorcode.pilllaw.entity.product.ProductType;
 
-@Service
 public interface ProductService {
   
   void registerProduct(ProductDto dto);
