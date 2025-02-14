@@ -61,7 +61,7 @@ public class MemberServiceTests {
 
   @Test
   public void getByEmailTest() {
-    log.info(service.getByEmail("test@test.com"));
+    log.info(service.getByEmail("service@test.com"));
   }
 
   @Test
