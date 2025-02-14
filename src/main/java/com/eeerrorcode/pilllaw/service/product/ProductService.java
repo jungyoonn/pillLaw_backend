@@ -21,6 +21,10 @@ public interface ProductService {
   Optional<ProductDto> viewProduct(Long pno);
 
   List<ProductDto> listAllProduct();
+
+  List<ProductDto> listProductByCategory(String Category);
+
+  List<ProductDto> listProductByCategoryAndType(String CategoryName, String CategoryType);
   
   default Product toEntity(ProductDto dto){
     Product product = Product

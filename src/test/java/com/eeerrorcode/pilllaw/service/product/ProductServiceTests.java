@@ -86,14 +86,21 @@ public class ProductServiceTests {
     productService.modifyProduct(ProductDto
     .builder()
       .pno(15L)
-      .company("TEST 수정 제조사")
+      .pname("TEST 패키지 영양제 수정3")
+      .company("TEST 수정3 제조사")
       .bestBefore(LocalDateTime.now().plusYears(100))
-      .keep("TEST 수정 보관법")
-      .effect("TEST 수정 효과")
-      .precautions("TEST 수정 복용 전 유의사항")
-      .type(List.of("EARLYBIRD", "SUBONLY"))
+      .keep("TEST 수정3 보관법")
+      .effect("TEST 수정3 효과")
+      .precautions("TEST 수정3 복용 전 유의사항")
+      .type(List.of("NORMAL"))
     .build());
     log.info("========================================");
     log.info(productService.viewProduct(15L));
+  }
+
+  @Test
+  @DisplayName("카테고리로 상품 조회 리스트 테스트 / CategoryFindByProductList")
+  public void testListProductByCategory(){
+    productService.listProductByCategory(null);
   }
 }

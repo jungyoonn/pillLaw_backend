@@ -5,10 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.eeerrorcode.pilllaw.entity.id.ProductCategoryId;
+import com.eeerrorcode.pilllaw.entity.product.Category;
 import com.eeerrorcode.pilllaw.entity.product.Product;
 import com.eeerrorcode.pilllaw.entity.product.ProductCategory;
 import java.util.List;
-import java.util.Locale.Category;
 
 
 public interface ProductCategoryRepository extends JpaRepository<ProductCategory, ProductCategoryId>{
@@ -17,4 +17,7 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
   
   @Query("SELECT pc.category FROM ProductCategory pc WHERE pc.product.pno = :pno")
   List<ProductCategory> findCategoriesByProduct(@Param("pno") Long pno);
+
+  @Query("SELECT pc.product FROM ProductCategory pc WHERE pc.category = :category")
+  List<Product> findProductsByCategory(@Param("category") Category category);
 }
