@@ -18,7 +18,7 @@ public class OrderItemDto {
   private Long oino;
   private Long ono;
   private Long pno;
-  private long price;
+  private Double price;
   private long subday;
   private long quantity;
 }
