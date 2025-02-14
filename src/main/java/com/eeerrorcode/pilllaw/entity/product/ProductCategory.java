@@ -34,6 +34,12 @@ public class ProductCategory {
     @MapsId("cno") 
     @JoinColumn(name = "cno", nullable = false)
     private Category category;
+
+    public ProductCategory(Product product, Category category) {
+        this.pcid = new ProductCategoryId(product.getPno(), category.getCno()); // 복합키 설정
+        this.product = product;
+        this.category = category;
+    }
 }
 
 

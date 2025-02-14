@@ -31,24 +31,69 @@ public class ProductServiceTests {
   @Transactional
   public void testRegisterProduct(){
     
-    // ProductDto dto = ProductDto
-    //   .builder()
-    //     .pname("TEST 영양제")
-    //     .company("TEST 제조사")
-    //     .bestBefore(LocalDateTime.now().plusYears(2))
-    //     .keep("TEST 보관법")
-    //     .effect("TEST 효과")
-    //     .precautions("TEST 복용 전 유의사항")
-    //     .type(List.of("NORMAL", "EARLYBIRD"))
-    //   .build();
+    ProductDto dto = ProductDto
+      .builder()
+        .pname("TEST 패키지 영양제 수정예정")
+        .company("TEST 제조사")
+        .bestBefore(LocalDateTime.now().plusYears(2))
+        .keep("TEST 보관법")
+        .effect("TEST 효과")
+        .precautions("TEST 복용 전 유의사항")
+        .type(List.of("EARLYBIRD", "SUBONLY"))
+      .build();
 
+    log.info("========================================");
+    log.info("새 상품 등록 ::: " + dto.toString());
+    log.info("========================================");
 
-
-    // log.info("========================================");
-    // log.info("새 상품 등록 ::: " + dto.toString());
-    // log.info("========================================");
-
-    // productService.registerProduct(dto);
+    productService.registerProduct(dto);
   }
 
+  @Test
+  @DisplayName("상품 리스트 테스트 / ProductList Test")
+  public void testListAllProduct(){
+    log.info("========================================");
+    log.info(productService.listAllProduct());
+    log.info("========================================");
+  }
+  
+  @Test
+  @DisplayName("상품 개별 조회 테스트 / ProductView Test")
+  public void testViewProduct(){
+    Long pno = 10L;
+    log.info("========================================");
+    log.info(productService.viewProduct(pno));
+    log.info("========================================");
+  }
+
+  @Test
+  @DisplayName("상품 개별 삭제 테스트 / ProductView Test")
+  @Rollback(false)
+  public void testDeleteProduct(){
+    Long pno = 14L;
+    log.info("========================================");
+    log.info("삭제 동작시작");
+    productService.deleteProduct(pno);
+    log.info("삭제 동작완료");
+    log.info("========================================");
+  }
+
+  @Test
+  @DisplayName("상품 수정 테스트 / ProductModifyTest")
+  @Rollback(false)
+  public void testModify(){
+    log.info("========================================");
+    productService.modifyProduct(ProductDto
+    .builder()
+      .pno(15L)
+      .company("TEST 수정 제조사")
+      .bestBefore(LocalDateTime.now().plusYears(100))
+      .keep("TEST 수정 보관법")
+      .effect("TEST 수정 효과")
+      .precautions("TEST 수정 복용 전 유의사항")
+      .type(List.of("EARLYBIRD", "SUBONLY"))
+    .build());
+    log.info("========================================");
+    log.info(productService.viewProduct(15L));
+  }
 }

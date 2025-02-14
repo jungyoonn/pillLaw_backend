@@ -50,10 +50,7 @@ public class CartController {
   // 장바구니 아이템 수정
   @PutMapping("/items/{cino}")
   public ResponseEntity<Integer> updateCartItem(@PathVariable Long cino, @RequestBody CartItemDto cartItemDto) {
-    // cino를 통해 CartItemDto의 cno를 설정
-    cartItemDto.setCno(cino);
-
-    // cartItemService.updateCartItem()을 호출하여 업데이트
+    cartItemDto.setCino(cino);
     int updated = cartItemService.updateCartItem(cartItemDto);
     return ResponseEntity.ok(updated);
   }
