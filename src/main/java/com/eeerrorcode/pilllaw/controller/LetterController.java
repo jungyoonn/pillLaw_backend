@@ -3,6 +3,7 @@ package com.eeerrorcode.pilllaw.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eeerrorcode.pilllaw.dto.letter.LetterRequestDto;
+import com.eeerrorcode.pilllaw.dto.letter.LetterResponseDto;
 import com.eeerrorcode.pilllaw.entity.follow.Letter;
 import com.eeerrorcode.pilllaw.service.letter.LetterService;
 
@@ -44,15 +45,15 @@ public class LetterController {
 
     // 3. 받은 쪽지 조회
     @GetMapping("/{receiverId}")
-    public ResponseEntity<List<Letter>> getReceivedLetters(@PathVariable Long receiverId) {
-        List<Letter> letters = letterService.getReceivedLetters(receiverId);
+    public ResponseEntity<?> getReceivedLetters(@PathVariable Long receiverId) {
+        List<LetterResponseDto> letters = letterService.getReceivedLetters(receiverId);
         return ResponseEntity.ok(letters);
     }
 
     // 4. 쪽지 전송 (POST 방식)
     @PostMapping("/send")
-    public ResponseEntity<Letter> sendLetter(@RequestBody LetterRequestDto letterDto) {
-        Letter savedLetter = letterService.sendLetter(
+    public ResponseEntity<?> sendLetter(@RequestBody LetterRequestDto letterDto) {
+        LetterRequestDto savedLetter = letterService.sendLetter(
             letterDto.getSenderId(), 
             letterDto.getReceiverId(), 
             letterDto.getContent()

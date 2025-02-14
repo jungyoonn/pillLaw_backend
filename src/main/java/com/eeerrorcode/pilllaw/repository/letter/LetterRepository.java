@@ -15,7 +15,6 @@ import com.eeerrorcode.pilllaw.entity.member.Member;
 public interface LetterRepository extends JpaRepository<Letter, Long> {
 
     List<Letter> findByReceiverId(Member receiverId);
-    List<LetterResponseDto> getReceivedLetters(long receiverId);
     // void findByReceiverId(long l);  
 
     
