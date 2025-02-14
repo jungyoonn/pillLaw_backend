@@ -31,24 +31,24 @@ public class ProductServiceTests {
   @Transactional
   public void testRegisterProduct(){
     
-    // ProductDto dto = ProductDto
-    //   .builder()
-    //     .pname("TEST 영양제")
-    //     .company("TEST 제조사")
-    //     .bestBefore(LocalDateTime.now().plusYears(2))
-    //     .keep("TEST 보관법")
-    //     .effect("TEST 효과")
-    //     .precautions("TEST 복용 전 유의사항")
-    //     .type(List.of("NORMAL", "EARLYBIRD"))
-    //   .build();
+    ProductDto dto = ProductDto
+      .builder()
+        .pname("TEST 영양제")
+        .company("TEST 제조사")
+        .bestBefore(LocalDateTime.now().plusYears(2))
+        .keep("TEST 보관법")
+        .effect("TEST 효과")
+        .precautions("TEST 복용 전 유의사항")
+        .type(List.of("NORMAL", "EARLYBIRD"))
+      .build();
 
 
 
-    // log.info("========================================");
-    // log.info("새 상품 등록 ::: " + dto.toString());
-    // log.info("========================================");
+    log.info("========================================");
+    log.info("새 상품 등록 ::: " + dto.toString());
+    log.info("========================================");
 
-    // productService.registerProduct(dto);
+    productService.registerProduct(dto);
   }
 
 }
