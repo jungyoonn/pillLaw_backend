@@ -3,6 +3,7 @@ package com.eeerrorcode.pilllaw.config;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,14 +20,32 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.eeerrorcode.pilllaw.security.filter.CustomLoginFilter;
+import com.eeerrorcode.pilllaw.security.filter.SignCheckFilter;
 import com.eeerrorcode.pilllaw.security.handler.LoginFailHandler;
 import com.eeerrorcode.pilllaw.security.handler.LoginSuccessHandler;
+import com.eeerrorcode.pilllaw.security.util.JWTUtil;
 
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+  @Value("${jwt.secret}")
+  private String secretKey;
+  
+  private final JWTUtil jwtUtil;
+
   @Autowired
   private UserDetailsService userDetailsService;
+
+  public SecurityConfig(@Value("${jwt.secret}") String secretKey) {
+    this.secretKey = secretKey;
+    this.jwtUtil = new JWTUtil(secretKey);
+  }
+
+  @Bean
+  public JWTUtil jwtUtil() {
+    return this.jwtUtil;
+  }
+
 
   @Bean
   public PasswordEncoder encoder() {
@@ -34,8 +53,14 @@ public class SecurityConfig {
   }
 
   @Bean
+  public SignCheckFilter signCheckFilter(){
+    return new SignCheckFilter("/api/**", this.jwtUtil);
+  }
+
+  @Bean
   public CustomLoginFilter customLoginFilter(AuthenticationManager authenticationManager) {
-    CustomLoginFilter customLoginFilter = new CustomLoginFilter(authenticationManager);
+    CustomLoginFilter customLoginFilter = new CustomLoginFilter("/api/member/signin", this.jwtUtil);
+    customLoginFilter.setAuthenticationManager(authenticationManager);
     customLoginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(encoder()));
     customLoginFilter.setAuthenticationFailureHandler(new LoginFailHandler());
     return customLoginFilter;
@@ -78,6 +103,7 @@ public class SecurityConfig {
         .requestMatchers("/swagger-ui.html").permitAll()
         .anyRequest().permitAll()
         )
+      .addFilterBefore(signCheckFilter(), UsernamePasswordAuthenticationFilter.class)
       .addFilterBefore(customLoginFilter(authenticationManager(http)), UsernamePasswordAuthenticationFilter.class);
     
       customLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
