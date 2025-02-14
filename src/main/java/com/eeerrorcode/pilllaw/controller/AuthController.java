@@ -28,7 +28,7 @@ public class AuthController {
   }
 
   @PostMapping("/signin")
-  public ResponseEntity<?> signin(@RequestParam String email) {
+  public ResponseEntity<?> signin(@RequestParam String email, @RequestParam String password) {
     return ResponseEntity.ok("로그인 성공: " + email);
   }
 
