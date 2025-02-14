@@ -2,6 +2,7 @@ spring:
   profiles:
     include:
     - mail
+    - jwt
   application:
     name: pilllaw
   servlet:
@@ -22,7 +23,7 @@ spring:
         format_sql: true
   devtools:
     restart:
-      enabled: true
+      enabled: false
       additional-paths:
       - src/main/java
       - src/main/resources
@@ -33,7 +34,7 @@ logging:
       info
     jdbc.audit: WARN
     jdbc.connection: WARN
-    jdbc.resultset: INFO
+    jdbc.resultset: WARN
     jdbc.sqltiming: INFO
     com.zaxxer.hikari: WARN
     org.hibernate: WARN
