@@ -96,4 +96,34 @@ public class ProductServiceImpl implements ProductService {
     productRepository.save(product);
   }
 
+  @Override
+  public List<ProductDto> listProductByCategory(String categoryName) {
+      Category category = categoryRepository.findByCname(categoryName)
+          .orElseThrow(() -> new RuntimeException("Category not found: " + categoryName));
+  
+      List<ProductDto> productList = productCategoryRepository.findByCategory(category)
+          .stream()
+          .map(pc -> this.toDto(pc.getProduct())) // ProductCategory → Product 변환
+          .toList();
+  
+      return productList;
+  }
+  
+  @Override
+  public List<ProductDto> listProductByCategoryAndType(String categoryName, String categoryType) {
+      Category category = categoryRepository.findByCname(categoryName)
+          .orElseThrow(() -> new RuntimeException("Category not found: " + categoryName));
+  
+      List<ProductDto> productList = productCategoryRepository.findByCategory(category)
+          .stream()
+          .filter(pc -> pc.getCategory().getTypeSet().contains(categoryType)) 
+          .map(pc -> this.toDto(pc.getProduct())) 
+          .toList();
+  
+      return productList;
+  }
+  
+  
+
+
 }
