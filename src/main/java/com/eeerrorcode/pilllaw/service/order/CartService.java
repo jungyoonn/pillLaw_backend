@@ -39,6 +39,8 @@ public interface CartService {
         return CartDto.builder()
                 .cno(cart.getCno())
                 .mno(cart.getMember().getMno())
+                .regdate(cart.getRegDate())
+                .moddate(cart.getModDate())
                 .build();
     }
 }

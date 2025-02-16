@@ -21,7 +21,7 @@ public interface OrderService {
   List<Order> getAllOrders();
 
   //주문 삭제
-  void removeOrder(Long ono);
+  int removeOrder(Long ono);
 
   // DTO -> Entity 변환
   default Order toEntity(OrderDto orderDto) {
@@ -46,6 +46,8 @@ public interface OrderService {
         .request(order.getRequest())
         .totalAmount(order.getTotalAmount())
         .usingPoint(order.getUsingPoint())
+        .regdate(order.getRegDate())
+        .moddate(order.getModDate())
         .build();
   }
 }

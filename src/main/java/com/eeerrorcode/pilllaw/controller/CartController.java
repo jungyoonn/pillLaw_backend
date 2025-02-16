@@ -9,12 +9,11 @@ import org.springframework.web.bind.annotation.*;
 
 import com.eeerrorcode.pilllaw.dto.order.CartDto;
 import com.eeerrorcode.pilllaw.dto.order.CartItemDto;
-import com.eeerrorcode.pilllaw.entity.order.CartItem;
 import com.eeerrorcode.pilllaw.service.order.CartItemService;
 import com.eeerrorcode.pilllaw.service.order.CartService;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/v1/cart")
@@ -50,7 +49,10 @@ public class CartController {
   // 장바구니 아이템 수정
   @PutMapping("/items/{cino}")
   public ResponseEntity<Integer> updateCartItem(@PathVariable Long cino, @RequestBody CartItemDto cartItemDto) {
+    // cino를 통해 CartItemDto의 cno를 설정
     cartItemDto.setCino(cino);
+
+    // cartItemService.updateCartItem()을 호출하여 업데이트
     int updated = cartItemService.updateCartItem(cartItemDto);
     return ResponseEntity.ok(updated);
   }

@@ -14,12 +14,14 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/orders")
+@RequestMapping("/api/v1/order")
 @RequiredArgsConstructor
 public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
     private OrderItemService orderItemService;
 
     // 주문 추가
@@ -53,9 +55,9 @@ public class OrderController {
 
     // 주문 삭제
     @DeleteMapping("/{ono}")
-    public ResponseEntity<Void> removeOrder(@PathVariable Long ono) {
-        orderService.removeOrder(ono);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Integer> removeOrder(@PathVariable Long ono) {
+        int removed = orderService.removeOrder(ono);
+        return ResponseEntity.ok(removed);
     }
 
     // 특정 주문의 주문 아이템 조회
@@ -66,17 +68,17 @@ public class OrderController {
     }
 
     // 주문 아이템 추가
-    @PostMapping("/{ono}/items")
-    public ResponseEntity<Long> addOrderItem(@PathVariable Long ono, @RequestBody OrderItemDto orderItemDto) {
-        orderItemDto.setOno(ono);
-        Long oino = orderItemService.addOrderItem(orderItemDto);
-        return ResponseEntity.ok(oino);
+    // 장바구니의 모든 아이템을 주문 아이템으로 추가
+    @PostMapping("/{mno}/{ono}")
+    public ResponseEntity<List<Long>> addOrderItems(@PathVariable Long mno, @PathVariable Long ono) {
+        List<Long> orderItemIds = orderItemService.addOrderItems(mno, ono);
+        return ResponseEntity.ok(orderItemIds);
     }
-
+    
     // 주문 아이템 삭제
     @DeleteMapping("/items/{oino}")
-    public ResponseEntity<Void> removeOrderItem(@PathVariable Long oino) {
-        orderItemService.removeOrderItem(oino);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Integer> removeOrderItem(@PathVariable Long oino) {
+        int removed = orderItemService.removeOrderItem(oino);
+        return ResponseEntity.ok(removed);
     }
 }

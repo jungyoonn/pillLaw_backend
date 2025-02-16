@@ -8,9 +8,9 @@ import com.eeerrorcode.pilllaw.entity.order.OrderItem;
 import com.eeerrorcode.pilllaw.entity.product.Product;
 
 public interface OrderItemService {
-  Long addOrderItem(OrderItemDto orderItemDto);
+  public List<Long> addOrderItems(Long mno, Long ono);
   List<OrderItemDto> getOrderItemsByOrder(Long ono);
-  void removeOrderItem(Long oino);
+  int removeOrderItem(Long oino);
 
   // DTO -> Entity 변환
   default OrderItem toEntity(OrderItemDto orderItemDto) {
