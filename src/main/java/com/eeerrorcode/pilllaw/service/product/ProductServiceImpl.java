@@ -99,7 +99,7 @@ public class ProductServiceImpl implements ProductService {
 
   
   
-
+  // 테스트 
   @Override
   public List<ProductDto> listProductByCategoryNameList(List<String> categoryNames) {
     List<Product> productList = productCategoryRepository.findProductsByCategoryNames(categoryNames);

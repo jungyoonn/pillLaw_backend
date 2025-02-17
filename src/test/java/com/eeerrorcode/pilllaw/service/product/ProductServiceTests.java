@@ -1,7 +1,5 @@
 package com.eeerrorcode.pilllaw.service.product;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -11,11 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
-import com.eeerrorcode.pilllaw.entity.product.CategoryType;
 import com.eeerrorcode.pilllaw.repository.product.ProductCategoryRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductRepository;
 
-import io.jsonwebtoken.lang.Arrays;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 
