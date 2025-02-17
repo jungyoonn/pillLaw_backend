@@ -49,7 +49,7 @@ public class SignCheckFilter extends OncePerRequestFilter {
       if(checkHeader) {
         // SecurityConfig에서 anyRequest().authenticated()이려면 이렇게 하는 것이 좋다
         String token = request.getHeader("Authorization").substring(7);
-        String email = jwtUtil.validateAndExtract(token);
+        String email = jwtUtil.validateToken(token);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, null);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -79,7 +79,7 @@ public class SignCheckFilter extends OncePerRequestFilter {
       log.info("=========== Authorization exist :: " + authHeader + " =============");
       String email;
       try {
-        email = jwtUtil.validateAndExtract(authHeader.substring(7));
+        email = jwtUtil.validateToken(authHeader.substring(7));
         log.info("valid email ::: " + email);
         checkResult = email.length() > 0;
       } catch (Exception e) {
