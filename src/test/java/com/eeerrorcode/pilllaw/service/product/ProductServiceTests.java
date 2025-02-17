@@ -1,6 +1,7 @@
 package com.eeerrorcode.pilllaw.service.product;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -10,9 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
+import com.eeerrorcode.pilllaw.entity.product.CategoryType;
 import com.eeerrorcode.pilllaw.repository.product.ProductCategoryRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductRepository;
 
+import io.jsonwebtoken.lang.Arrays;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 
@@ -115,8 +118,13 @@ public class ProductServiceTests {
     productService.listProductByCategoryNameAndCategoryType("갱년기 남", "생리활성");
   }
 
-  // @Test
-  // @DisplayName("카테고리타입으로 상품 조회 리스트 테스트")
-  // public void testList
+  @Test
+  @DisplayName("다중 카테고리 이름으로 상품 조회 리스트 테스트")
+  public void testListByProductCategoryNameList(){
+      List<String> names = List.of("관절, 뼈", "피부");
+      List<ProductDto> result = productService.listProductByCategoryNameList(names);
+      log.info(result);
+  }
+  
 
 }

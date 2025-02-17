@@ -100,12 +100,13 @@ public class ProductServiceImpl implements ProductService {
   
   
 
-
   @Override
-  public List<ProductDto> listProductByCategoryNameList(List<String> Categorytype) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+  public List<ProductDto> listProductByCategoryNameList(List<String> categoryNames) {
+    List<Product> productList = productCategoryRepository.findProductsByCategoryNames(categoryNames);
+    return productList.stream()
+            .map(ProductDto::new)
+            .collect(Collectors.toList());
+}
 
   @Override
   public List<ProductDto> listProductByCategory(List<CategoryType> types) {
