@@ -3,13 +3,11 @@ package com.eeerrorcode.pilllaw.config;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,6 +22,7 @@ import com.eeerrorcode.pilllaw.security.filter.CustomLoginFilter;
 import com.eeerrorcode.pilllaw.security.filter.SignCheckFilter;
 import com.eeerrorcode.pilllaw.security.handler.LoginFailHandler;
 import com.eeerrorcode.pilllaw.security.handler.LoginSuccessHandler;
+import com.eeerrorcode.pilllaw.security.util.JWTUtil;
 
 @Configuration
 @EnableMethodSecurity
@@ -33,21 +32,24 @@ public class SecurityConfig {
   private UserDetailsService userDetailsService;
 
   @Autowired
-  public PasswordEncoder encoder;
+  private PasswordEncoder encoder;
+
+  @Autowired
+  private JWTUtil jwtUtil;
 
   // @Bean
   // public SignCheckFilter signCheckFilter(){
   //   return new SignCheckFilter("/api/**", this.jwtUtil);
   // }
 
-  // @Bean
-  // public CustomLoginFilter customLoginFilter(AuthenticationManager authenticationManager) {
-  //   CustomLoginFilter customLoginFilter = new CustomLoginFilter("/api/member/signin", this.jwtUtil);
-  //   customLoginFilter.setAuthenticationManager(authenticationManager);
-  //   customLoginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(encoder));
-  //   customLoginFilter.setAuthenticationFailureHandler(new LoginFailHandler());
-  //   return customLoginFilter;
-  // }
+  @Bean
+  public CustomLoginFilter customLoginFilter(AuthenticationManager authenticationManager) {
+    CustomLoginFilter customLoginFilter = new CustomLoginFilter("/api/member/signin", jwtUtil);
+    customLoginFilter.setAuthenticationManager(authenticationManager);
+    customLoginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(encoder));
+    customLoginFilter.setAuthenticationFailureHandler(new LoginFailHandler());
+    return customLoginFilter;
+  }
 
   @Bean
   public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
@@ -85,13 +87,8 @@ public class SecurityConfig {
         .requestMatchers("/api/member/**", "/").permitAll()
         .anyRequest().permitAll()
         )
-        .formLogin(form -> form
-          // .loginProcessingUrl("/auth/login")
-          .defaultSuccessUrl("/api/member", true) // 로그인 성공 후 리디렉션
-          .permitAll()
-        );
       // .addFilterBefore(signCheckFilter(), UsernamePasswordAuthenticationFilter.class)
-      // .addFilterBefore(customLoginFilter(authenticationManager(http)), UsernamePasswordAuthenticationFilter.class);
+      .addFilterBefore(customLoginFilter(authenticationManager(userDetailsService)), UsernamePasswordAuthenticationFilter.class);
     
       // customLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
       return http.build();

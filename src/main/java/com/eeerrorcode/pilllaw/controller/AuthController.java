@@ -28,10 +28,10 @@ public class AuthController {
   @Autowired
   private JWTUtil jwtUtil;
 
-  @RequestMapping(value = "/signin", method = RequestMethod.OPTIONS)
-  public ResponseEntity<?> handleOptions() {
-    return ResponseEntity.ok().build();
-  }
+  // @RequestMapping(value = "/signin", method = RequestMethod.OPTIONS)
+  // public ResponseEntity<?> handleOptions() {
+  //   return ResponseEntity.ok().build();
+  // }
 
   @PostMapping("/signin")
   public ResponseEntity<?> signin(@RequestBody LoginDto loginDto) {
@@ -45,7 +45,7 @@ public class AuthController {
     String token = jwtUtil.generateToken(user.getEmail());
     log.info("토큰 생성 => {}", token);
 
-    return ResponseEntity.ok(token);
+    return ResponseEntity.ok(loginDto);
   }
 
   @PostMapping("/email/verification-requests")
