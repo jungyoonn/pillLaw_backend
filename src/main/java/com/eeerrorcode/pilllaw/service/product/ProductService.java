@@ -23,6 +23,8 @@ public interface ProductService {
 
   List<ProductDto> listProductByCategory(List<CategoryType> types);
 
+  List<ProductDto> listProductByCategoryNameList(List<String> Categorytype);
+
   List<ProductDto> listProductByCategoryName(String Category);
 
   List<ProductDto> listProductByCategoryNameAndCategoryType(String CategoryName, String CategoryType);

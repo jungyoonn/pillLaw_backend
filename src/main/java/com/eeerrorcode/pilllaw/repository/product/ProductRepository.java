@@ -10,5 +10,5 @@ import com.eeerrorcode.pilllaw.entity.product.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>{
-  List<Product> findByCategoryTypeIn(List<CategoryType> types);
+  // List<Product> findByCategoryTypeIn(List<CategoryType> types);
 }
