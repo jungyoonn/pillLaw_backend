@@ -39,7 +39,7 @@ public class ProductServiceTests {
       .builder()
         .pname("TEST 패키지 영양제 수정예정")
         .company("TEST 제조사")
-        .bestBefore(LocalDateTime.now().plusYears(2))
+        .bestBefore("구매일로부터 2년")
         .keep("TEST 보관법")
         .effect("TEST 효과")
         .precautions("TEST 복용 전 유의사항")
@@ -93,7 +93,7 @@ public class ProductServiceTests {
       .pno(13L)
       .pname("Pillaw Sample 영양제")
       .company("Pillaw Sample 제조사")
-      .bestBefore(LocalDateTime.now().plusYears(100))
+      .bestBefore("구매일로부터 2년")
       .keep("Pillaw Sample 보관법")
       .effect("Pillaw Sample 효과")
       .precautions("Pillaw Sample 복용 전 유의사항")
@@ -114,5 +114,9 @@ public class ProductServiceTests {
   public void testListProductByCategoryNameAndCategoryType(){
     productService.listProductByCategoryNameAndCategoryType("갱년기 남", "생리활성");
   }
+
+  // @Test
+  // @DisplayName("카테고리타입으로 상품 조회 리스트 테스트")
+  // public void testList
 
 }
