@@ -45,7 +45,7 @@ public class ProductDto {
     this.keep = product.getKeep();
     this.state = product.isState();
     this.type = (product.getTypeSet() != null) ? product.getTypeSet().stream().map(Enum::name).collect(Collectors.toList()) : List.of();
-    this.categories = List.of();
+    // this.categories = List.of();
     this.regDate = product.getRegDate();
     this.modDate = product.getModDate();
   }
