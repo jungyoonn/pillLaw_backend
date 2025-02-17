@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,55 +24,37 @@ import com.eeerrorcode.pilllaw.security.filter.CustomLoginFilter;
 import com.eeerrorcode.pilllaw.security.filter.SignCheckFilter;
 import com.eeerrorcode.pilllaw.security.handler.LoginFailHandler;
 import com.eeerrorcode.pilllaw.security.handler.LoginSuccessHandler;
-import com.eeerrorcode.pilllaw.security.util.JWTUtil;
 
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-  @Value("${jwt.secret}")
-  private String secretKey;
-  
-  private final JWTUtil jwtUtil;
 
   @Autowired
   private UserDetailsService userDetailsService;
 
-  public SecurityConfig(@Value("${jwt.secret}") String secretKey) {
-    this.secretKey = secretKey;
-    this.jwtUtil = new JWTUtil(secretKey);
-  }
-
-  @Bean
-  public JWTUtil jwtUtil() {
-    return this.jwtUtil;
-  }
-
-
   @Autowired
   public PasswordEncoder encoder;
 
-  @Bean
-  public SignCheckFilter signCheckFilter(){
-    return new SignCheckFilter("/api/**", this.jwtUtil);
-  }
+  // @Bean
+  // public SignCheckFilter signCheckFilter(){
+  //   return new SignCheckFilter("/api/**", this.jwtUtil);
+  // }
+
+  // @Bean
+  // public CustomLoginFilter customLoginFilter(AuthenticationManager authenticationManager) {
+  //   CustomLoginFilter customLoginFilter = new CustomLoginFilter("/api/member/signin", this.jwtUtil);
+  //   customLoginFilter.setAuthenticationManager(authenticationManager);
+  //   customLoginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(encoder));
+  //   customLoginFilter.setAuthenticationFailureHandler(new LoginFailHandler());
+  //   return customLoginFilter;
+  // }
 
   @Bean
-  public CustomLoginFilter customLoginFilter(AuthenticationManager authenticationManager) {
-    CustomLoginFilter customLoginFilter = new CustomLoginFilter("/api/member/signin", this.jwtUtil);
-    customLoginFilter.setAuthenticationManager(authenticationManager);
-    customLoginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(encoder));
-    customLoginFilter.setAuthenticationFailureHandler(new LoginFailHandler());
-    return customLoginFilter;
-  }
-
-  @Bean
-  public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception{
-    AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
-    builder.userDetailsService(userDetailsService)
-      .passwordEncoder(encoder).setBuilder(builder);
-  
-    AuthenticationManager authenticationManager = builder.build();
-    return authenticationManager;
+  public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+    DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+    authenticationProvider.setUserDetailsService(userDetailsService);
+    authenticationProvider.setPasswordEncoder(encoder);
+    return new ProviderManager(List.of(authenticationProvider));
   }
 
   @Bean 
@@ -91,20 +75,25 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authManager
-  , CustomLoginFilter customLoginFilter, LoginSuccessHandler loginSuccessHandler) throws Exception {
+  , LoginSuccessHandler loginSuccessHandler) throws Exception {
     http
       .cors(c -> c.configurationSource(configurationSource()))
       .csrf(csrf -> csrf.disable())
       // .oauth2Login(o -> o.successHandler(loginSuccessHandler()))
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/swagger-ui.html").permitAll()
-        .requestMatchers("/api/member/**").permitAll()
+        .requestMatchers("/api/member/**", "/").permitAll()
         .anyRequest().permitAll()
         )
-      .addFilterBefore(signCheckFilter(), UsernamePasswordAuthenticationFilter.class)
-      .addFilterBefore(customLoginFilter(authenticationManager(http)), UsernamePasswordAuthenticationFilter.class);
+        .formLogin(form -> form
+          // .loginProcessingUrl("/auth/login")
+          .defaultSuccessUrl("/api/member", true) // 로그인 성공 후 리디렉션
+          .permitAll()
+        );
+      // .addFilterBefore(signCheckFilter(), UsernamePasswordAuthenticationFilter.class)
+      // .addFilterBefore(customLoginFilter(authenticationManager(http)), UsernamePasswordAuthenticationFilter.class);
     
-      customLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
+      // customLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
       return http.build();
   }
 
