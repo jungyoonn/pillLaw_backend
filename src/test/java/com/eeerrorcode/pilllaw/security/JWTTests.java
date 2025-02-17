@@ -28,7 +28,7 @@ public class JWTTests {
 
     Thread.sleep(5000);
 
-    String resultEmail = util.validateAndExtract(str);
+    String resultEmail = util.validateToken(str);
 
     log.info(resultEmail);
   }
