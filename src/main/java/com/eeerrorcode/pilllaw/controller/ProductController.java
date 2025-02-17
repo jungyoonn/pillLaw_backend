@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eeerrorcode.pilllaw.dto.product.CategoryDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
-import com.eeerrorcode.pilllaw.entity.product.CategoryType;
-import com.eeerrorcode.pilllaw.service.product.CategoryService;
 import com.eeerrorcode.pilllaw.service.product.ProductService;
 
 import lombok.extern.log4j.Log4j2;
@@ -34,13 +31,13 @@ public class ProductController {
   @Autowired
   private ProductService productService;
 
-  @Autowired
-  private CategoryService categoryService;
-
+  // @Autowired
+  // private CategoryService categoryService;
+  
+  // 포스트맨 통과!
   @GetMapping("list")
   public List<ProductDto> allList(@RequestParam(required = false) List<String> categoryNames) {
       log.info("showlist :::::::::::::::::::::::::::::::::::::::::::::: " + categoryNames);
-  
       if (categoryNames != null && !categoryNames.isEmpty()) {
           return productService.listProductByCategoryNameList(categoryNames);
       }
@@ -55,20 +52,23 @@ public class ProductController {
   // }
   
 
+  // 포스트맨 통과!
   @GetMapping(value = "{pno}")
   public ResponseEntity<?> showDetail(@PathVariable("pno") Long pno) {
     log.info("showdetail::::::::::::::::::::::::::::::::::::::::::::::::::::");
     productService.viewProduct(pno);
-    return new ResponseEntity<>(pno + "showed",HttpStatus.OK);
+    return new ResponseEntity<>(productService.viewProduct(pno) + "showed", HttpStatus.OK);
   }
 
-  @PostMapping(value = "")
+  // 포스트맨 통과!
+  @PostMapping("")
   public ResponseEntity<?> register(@RequestBody ProductDto productDto) {
     log.info("register::::::::::::::::::::::::::::::::::::::::::::::::::::"); 
     productService.registerProduct(productDto);
     return new ResponseEntity<>(productDto.getPname() + "registered" ,HttpStatus.OK);
   }
 
+  // 포스트맨 통과!
   @PutMapping(value = "/{pno}")
   public ResponseEntity<?> modify(@RequestBody ProductDto productDto) {
     log.info("modify::::::::::::::::::::::::::::::::::::::::::::::::::::"); 
@@ -76,7 +76,7 @@ public class ProductController {
     log.info(productDto);
     return new ResponseEntity<>(productDto.getPname() + "modified", HttpStatus.OK);
   }
-  
+  // 포스트맨 통과!
   @DeleteMapping(value = "/{pno}")
   public ResponseEntity<?> remove(@PathVariable("pno") Long pno){
     log.info("delete::::::::::::::::::::::::::::::::::::::::::::::::::::"); 
