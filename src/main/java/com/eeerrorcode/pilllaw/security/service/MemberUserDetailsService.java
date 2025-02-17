@@ -31,14 +31,12 @@ public class MemberUserDetailsService implements UserDetailsService{
   @Transactional
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Optional<MemberDto> optional = memberService.toOptionalDto(repository.findByEmailAndAccountType(username
-    , MemberAccount.NORMAL).orElse(null));
+    , MemberAccount.NORMAL).orElseThrow(() -> new UsernameNotFoundException(username + " 사용자를 찾을 수 없습니다")));
   
-    if(optional.isEmpty()) {
-      throw new UsernameNotFoundException(username);
-    }
     MemberDto dto = optional.get();
 
-    AuthMemberDto authMemberDto = new AuthMemberDto(dto.getEmail(), dto.getPassword(), dto.getMno(), dto.getAccounts()
+    AuthMemberDto authMemberDto = new AuthMemberDto(dto.getEmail(), dto.getPassword(), dto.getMno()
+    , dto.getAccounts() , dto.getRoles(), dto.getStatus()
     , dto.getName(), dto.getNickname(), dto.getTel(), dto.isFirstLogin()
     , dto.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.name())).toList());
 
