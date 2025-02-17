@@ -17,13 +17,13 @@ import lombok.*;
 @Setter
 @ToString
 public class AuthMemberDto extends User {
-  private long mno;
+  private Long mno;
   private String email;
   private String password;
   private String name;
   private String nickname;
   private String tel;
-  private boolean firstLogin;
+  private Boolean firstLogin;
 
   private List<MemberRole> roles = new ArrayList<>();
 
@@ -32,7 +32,9 @@ public class AuthMemberDto extends User {
   private List<MemberStatus> status = new ArrayList<>();
   
   // security 자체 로그인 호출 생성자
-  public AuthMemberDto(String username, String password, Long mno, List<MemberAccount> accounts, String name, String nickname, String tel, boolean firstLogin, Collection<? extends GrantedAuthority> authorities) {
+  public AuthMemberDto(String username, String password, Long mno, List<MemberAccount> accounts, List<MemberRole> roles
+  , List<MemberStatus> status, String name, String nickname, String tel, boolean firstLogin
+  , Collection<? extends GrantedAuthority> authorities) {
     super(username, password, authorities);
     this.name = name;
     this.mno = mno;
@@ -41,6 +43,8 @@ public class AuthMemberDto extends User {
     this.firstLogin = firstLogin;
     this.email = username;
     this.accounts = accounts;
+    this.roles = roles;
+    this.status = status;
     this.password = password;
   }
 }
