@@ -7,6 +7,7 @@ import java.util.Set;
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
 
 import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -36,8 +37,10 @@ public class Product extends BaseEntity {
 
   private String pname;
   private String company;
-  private LocalDateTime bestBefore;
+  private String bestBefore;
+  @Column(length = 1000)
   private String effect;
+  @Column(length = 1000)
   private String precautions;
   private String keep;
   private boolean state;
