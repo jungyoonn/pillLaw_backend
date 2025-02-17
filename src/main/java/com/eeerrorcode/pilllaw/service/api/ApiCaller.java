@@ -13,6 +13,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -30,17 +31,24 @@ import lombok.Setter;
 public class ApiCaller {
 
   public URL buildApiCallUrl(ApiField apiField) throws IOException{
-    StringBuilder urlBuilder = new StringBuilder("http://openapi.foodsafetykorea.go.kr/api/");
-    urlBuilder.append(apiField.getKeyId()+ "/" + apiField.getServiceId() + "/" + apiField.getDataType() + "/" + apiField.getStartIdx() + "/" + apiField.getEndIdx());
+    // StringBuilder urlBuilder = new StringBuilder("http://openapi.foodsafetykorea.go.kr/api/");
+    // urlBuilder.append(apiField.getKeyId()+ "/" + apiField.getServiceId() + "/" + apiField.getDataType() + "/" + apiField.getStartIdx() + "/" + apiField.getEndIdx());
 
-    if (!apiField.getItemName().isEmpty()) {
-      urlBuilder.append("/PRDLST_NM=" + apiField.getEncodedItemName());
-    }
-    if (!apiField.getCompanyName().isEmpty()) {
-      urlBuilder.append("&BSSH_NM=" + URLEncoder.encode(apiField.getCompanyName(), "UTF-8")); 
-    }
-    URL url = new URL(urlBuilder.toString());
-    return url;
+    // if (!apiField.getItemName().isEmpty()) {
+    //   urlBuilder.append("/PRDLST_NM=" + apiField.getEncodedItemName());
+    // }
+    // if (!apiField.getCompanyName().isEmpty()) {
+    //   urlBuilder.append("&BSSH_NM=" + URLEncoder.encode(apiField.getCompanyName(), "UTF-8")); 
+    // }
+    // URL url = new URL(urlBuilder.toString());
+    // return url;
+    return new URL(
+      UriComponentsBuilder.fromHttpUrl("http://openapi.foodsafetykorea.go.kr/api/")
+        .pathSegment(apiField.getKeyId(), apiField.getServiceId(), apiField.getDataType(), apiField.getStartIdx(), apiField.getEndIdx())
+        .queryParam("PRDLST_NM", apiField.getItemName().isEmpty() ? null : apiField.getEncodedItemName())
+        .queryParam("BSSH_NM", apiField.getCompanyName().isEmpty() ? null : URLEncoder.encode(apiField.getCompanyName(), "UTF-8"))
+        .toUriString()
+    );
   }
 
   public List<PreClean> sendAndGetFromApi(URL url) throws IOException{
