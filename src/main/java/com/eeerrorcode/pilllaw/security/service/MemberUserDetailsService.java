@@ -1,8 +1,6 @@
 package com.eeerrorcode.pilllaw.security.service;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,13 +24,14 @@ public class MemberUserDetailsService implements UserDetailsService{
   @Autowired
   private MemberRepository repository;
 
+  @Autowired
   private MemberService memberService;
 
   @Override
   @Transactional
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    Optional<MemberDto> optional = memberService.toOptionalDto(repository.findByEmailAndAccountSet(username
-    , new HashSet<>(Set.of(MemberAccount.NORMAL))).orElse(null));
+    Optional<MemberDto> optional = memberService.toOptionalDto(repository.findByEmailAndAccountType(username
+    , MemberAccount.NORMAL).orElse(null));
   
     if(optional.isEmpty()) {
       throw new UsernameNotFoundException(username);

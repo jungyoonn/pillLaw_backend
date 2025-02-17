@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -47,10 +46,8 @@ public class SecurityConfig {
   }
 
 
-  @Bean
-  public PasswordEncoder encoder() {
-    return new BCryptPasswordEncoder();
-  }
+  @Autowired
+  public PasswordEncoder encoder;
 
   @Bean
   public SignCheckFilter signCheckFilter(){
@@ -61,7 +58,7 @@ public class SecurityConfig {
   public CustomLoginFilter customLoginFilter(AuthenticationManager authenticationManager) {
     CustomLoginFilter customLoginFilter = new CustomLoginFilter("/api/member/signin", this.jwtUtil);
     customLoginFilter.setAuthenticationManager(authenticationManager);
-    customLoginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(encoder()));
+    customLoginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(encoder));
     customLoginFilter.setAuthenticationFailureHandler(new LoginFailHandler());
     return customLoginFilter;
   }
@@ -70,7 +67,7 @@ public class SecurityConfig {
   public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception{
     AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
     builder.userDetailsService(userDetailsService)
-      .passwordEncoder(encoder()).setBuilder(builder);
+      .passwordEncoder(encoder).setBuilder(builder);
   
     AuthenticationManager authenticationManager = builder.build();
     return authenticationManager;
@@ -101,6 +98,7 @@ public class SecurityConfig {
       // .oauth2Login(o -> o.successHandler(loginSuccessHandler()))
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/swagger-ui.html").permitAll()
+        .requestMatchers("/api/member/**").permitAll()
         .anyRequest().permitAll()
         )
       .addFilterBefore(signCheckFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -112,6 +110,6 @@ public class SecurityConfig {
 
   @Bean
   public LoginSuccessHandler loginSuccessHandler() {
-    return new LoginSuccessHandler(encoder());
+    return new LoginSuccessHandler(encoder);
   }
 }
