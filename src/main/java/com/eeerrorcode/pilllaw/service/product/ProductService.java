@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
+import com.eeerrorcode.pilllaw.entity.product.CategoryType;
 import com.eeerrorcode.pilllaw.entity.product.Product;
 import com.eeerrorcode.pilllaw.entity.product.ProductType;
 
@@ -19,6 +20,8 @@ public interface ProductService {
   Optional<ProductDto> viewProduct(Long pno);
 
   List<ProductDto> listAllProduct();
+
+  List<ProductDto> listProductByCategory(List<CategoryType> types);
 
   List<ProductDto> listProductByCategoryName(String Category);
 

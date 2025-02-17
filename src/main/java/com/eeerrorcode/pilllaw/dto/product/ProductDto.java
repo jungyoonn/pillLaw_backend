@@ -24,7 +24,7 @@ public class ProductDto {
   private Long pno;
   private String pname;
   private String company;
-  private LocalDateTime bestBefore;  
+  private String bestBefore;  
   private String effect;
   private String precautions;
   private String keep;

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
 import com.eeerrorcode.pilllaw.entity.product.Category;
+import com.eeerrorcode.pilllaw.entity.product.CategoryType;
 import com.eeerrorcode.pilllaw.entity.product.Product;
 import com.eeerrorcode.pilllaw.entity.product.ProductCategory;
 import com.eeerrorcode.pilllaw.entity.product.ProductType;
@@ -96,6 +97,15 @@ public class ProductServiceImpl implements ProductService {
     productRepository.save(product);
   }
 
+  
+
+  @Override
+  public List<ProductDto> listProductByCategory(List<CategoryType> types) {
+    List<Product> products = productRepository.findByCategoryTypeIn(types);
+    return products.stream()
+            .map(ProductDto::new)
+            .collect(Collectors.toList());
+  }
 
   // 테스트 완료!
   @Override
