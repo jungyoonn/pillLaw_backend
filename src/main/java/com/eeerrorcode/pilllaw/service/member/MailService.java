@@ -1,37 +1,53 @@
 package com.eeerrorcode.pilllaw.service.member;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
+import java.util.Optional;
 
-import jakarta.transaction.Transactional;
-import lombok.extern.log4j.Log4j2;
+import com.eeerrorcode.pilllaw.dto.member.EmailDto;
+import com.eeerrorcode.pilllaw.entity.member.EmailVerification;
 
-@Service
-@Log4j2
-@Transactional
-public class MailService {
-  @Autowired
-  private JavaMailSender sender;
+public interface MailService {
+  boolean sendVerificationLink(String toEmail);
 
-  public void sendEmail(String toEmail, String title, String text) {
-    SimpleMailMessage emailForm = createEmailForm(toEmail, title, text);
-    try {
-      sender.send(emailForm);
-    } catch (RuntimeException e) {
-      log.info("failure sending email");
-      throw new RuntimeException();
-    }
+  boolean verifyEmail(String token);
+
+  void sendEmail(String toEmail, String title, String content);
+
+  void sendHtmlMail(String toEMail, String title, String htmlContent);
+
+  default EmailVerification toEntity(EmailDto dto) {
+    EmailVerification emailVerification = EmailVerification.builder()
+      .id(dto.getId())
+      .email(dto.getEmail())
+      .token(dto.getToken())
+      .expiresAt(dto.getExpiresAt())
+      .build();
+
+    return emailVerification;
   }
 
-  // 발신할 이메일 데이터 세팅
-  private SimpleMailMessage createEmailForm(String toEmail, String title, String text) {
-    SimpleMailMessage message = new SimpleMailMessage();
-    message.setTo(toEmail);
-    message.setSubject(title);
-    message.setText(text);
+  default EmailDto toDto(EmailVerification emailVerification) {
+    EmailDto dto = EmailDto.builder()
+      .id(emailVerification.getId())
+      .email(emailVerification.getEmail())
+      .token(emailVerification.getToken())
+      .expiresAt(emailVerification.getExpiresAt())
+      .build();
 
-    return message;
+    return dto;
+  }
+
+  default Optional<EmailDto> toOptionalDto(EmailVerification emailVerification) {
+    if(emailVerification == null) {
+      return Optional.empty();
+    }
+
+    EmailDto dto = EmailDto.builder()
+      .id(emailVerification.getId())
+      .email(emailVerification.getEmail())
+      .token(emailVerification.getToken())
+      .expiresAt(emailVerification.getExpiresAt())
+      .build();
+
+    return Optional.of(dto);
   }
 }
