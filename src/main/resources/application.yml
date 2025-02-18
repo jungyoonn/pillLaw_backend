@@ -38,6 +38,8 @@ logging:
     jdbc.sqltiming: INFO
     com.zaxxer.hikari: WARN
     org.hibernate: WARN
+app:
+  domain: https://pilllaw.eeerrorcode.com
   # security:
   #   user:
   #     name: user1
