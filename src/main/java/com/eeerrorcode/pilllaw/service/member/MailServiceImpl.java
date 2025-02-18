@@ -55,14 +55,14 @@ public class MailServiceImpl implements MailService{
     repository.save(toEntity(dto));
 
     // String verificationLink = appDomain + "/api/mail/verify?token=" + verification.getToken();
-    String verificationLink = "http://127.0.0.1:3000/pilllaw/signup/email/verify?token=" + dto.getToken();
+    String verificationLink = "http://localhost:3000/pilllaw/signup/email/verify?token=" + dto.getToken();
 
     String title = "PILL LAW 이메일 인증 링크";
-    String content = "<h3>안녕하세요, PILL LAW입니다!</h3>" +
-                      "<p>아래 버튼을 클릭하여 이메일을 인증하세요.</p>" +
+    String content = "<h3 style='color:#7DA9A7'>안녕하세요, PILL LAW입니다!</h3>" +
+                      "<p style='color:#7DA9A7'>아래 버튼을 클릭하여 이메일을 인증하세요.</p>" +
                       "<a href='" + verificationLink + "' " +
                       "style='display:inline-block;padding:10px 20px;background-color:#7DA9A7;color:white;text-decoration:none;border-radius:5px;'>이메일 인증</a>" +
-                      "<p>이 링크는 10분 동안 유효합니다.</p>";
+                      "<p style='color:green'>이 링크는 10분 동안 유효합니다.</p>";
 
     sendHtmlMail(toEmail, title, content);
     return true;
