@@ -7,14 +7,13 @@ import java.util.Map;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
+import com.eeerrorcode.pilllaw.security.dto.LoginDto;
 import com.eeerrorcode.pilllaw.security.util.JWTUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 import org.springframework.security.core.Authentication;
@@ -36,16 +35,17 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
     log.info("======================= login filter on ========================");
     
     try {
-      LoginRequest loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
+      LoginDto dto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
+      // LoginRequest loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
       
-      if (loginRequest.getEmail() == null || loginRequest.getPassword() == null) {
+      if (dto.getEmail() == null || dto.getPassword() == null) {
         throw new AuthenticationException("Email and password are required") {};
       }
 
-      log.info("password => {}", loginRequest.getPassword());
+      log.info("password => {}", dto.getPassword());
 
       UsernamePasswordAuthenticationToken authenticationToken = 
-        new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
+        new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
       
       return getAuthenticationManager().authenticate(authenticationToken);
     } catch (IOException e) {
@@ -82,10 +82,10 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
     }
   }
 
-  @Getter
-  @Setter
-  static class LoginRequest {
-    private String email;
-    private String password;
-  }
+  // @Getter
+  // @Setter
+  // static class LoginRequest {
+  //   private String email;
+  //   private String password;
+  // }
 }
