@@ -88,7 +88,11 @@ public class SecurityConfig {
         .anyRequest().permitAll()
         )
       // .addFilterBefore(signCheckFilter(), UsernamePasswordAuthenticationFilter.class)
-      .addFilterBefore(customLoginFilter(authenticationManager(userDetailsService)), UsernamePasswordAuthenticationFilter.class);
+      .addFilterBefore(customLoginFilter(authenticationManager(userDetailsService)), UsernamePasswordAuthenticationFilter.class)
+      .rememberMe(r -> r.tokenValiditySeconds(60 * 60 * 24 * 14) // 토큰 유지 시간 (밀리초)
+        .userDetailsService(userDetailsService)
+        .rememberMeCookieName("remember-email")
+      );
     
       // customLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
       return http.build();
