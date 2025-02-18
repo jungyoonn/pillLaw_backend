@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import com.eeerrorcode.pilllaw.dto.member.EmailDto;
 import com.eeerrorcode.pilllaw.dto.member.MemberDto;
 import com.eeerrorcode.pilllaw.entity.member.LoginResult;
 import com.eeerrorcode.pilllaw.entity.member.Member;
@@ -25,13 +24,13 @@ public interface MemberService {
 
   LoginResult login(String email, String pw);
 
-  EmailDto sendCodeToEmail(String email);
+  // EmailDto sendCodeToEmail(String email);
 
-  boolean checkDuplicatedEmail(String email);
+  // boolean checkDuplicatedEmail(String email);
 
-  String createCode();
+  // String createCode();
 
-  boolean verifiedCode(String email, String authCode);
+  // boolean verifiedCode(String email, String authCode);
 
   default Member toEntity(MemberDto dto) {
     Member member = Member.builder()
