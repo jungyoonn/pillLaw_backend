@@ -46,4 +46,12 @@ public class Follow extends BaseEntity{
 
     private Boolean isFollowBack;
 
+
+    //테스트코드
+    @Builder
+    public Follow(Member sender, Member receiver, Boolean isFollowBack) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.isFollowBack = isFollowBack;
+    }
 }
