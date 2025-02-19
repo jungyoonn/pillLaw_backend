@@ -2,6 +2,9 @@ package com.eeerrorcode.pilllaw.service.board;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.eeerrorcode.pilllaw.dto.file.FileDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDetailDto;
 import com.eeerrorcode.pilllaw.entity.file.File;
@@ -12,7 +15,18 @@ import com.eeerrorcode.pilllaw.entity.product.ProductDetail;
 
 public interface ProductDetailService {
 
-  ProductDetailDto showDetails(Long pno);
+  void registerDetail(ProductDetailDto dto);
+  
+  ProductDetail showDetailsByPno(Long pno);
+  
+  void modifyDetail(ProductDetailDto dto);
+  
+  void deleteDetail(Long pno);
+
+  Page<ProductDetailDto> showMyList(Pageable pageable, Long mno);
+
+  Page<ProductDetailDto> showAll(Pageable pageable);
+
 
   default ProductDetail toEntity(ProductDetailDto dto){
 
@@ -80,5 +94,7 @@ public interface ProductDetailService {
     .build();
 
     return productDetailDto;
+
   }
+
 }
