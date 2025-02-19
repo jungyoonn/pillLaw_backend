@@ -17,7 +17,7 @@ public class MainController {
   private MemberService memberService;
 
   @GetMapping("")
-  public ResponseEntity<?> index(@RequestParam String email) {
+  public ResponseEntity<?> index(@RequestParam("email") String email) {
     log.info("email => {}", email);
     log.info("findByEmail => {}", memberService.getByEmail(email));
     return ResponseEntity.ok(memberService.getByEmail(email));
