@@ -61,4 +61,13 @@ public class Notice extends BaseEntity{
     this.count = (this.count == null) ? 0 : this.count;
   }
 
+  public void updateNotice(String content) {
+    this.content = content;
+  }
+
+  public void updateFiles(List<File> newFiles) {
+    this.files.clear();
+    this.files.addAll(newFiles);
+  }
+
 }
