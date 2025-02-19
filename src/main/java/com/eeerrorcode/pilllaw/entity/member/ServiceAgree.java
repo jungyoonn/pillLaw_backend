@@ -24,4 +24,7 @@ public class ServiceAgree extends BaseEntity{
   private boolean info;
   private boolean tel;
   private boolean email;
+
+  @Version
+  private Long version;
 }
