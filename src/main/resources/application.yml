@@ -12,8 +12,8 @@ spring:
   datasource:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     url: jdbc:log4jdbc:mariadb://np.eeerrorcode.com:3306/pilllaw
-    username: 
-    password: 
+    username: admin
+    password: 1208
   jpa:
     hibernate:
       ddl-auto: update
@@ -23,11 +23,13 @@ spring:
         format_sql: true
   devtools:
     restart:
-      enabled: false
+      enabled: true
       additional-paths:
       - src/main/java
       - src/main/resources
       - templates
+    livereload:
+      enabled: true
 logging:
   level:
     root: 
