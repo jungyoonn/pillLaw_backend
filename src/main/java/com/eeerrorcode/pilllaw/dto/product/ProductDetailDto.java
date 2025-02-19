@@ -1,9 +1,14 @@
 package com.eeerrorcode.pilllaw.dto.product;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.eeerrorcode.pilllaw.dto.file.FileDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +27,9 @@ public class ProductDetailDto {
   private String content;
 
   private Long count;
+
+  @Default
+  private List<FileDto> fileDtos = new ArrayList<>();
 
   private LocalDateTime regDate, modDate;
   
