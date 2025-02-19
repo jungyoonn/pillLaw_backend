@@ -16,7 +16,6 @@ import com.eeerrorcode.pilllaw.entity.product.ProductCategory;
 import com.eeerrorcode.pilllaw.entity.product.ProductType;
 import com.eeerrorcode.pilllaw.repository.product.CategoryRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductCategoryRepository;
-import com.eeerrorcode.pilllaw.repository.product.ProductDetailRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductRepository;
 
 import jakarta.transaction.Transactional;
@@ -33,8 +32,6 @@ public class ProductServiceImpl implements ProductService {
   private final ProductRepository productRepository;
 
   private final CategoryRepository categoryRepository;
-
-  private final ProductDetailRepository productDetailRepository;
 
   private final ProductCategoryRepository productCategoryRepository;
 
