@@ -33,4 +33,30 @@ public class MemberDto {
 
   @Default
   private List<MemberStatus> status = new ArrayList<>();
+
+  public void addRole(MemberRole role) {
+    if (this.roles == null) {
+      this.roles = new ArrayList<>();
+    }
+    this.roles.add(role);
+  }
+
+  public void addAccount(MemberAccount account) {
+    if (this.accounts == null) {
+      this.accounts = new ArrayList<>();
+    }
+    this.accounts.add(account);
+  }
+
+  public boolean hasRole(MemberRole role) {
+    return roles.contains(role);
+  }
+
+  public boolean isAdmin() {
+    return roles.contains(MemberRole.ADMIN);
+  }
+
+  public boolean isSubscriber() {
+    return roles.contains(MemberRole.SUBSCRIBER);
+  }
 }
