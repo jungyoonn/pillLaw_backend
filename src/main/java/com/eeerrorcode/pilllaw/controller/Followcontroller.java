@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.eeerrorcode.pilllaw.service.follow.FollowService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 
-@Controller
+@RestController
 @RequestMapping("api/follow")
 public class FollowController {
   

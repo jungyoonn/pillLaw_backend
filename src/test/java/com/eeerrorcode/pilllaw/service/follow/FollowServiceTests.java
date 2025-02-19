@@ -1,5 +1,7 @@
 package com.eeerrorcode.pilllaw.service.follow;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,7 +33,7 @@ import lombok.extern.log4j.Log4j2;
 @SpringBootTest
 @Log4j2
 @Rollback(false)
-public class FollowServiceTest {
+public class FollowServiceTests {
   
   @Autowired
   private FollowService followService;
@@ -45,38 +47,58 @@ public class FollowServiceTest {
   @Test
   @Transactional
   @Rollback(false)
-  public void followTest() {
-    // Member 1 (팔로우하는 사람) 생성
-    Member member1 = Member.builder()
-      .email("test1@test.com")
-      .password("1234") // 암호화 필요 없음
-      .name("테스터1")
-      .nickname("닉네임1")
-      .tel("010-1111-1111")
-      .build();
-     memberRepository.save(member1);
-
-    // Member 2 (팔로우 대상) 생성
-    Member member2 = Member.builder()
-      .email("test2@test.com")
-      .password("1234") // 암호화 필요 없음
-      .name("테스터2")
-      .nickname("닉네임2")
-      .tel("010-2222-2222")
-      .build();
-      memberRepository.save(member2);
-
-    // Follow 관계 추가
-    Follow follow = Follow.builder()
-      .sender(member1) // 팔로우 요청을 보낸 사람
-      .receiver(member2) // 팔로우 받는 사람
-      .isFollowBack(false) // 기본적으로 false 설정
-      .build();
-
-    followRepository.save(follow);
-    log.info("팔로우 저장 완료: " + follow.toString());
-    // log.info(followRepository.findAll().toString());
+  public void testGetReceiverMnos() {
+      List<Follow> receiverMnos = followService.getReceiver_Mno(12L);
+      log.info(receiverMnos);
+      // assertThat(receiverMnos).hasSize(2); // 예시로 2명이 팔로우한다고 가정
   }
+
+  @Test
+  public void testGetSenderMnos() {
+      List<Follow> senderMnos = followService.getSender_Mno(13L);
+      log.info(senderMnos);
+      // assertThat(senderMnos).hasSize(2); // 예시로 2명이 팔로우한다고 가정
+  }
+  @Test
+  @Transactional
+  @Rollback(false)
+  public void testInsert() {
+    followService.insertFollow(3, 6);
+  }
+
+  
+  // public void followTest() {
+  //   // Member 1 (팔로우하는 사람) 생성
+  //   Member member1 = Member.builder()
+  //     .email("test1@test.com")
+  //     .password("1234") // 암호화 필요 없음
+  //     .name("테스터1")
+  //     .nickname("닉네임1")
+  //     .tel("010-1111-1111")
+  //     .build();
+  //    memberRepository.save(member1);
+
+  //   // Member 2 (팔로우 대상) 생성
+  //   Member member2 = Member.builder()
+  //     .email("test2@test.com")
+  //     .password("1234") // 암호화 필요 없음
+  //     .name("테스터2")
+  //     .nickname("닉네임2")
+  //     .tel("010-2222-2222")
+  //     .build();
+  //     memberRepository.save(member2);
+
+  //   // Follow 관계 추가
+  //   Follow follow = Follow.builder()
+  //     .sender(member1) // 팔로우 요청을 보낸 사람
+  //     .receiver(member2) // 팔로우 받는 사람
+  //     .isFollowBack(false) // 기본적으로 false 설정
+  //     .build();
+
+  //   followRepository.save(follow);
+  //   log.info("팔로우 저장 완료: " + follow.toString());
+  //   // log.info(followRepository.findAll().toString());
+  // }
 
   @Test
   @Transactional

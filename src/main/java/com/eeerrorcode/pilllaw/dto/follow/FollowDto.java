@@ -2,6 +2,13 @@ package com.eeerrorcode.pilllaw.dto.follow;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FollowDto {
   private long followId;
 
