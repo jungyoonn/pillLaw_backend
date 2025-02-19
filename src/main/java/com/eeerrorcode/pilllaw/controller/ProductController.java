@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eeerrorcode.pilllaw.dto.common.CommonResponseDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
 import com.eeerrorcode.pilllaw.service.product.ProductService;
 
@@ -56,8 +57,23 @@ public class ProductController {
   @GetMapping(value = "{pno}")
   public ResponseEntity<?> showDetail(@PathVariable("pno") Long pno) {
     log.info("showdetail::::::::::::::::::::::::::::::::::::::::::::::::::::");
-    productService.viewProduct(pno);
-    return new ResponseEntity<>(productService.viewProduct(pno) + "showed", HttpStatus.OK);
+    return ResponseEntity.ok(pno + "번 글 조회" + productService.viewProduct(pno));
+    // try {
+    //   return ResponseEntity.ok(CommonResponseDto
+    //   .builder()
+    //     .msg(productService.viewProduct(pno) + "조회 완료")
+    //     .ok(true)
+    //     .statusCode(HttpStatus.OK.value())
+    //   .build());
+    // } catch(Exception e){
+    //   return ResponseEntity.badRequest().body(
+    //     CommonResponseDto.builder()
+    //       .msg("존재하지 않는 상품입니다. 다시 시도해 주세요.")
+    //       .ok(false)
+    //       .statusCode(HttpStatus.BAD_REQUEST.value())
+    //       .build()
+    //   );
+    // }
   }
 
   // 포스트맨 통과!
