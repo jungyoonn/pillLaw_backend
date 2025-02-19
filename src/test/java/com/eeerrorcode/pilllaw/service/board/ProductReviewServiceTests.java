@@ -9,7 +9,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eeerrorcode.pilllaw.dto.board.ProductReviewDto;
-import com.eeerrorcode.pilllaw.repository.board.ProductReviewRepository;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -19,9 +18,6 @@ public class ProductReviewServiceTests {
 
   @Autowired
   private ProductReviewService productReviewService;
-
-  @Autowired
-  private ProductReviewRepository productReviewRepository;
 
   @Test
   @Transactional
