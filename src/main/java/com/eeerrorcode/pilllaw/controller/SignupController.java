@@ -1,5 +1,6 @@
 package com.eeerrorcode.pilllaw.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eeerrorcode.pilllaw.dto.common.CommonResponseDto;
 import com.eeerrorcode.pilllaw.dto.member.EmailRequestDto;
+import com.eeerrorcode.pilllaw.dto.member.SignUpDto;
 import com.eeerrorcode.pilllaw.service.member.MailServiceImpl;
+import com.eeerrorcode.pilllaw.service.member.MemberService;
+import com.eeerrorcode.pilllaw.service.member.TermsAgreeService;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -22,6 +26,10 @@ import lombok.extern.log4j.Log4j2;
 public class SignupController {
   @Autowired
   private MailServiceImpl mailService;
+  @Autowired
+  private MemberService memberService;
+  @Autowired
+  private TermsAgreeService termsAgreeService;
 
   @PostMapping("/email/verification-requests")
   public ResponseEntity<?> sendMail(@RequestBody EmailRequestDto dto) {
@@ -89,4 +97,34 @@ public class SignupController {
       );
     }
   }
+
+  @PostMapping("/terms")
+  public ResponseEntity<?> terms(@RequestBody SignUpDto dto) {
+    log.info("member info dto => {}", dto);
+
+    Long mno = memberService.register(dto.getMemberInfo());
+    
+    log.info("mno는 => {} ", mno);
+
+    if(mno == null) {
+      return ResponseEntity.ok(
+      CommonResponseDto.builder()
+        .msg("이미 존재하는 회원입니다.")
+        .ok(false)
+        .statusCode(HttpStatus.OK.value())
+        .build()
+      );
+    } else  {
+      dto.getTerms().setMno(mno);
+      termsAgreeService.register(dto.getTerms());
+      return ResponseEntity.ok(
+        CommonResponseDto.builder()
+          .msg("회원가입이 완료되었습니다. " + dto)
+          .ok(true)
+          .statusCode(HttpStatus.OK.value())
+          .build()
+      );
+    }
+  }
+  
 }
