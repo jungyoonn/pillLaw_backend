@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.eeerrorcode.pilllaw.dto.member.MemberDto;
 import com.eeerrorcode.pilllaw.entity.member.LoginResult;
+import com.eeerrorcode.pilllaw.entity.member.MemberAccount;
+import com.eeerrorcode.pilllaw.entity.member.MemberRole;
 import com.eeerrorcode.pilllaw.repository.MemberRepository;
 
 import jakarta.transaction.Transactional;
@@ -49,9 +51,15 @@ public class MemberServiceImpl implements MemberService{
 
   @Override
   public Long register(MemberDto dto) {
-    if(repository.findByEmail(dto.getEmail()) != null) {
+    if(repository.findByEmail(dto.getEmail()).isPresent()) {
       return null;
     }
+
+    String pw = dto.getPassword();
+    dto.setPassword(encoder.encode(pw));
+    dto.addRole(MemberRole.USER);
+    dto.addAccount(MemberAccount.NORMAL);
+
     return repository.save(toEntity(dto)).getMno();
   }
 

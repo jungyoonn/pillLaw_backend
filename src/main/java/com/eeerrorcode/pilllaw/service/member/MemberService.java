@@ -24,14 +24,6 @@ public interface MemberService {
 
   LoginResult login(String email, String pw);
 
-  // EmailDto sendCodeToEmail(String email);
-
-  // boolean checkDuplicatedEmail(String email);
-
-  // String createCode();
-
-  // boolean verifiedCode(String email, String authCode);
-
   default Member toEntity(MemberDto dto) {
     Member member = Member.builder()
       .mno(dto.getMno())
