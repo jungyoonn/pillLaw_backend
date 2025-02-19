@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
-@RequestMapping("/follw")
-public class Followcontroller {
+@RequestMapping("api/follow")
+public class FollowController {
   
+  @Autowired
   private FollowService followService;
 
-  @Autowired
-  public Followcontroller(FollowService followService) {
-    this.followService = followService;
-  }
+  // public FollowController(FollowService followService) {
+  //   this.followService = followService;
+  // }
 
-  @GetMapping("/{mno}")
-  public String getMethodName(@RequestParam String param) {
-      return new String();
-  }
+  // @GetMapping("/{mno}")
+  // public String getMethodName(@RequestParam String param) {
+  //     return new String();
+  // }
   
 }

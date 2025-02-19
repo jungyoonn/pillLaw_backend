@@ -6,5 +6,9 @@ import com.eeerrorcode.pilllaw.dto.follow.FollowDto;
 import com.eeerrorcode.pilllaw.entity.follow.Follow;
 
 public interface FollowService {
-  List<Follow> getFollowers(long mno);
+  List<Follow> getFollowers(long receiverId);
+
+  List<Follow> getSenderFollowList(long senderId);
+
+  List<Follow> getReceiverFollowList(long receiverId);
 }

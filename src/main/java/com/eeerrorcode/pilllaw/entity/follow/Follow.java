@@ -45,7 +45,7 @@ public class Follow extends BaseEntity{
     private LocalDate createdAt;
 
     private Boolean isFollowBack;
-
+    
 
     //테스트코드
     @Builder
