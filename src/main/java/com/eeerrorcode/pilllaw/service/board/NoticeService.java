@@ -3,6 +3,9 @@ package com.eeerrorcode.pilllaw.service.board;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.eeerrorcode.pilllaw.dto.board.NoticeDto;
 import com.eeerrorcode.pilllaw.dto.file.FileDto;
 import com.eeerrorcode.pilllaw.entity.board.Notice;
@@ -17,7 +20,9 @@ public interface NoticeService {
 
   void modify(NoticeDto dto);
 
-  void view(Long nno);
+  Notice view(Long nno);
+
+  Page<NoticeDto> showList(Pageable pageable);
 
   default Notice toEntity(NoticeDto dto){
     Notice notice = Notice
