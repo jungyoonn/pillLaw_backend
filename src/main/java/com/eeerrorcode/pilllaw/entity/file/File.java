@@ -33,18 +33,25 @@ public class File extends BaseEntity{
   // @GeneratedValue(strategy = GenerationType.UUID)
   private String uuid;
 
+  @Column(nullable = false)
   private String origin;
   
+  @Column(nullable = false)
   private String path;
 
+  @Column(nullable = false)
   private String fname;
 
+  @Column(nullable = false)
   private String mime;
 
+  @Column(nullable = false)
   private Long size;
 
+  @Column(nullable = false)
   private String ext;
 
+  @Column(nullable = false)
   private String url;
 
   @Enumerated(EnumType.STRING)
