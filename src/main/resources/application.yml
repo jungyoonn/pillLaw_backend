@@ -3,6 +3,7 @@ spring:
     include:
     - mail
     - jwt
+    - oauth
   application:
     name: pilllaw
   servlet:
