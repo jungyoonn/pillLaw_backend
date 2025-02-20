@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.List;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.eeerrorcode.pilllaw.PilllawApplication;
 import com.eeerrorcode.pilllaw.dto.product.CategoryDto;
 import com.eeerrorcode.pilllaw.entity.product.CategoryType;
-import com.eeerrorcode.pilllaw.repository.product.CategoryRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
@@ -25,11 +23,7 @@ public class CategoryServiceTests {
   @Autowired
   private CategoryService categoryService;
 
-  @Autowired
-  private CategoryRepository categoryRepository;
-  
   @Test
-  @DisplayName("카테고리 타입별 조회 테스트")
   public void testListCategoryByType() {
     CategoryType type = CategoryType.BIOACTIVE;
     List<CategoryDto> bioactiveCategories = categoryService.listCategoryByType(type);
