@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
 import com.eeerrorcode.pilllaw.security.dto.LoginDto;
+import com.eeerrorcode.pilllaw.security.util.CustomWebAuthenticationDetails;
 import com.eeerrorcode.pilllaw.security.util.JWTUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -42,11 +43,17 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
         throw new AuthenticationException("Email and password are required") {};
       }
 
+      request.setAttribute("attemptEmail", dto.getEmail());
+      log.info("Attempting login with email => {}", dto.getEmail());
+
       log.info("password => {}", dto.getPassword());
 
       UsernamePasswordAuthenticationToken authenticationToken = 
         new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
       
+      CustomWebAuthenticationDetails details = new CustomWebAuthenticationDetails(request);
+      authenticationToken.setDetails(details);
+
       return getAuthenticationManager().authenticate(authenticationToken);
     } catch (IOException e) {
       log.error("Failed to parse JSON request", e);
@@ -81,11 +88,4 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
       response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
   }
-
-  // @Getter
-  // @Setter
-  // static class LoginRequest {
-  //   private String email;
-  //   private String password;
-  // }
 }
