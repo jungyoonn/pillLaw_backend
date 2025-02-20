@@ -1,6 +1,7 @@
 package com.eeerrorcode.pilllaw.repository.follow;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,9 @@ public interface FollowRepository extends JpaRepository <Follow, Long> {
       
       // receiver의 팔로우 목록을 가져오는 메소드
       List<Follow> findByReceiver_Mno(Long receiverMno);
+
+    //   boolean existsBySender_MnoAndReceiver_Mno(long senderMno, long receiverMno);
+    //   //맞팔여부
+      Optional<Follow> findBySender_MnoAndReceiver_Mno(Long senderMno, Long receiverMno);
+    //   Optional<Follow> findBySender_IdAndReceiver_Id(Long senderId, Long receiverId);
   }

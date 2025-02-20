@@ -34,4 +34,12 @@ public class FollowRepositoryTests {
     log.info(repository.findByReceiver_Mno(13L));
   }
 
+  // @Test
+  // public void testbooleanFollow(){
+  //   log.info(repository.existsBySender_MnoAndReceiver_Mno(6, 3));
+  // }
+  @Test
+  public void testIsBackFollow(){
+    log.info(repository.findBySender_MnoAndReceiver_Mno(42L, 40L));
+  }
 }

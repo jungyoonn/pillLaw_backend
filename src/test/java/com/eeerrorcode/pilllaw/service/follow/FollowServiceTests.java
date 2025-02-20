@@ -63,9 +63,21 @@ public class FollowServiceTests {
   @Transactional
   @Rollback(false)
   public void testInsert() {
-    followService.insertFollow(3, 6);
+    followService.insertFollow(40, 42);
   }
 
+  // @Test
+  // @Transactional
+  // @Rollback(false)
+  // public void testupdate() {
+    
+  //   long senderMno = 40L ;
+  //   long receiverMno = 42L;
+
+  //   followService.updateFollowBack(senderMno, receiverMno);
+
+  //   log.info("Follow back updated test completed.");
+  // }
   
   // public void followTest() {
   //   // Member 1 (팔로우하는 사람) 생성
