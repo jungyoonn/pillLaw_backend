@@ -35,7 +35,7 @@ public interface LoginHistoryService {
       .device(dto.getDevice())
       .loginResult(dto.getLoginResult())
       .failureReason(dto.getFailureReason())
-      .member(Member.builder().mno(dto.getMno()).build())
+      .member(dto.getMno() == null ? null : Member.builder().mno(dto.getMno()).build())
       .build();
 
     return history;
