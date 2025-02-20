@@ -37,17 +37,22 @@ public class SecurityConfig {
   @Autowired
   private JWTUtil jwtUtil;
 
-  // @Bean
-  // public SignCheckFilter signCheckFilter(){
-  //   return new SignCheckFilter("/api/**", this.jwtUtil);
-  // }
+  @Bean
+  public LoginFailHandler loginFailHandler() {
+    return new LoginFailHandler();
+  }
+
+  @Bean
+  public SignCheckFilter signCheckFilter(){
+    return new SignCheckFilter("/api/**", this.jwtUtil);
+  }
 
   @Bean
   public CustomLoginFilter customLoginFilter(AuthenticationManager authenticationManager) {
     CustomLoginFilter customLoginFilter = new CustomLoginFilter("/api/member/signin", jwtUtil);
     customLoginFilter.setAuthenticationManager(authenticationManager);
     customLoginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(encoder));
-    customLoginFilter.setAuthenticationFailureHandler(new LoginFailHandler());
+    customLoginFilter.setAuthenticationFailureHandler(loginFailHandler());
     return customLoginFilter;
   }
 
@@ -85,9 +90,9 @@ public class SecurityConfig {
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/swagger-ui.html").permitAll()
         .requestMatchers("/api/member/**", "/").permitAll()
-        .anyRequest().permitAll()
+        .anyRequest().authenticated()
         )
-      // .addFilterBefore(signCheckFilter(), UsernamePasswordAuthenticationFilter.class)
+      .addFilterBefore(signCheckFilter(), UsernamePasswordAuthenticationFilter.class)
       .addFilterBefore(customLoginFilter(authenticationManager(userDetailsService)), UsernamePasswordAuthenticationFilter.class)
       .rememberMe(r -> r.tokenValiditySeconds(60 * 60 * 24 * 14) // 토큰 유지 시간 (밀리초)
         .userDetailsService(userDetailsService)
