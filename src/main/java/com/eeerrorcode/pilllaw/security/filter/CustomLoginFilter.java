@@ -1,15 +1,21 @@
 package com.eeerrorcode.pilllaw.security.filter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
+import com.eeerrorcode.pilllaw.dto.member.LoginHistoryDto;
+import com.eeerrorcode.pilllaw.entity.member.LoginResult;
+import com.eeerrorcode.pilllaw.security.dto.AuthMemberDto;
 import com.eeerrorcode.pilllaw.security.dto.LoginDto;
 import com.eeerrorcode.pilllaw.security.util.CustomWebAuthenticationDetails;
 import com.eeerrorcode.pilllaw.security.util.JWTUtil;
+import com.eeerrorcode.pilllaw.service.member.LoginHistoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
@@ -24,6 +30,9 @@ import org.springframework.security.core.AuthenticationException;
 public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final JWTUtil jwtUtil;
+
+  @Autowired
+  private LoginHistoryService historyService;
 
   public CustomLoginFilter(String url, JWTUtil jwtUtil) {
     super(url);
@@ -66,6 +75,8 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
     FilterChain chain, Authentication authResult) throws IOException {
     log.info("=============== custom Login filter ===================");
     
+    saveLoginHistory(authResult);
+
     try {
       String email = authResult.getName();
       String token = jwtUtil.generateToken(email);
@@ -87,5 +98,22 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
       errorResponse.put("error", "Token generation failed");
       response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
+  }
+
+  private void saveLoginHistory(Authentication authentication) {
+    CustomWebAuthenticationDetails details = 
+      (CustomWebAuthenticationDetails) authentication.getDetails();
+
+    AuthMemberDto authMember = (AuthMemberDto) authentication.getPrincipal();
+
+    LoginHistoryDto loginHistoryDto = LoginHistoryDto.builder()
+      .loginTime(LocalDateTime.now())
+      .ip(details.getIp())
+      .device(details.getDevice())
+      .loginResult(LoginResult.SUCCESS)
+      .mno(authMember.getMno())  // Member 엔티티 참조 필요
+      .build();
+    
+    historyService.register(loginHistoryDto);
   }
 }

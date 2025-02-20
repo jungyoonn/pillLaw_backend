@@ -51,7 +51,7 @@ public class SecurityConfig {
   public CustomLoginFilter customLoginFilter(AuthenticationManager authenticationManager) {
     CustomLoginFilter customLoginFilter = new CustomLoginFilter("/api/member/signin", jwtUtil);
     customLoginFilter.setAuthenticationManager(authenticationManager);
-    customLoginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(encoder));
+    customLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler(encoder));
     customLoginFilter.setAuthenticationFailureHandler(loginFailHandler());
     return customLoginFilter;
   }
@@ -104,7 +104,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  public LoginSuccessHandler loginSuccessHandler() {
+  public LoginSuccessHandler loginSuccessHandler(PasswordEncoder encoder) {
     return new LoginSuccessHandler(encoder);
   }
 }
