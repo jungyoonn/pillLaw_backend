@@ -38,7 +38,7 @@ public class SignCheckFilter extends OncePerRequestFilter {
       log.info("================== filter on ====================");
       log.info(request.getRequestURI());
 
-      if(request.getRequestURI().equals("/api/member/signin")) {
+      if(request.getRequestURI().equals("/api/member/signin") || request.getRequestURI().equals("/api/member/signup/terms")) {
         log.info("Skipping token validation for login request");
         filterChain.doFilter(request, response);
         return;
