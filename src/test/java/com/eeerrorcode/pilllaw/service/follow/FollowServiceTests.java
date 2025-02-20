@@ -1,6 +1,9 @@
 package com.eeerrorcode.pilllaw.service.follow;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,18 +66,26 @@ public class FollowServiceTests {
   @Transactional
   @Rollback(false)
   public void testInsert() {
-    followService.insertFollow(40, 42);
+    followService.insertFollow(39, 38);
   }
 
+  //업데이트는 굳이 불필요할것 같음..
   // @Test
   // @Transactional
   // @Rollback(false)
   // public void testupdate() {
     
-  //   long senderMno = 40L ;
-  //   long receiverMno = 42L;
+  //   long senderMno = 38L ;
+  //   long receiverMno = 39L;
 
   //   followService.updateFollowBack(senderMno, receiverMno);
+
+  //   Optional<Follow> updatedFollow = followRepository.findBySender_MnoAndReceiver_Mno(senderMno, receiverMno);
+
+  //   updatedFollow.ifPresent(follow -> {
+  //     log.info("Updated FollowBack Status: " + follow.getIsFollowBack());
+  //     assertTrue(follow.getIsFollowBack());
+  //   });
 
   //   log.info("Follow back updated test completed.");
   // }

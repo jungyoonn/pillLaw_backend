@@ -4,12 +4,19 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.eeerrorcode.pilllaw.entity.follow.Follow;
 
 @Repository
 public interface FollowRepository extends JpaRepository <Follow, Long> {
+
+    // @Query("SELECT f FROM Follow f WHERE f.followerId = :followerId AND f.followingId = :followingId")
+    // Follow findFollow(@Param("followerId") long followerId, @Param("followingId") long followingId);
+
+
       // sender의 팔로우 목록을 가져오는 메소드 // 내가 팔로우한 사람 목록 보기
       List<Follow> findByFollowIdAndSenderMno(Long followId, Long senderMno);
 
@@ -19,8 +26,8 @@ public interface FollowRepository extends JpaRepository <Follow, Long> {
       // receiver의 팔로우 목록을 가져오는 메소드
       List<Follow> findByReceiver_Mno(Long receiverMno);
 
-    //   boolean existsBySender_MnoAndReceiver_Mno(long senderMno, long receiverMno);
+      boolean existsBySender_MnoAndReceiver_Mno(long senderMno, long receiverMno);
     //   //맞팔여부
-      Optional<Follow> findBySender_MnoAndReceiver_Mno(Long senderMno, Long receiverMno);
-    //   Optional<Follow> findBySender_IdAndReceiver_Id(Long senderId, Long receiverId);
+      Optional<Follow> findBySender_MnoAndReceiver_Mno(long senderMno, long receiverMno);
+      // Optional<Follow> findBySender_IdAndReceiver_Id(Long senderId, Long receiverId);
   }

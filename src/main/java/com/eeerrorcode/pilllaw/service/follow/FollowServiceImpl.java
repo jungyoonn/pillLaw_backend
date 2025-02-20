@@ -15,7 +15,9 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Service
 // @AllArgsConstructor
 // @NoArgsConstructor
@@ -24,9 +26,9 @@ public class FollowServiceImpl implements FollowService {
   @Autowired
   private FollowRepository repository;
 
-  // public FollowServiceImpl(FollowRepository repository) {
-  //     this.repository = repository;
-  // }
+  public FollowServiceImpl(FollowRepository repository) {
+      this.repository = repository;
+  }
   // receiver 팔로우 목록 가져오기
   @Override
   public List<Follow> getReceiver_Mno(long receiverMno) {
@@ -74,8 +76,10 @@ public class FollowServiceImpl implements FollowService {
       followOpt.ifPresent(follow -> {
           // 이미 팔로우 관계가 있으면 맞팔로우 상태를 true로 업데이트
           if (!follow.getIsFollowBack()) {
+          // if (!follow.IsFollowBack()) {
               follow.setIsFollowBack(true);
               repository.save(follow); // 변경 사항 저장
+              // log.info("FollowBack updated: " + follow.getIsFollowBack());
           }
       });
   
@@ -84,5 +88,17 @@ public class FollowServiceImpl implements FollowService {
   //     // return repository.findByReceiverFollowId(receiverId);
   //     return null;
   // }
+    }
+
+  @Override
+  public boolean isFollowBack(long senderMno, long receiverMno) {
+        // sender -> receiver 팔로우 관계
+        Optional<Follow> senderFollowsReceiver = repository.findBySender_MnoAndReceiver_Mno(senderMno, receiverMno);
+
+        // receiver -> sender 팔로우 관계
+        Optional<Follow> receiverFollowsSender = repository.findBySender_MnoAndReceiver_Mno(receiverMno, senderMno);
+
+        // 두 관계가 모두 존재하면 팔로우백 (true)
+        return senderFollowsReceiver.isPresent() && receiverFollowsSender.isPresent();
     }
 }

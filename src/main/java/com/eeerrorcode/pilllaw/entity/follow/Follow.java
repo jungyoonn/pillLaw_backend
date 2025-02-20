@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -44,6 +45,7 @@ public class Follow extends BaseEntity{
     @CreationTimestamp
     private LocalDate createdAt;
 
+    @Column(name = "is_follow_back")
     private Boolean isFollowBack;
     
 
