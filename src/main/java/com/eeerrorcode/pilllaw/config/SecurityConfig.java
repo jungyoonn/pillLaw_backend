@@ -90,7 +90,7 @@ public class SecurityConfig {
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/swagger-ui.html").permitAll()
         .requestMatchers("/api/member/**", "/").permitAll()
-        .anyRequest().authenticated()
+        .anyRequest().permitAll()
         )
       .addFilterBefore(signCheckFilter(), UsernamePasswordAuthenticationFilter.class)
       .addFilterBefore(customLoginFilter(authenticationManager(userDetailsService)), UsernamePasswordAuthenticationFilter.class)
