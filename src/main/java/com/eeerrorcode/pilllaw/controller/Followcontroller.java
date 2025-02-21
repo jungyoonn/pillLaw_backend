@@ -31,51 +31,53 @@ public class FollowController {
   @Autowired
   private FollowRepository repository;
  
-      // 팔로우 목록 불러오기
-      @GetMapping("/{mno}")
-      // public ResponseEntity<List<Follow>> getReceiver_Mno(@PathVariable long receiverMno) {
-      public ResponseEntity<List<Follow>> getReceiver_Mno(@PathVariable ("mno") long receiverMno) {
-          List<Follow> followList = followService.getReceiver_Mno(receiverMno);  // 팔로우 목록 가져오기
-          return ResponseEntity.ok(followList);
-      }
-  
+  // 팔로우 목록 불러오기
+  @GetMapping("/{mno}")
+  // public ResponseEntity<List<Follow>> getReceiver_Mno(@PathVariable long receiverMno) {
+  public ResponseEntity<List<Follow>> getReceiver_Mno(@PathVariable ("mno") long receiverMno) {
+    List<Follow> followList = followService.getReceiver_Mno(receiverMno);  // 팔로우 목록 가져오기
+    
+    return ResponseEntity.ok(followList);
+  }
+
   
     //   //ex) senderMno=40&receiverMno=38 
-      @GetMapping("/check")
-      public ResponseEntity<String> checkFollowStatus(@RequestParam(required = false, defaultValue = "0") long senderMno, 
-                                                      @RequestParam(required = false, defaultValue = "0") long receiverMno) {
-          
-          boolean isFollowBack = followService.isFollowBack(receiverMno, senderMno);
-        
-
-            // 로그 추가
-          System.out.println("Sender MNO: " + senderMno + ", Receiver MNO: " + receiverMno);
-          System.out.println("isFollowBack result: " + isFollowBack);
-        if (isFollowBack) {
-            return ResponseEntity.ok("맞팔로우");
-        } else {
-            return ResponseEntity.ok("맞팔로우 하기");
-        }
+  @GetMapping("/check")
+  public ResponseEntity<String> checkFollowStatus(@RequestParam(required = false, defaultValue = "0") long senderMno, 
+                                                  @RequestParam(required = false, defaultValue = "0") long receiverMno) {
+    boolean isFollowBack = followService.isFollowBack(receiverMno, senderMno);
+      // 로그 추가
+      System.out.println("Sender MNO: " + senderMno + ", Receiver MNO: " + receiverMno);
+      System.out.println("isFollowBack result: " + isFollowBack);
+      
+    if (isFollowBack) {
+      return ResponseEntity.ok("맞팔로우");
+    } 
+    else {
+      return ResponseEntity.ok("맞팔로우 하기");
+    }
 
     // // // mno로 닉네임 가져오기
-    // @GetMapping("/nickname/{mno}")
-    // public ResponseEntity<String> getNickname(@PathVariable Long mno) {
-    //     String nickname = memberService.getNicknameByMno(mno);  // mno로 닉네임 조회
-    //     return ResponseEntity.ok(nickname);
+    //   @GetMapping("/nickname/{mno}")
+    //   public ResponseEntity<String> getNickname(@PathVariable Long mno) {
+    //       String nickname = memberService.getClass(mno);  // mno로 닉네임 조회
+    //       return ResponseEntity.ok(nickname);
     // }
-        // @GetMapping("/search/{nickname}")
-        // public ResponseEntity<List<Follow>> getNickname(@PathVariable String nickname) {
-        //   Member member = memberService.findByNickname(nickname);
+    // @GetMapping("/search/{nickname}")
+    // public ResponseEntity<List<Follow>> getNickname(@PathVariable String nickname) {
+    //   Member member = memberService.findByNickname(nickname);
 
-        //   if (member == null) {
-        //     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        //   }
+    //   if (member == null) {
+    //     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    //   }
 
-        //   // List<Follow> followList = followService.getReceiver_Mno(member.getMno());
-        //   List<Follow> followList = followService.getReceiver_Mno(receiverMno);
+    //   // List<Follow> followList = followService.getReceiver_Mno(member.getMno());
+    //   List<Follow> followList = followService.getReceiver_Mno(receiverMno);
 
-        //   return ResponseEntity.ok(followList);
-        // }
+    //   return ResponseEntity.ok(followList);
+    // }
 
   }
+
 }
+
