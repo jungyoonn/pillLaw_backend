@@ -11,4 +11,5 @@ public interface FollowService {
   void insertFollow(long receiver, long sender);
   void updateFollowBack(long senderMno, long receiverMno);
   boolean isFollowBack(long senderMno, long receiverMno); 
+  
 }

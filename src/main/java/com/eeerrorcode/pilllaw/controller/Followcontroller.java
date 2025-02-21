@@ -1,9 +1,11 @@
 package com.eeerrorcode.pilllaw.controller;
 
+import java.lang.reflect.Member;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,5 +63,19 @@ public class FollowController {
     //     String nickname = memberService.getNicknameByMno(mno);  // mno로 닉네임 조회
     //     return ResponseEntity.ok(nickname);
     // }
-}
+        // @GetMapping("/search/{nickname}")
+        // public ResponseEntity<List<Follow>> getNickname(@PathVariable String nickname) {
+        //   Member member = memberService.findByNickname(nickname);
+
+        //   if (member == null) {
+        //     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        //   }
+
+        //   // List<Follow> followList = followService.getReceiver_Mno(member.getMno());
+        //   List<Follow> followList = followService.getReceiver_Mno(receiverMno);
+
+        //   return ResponseEntity.ok(followList);
+        // }
+
+  }
 }

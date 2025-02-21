@@ -32,4 +32,8 @@ public interface FollowRepository extends JpaRepository <Follow, Long> {
     //   //맞팔여부
       Optional<Follow> findBySender_MnoAndReceiver_Mno(long senderMno, long receiverMno);
       // Optional<Follow> findBySender_IdAndReceiver_Id(Long senderId, Long receiverId);
+
+      // @Query("SELECT f FROM Follow f JOIN Member m ON f.receiverFollowId = m.mno WHERE m.nickname = :nickname")
+      // List<Follow> findByReceiverNickname(@Param("nickname") String nickname);
+
   }
