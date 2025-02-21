@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.eeerrorcode.pilllaw.dto.member.LoginHistoryDto;
-import com.eeerrorcode.pilllaw.repository.MemberRepository;
 import com.eeerrorcode.pilllaw.repository.member.LoginHistoryRepository;
 
 import jakarta.transaction.Transactional;
@@ -18,8 +17,6 @@ import lombok.extern.log4j.Log4j2;
 public class LoginHistoryServiceImpl implements LoginHistoryService{
   @Autowired
   private LoginHistoryRepository historyRepository;
-  @Autowired
-  private MemberRepository memberRepository;
   
   @Override
   public Long register(LoginHistoryDto dto) {
@@ -28,13 +25,11 @@ public class LoginHistoryServiceImpl implements LoginHistoryService{
 
   @Override
   public LoginHistoryDto get(Long mno) {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'get'");
   }
 
   @Override
   public List<LoginHistoryDto> getListByEmail(String email) {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'getListByEmail'");
   }
   
