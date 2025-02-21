@@ -31,7 +31,8 @@ public class FollowController {
  
       // 팔로우 목록 불러오기
       @GetMapping("/{mno}")
-      public ResponseEntity<List<Follow>> getReceiver_Mno(@PathVariable Long receiverMno) {
+      // public ResponseEntity<List<Follow>> getReceiver_Mno(@PathVariable long receiverMno) {
+      public ResponseEntity<List<Follow>> getReceiver_Mno(@PathVariable ("mno") long receiverMno) {
           List<Follow> followList = followService.getReceiver_Mno(receiverMno);  // 팔로우 목록 가져오기
           return ResponseEntity.ok(followList);
       }

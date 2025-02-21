@@ -42,7 +42,7 @@ public class FollowServiceImpl implements FollowService {
   public List<Follow> getSender_Mno(long senderMno) {
     // return repository.findBySenderFollowId(senderId);
       // return null;
-      return repository.findByReceiver_Mno(senderMno); 
+      return repository.findBySender_Mno(senderMno); 
   }
 
   @Override
