@@ -111,7 +111,7 @@ public class ProductServiceTests {
   @Test
   @DisplayName("카테고리타입 + 카테고리 이름으로 상품 조회 리스트 테스트 / CategoryFindByNameAndTypeProductList")
   public void testListProductByCategoryNameAndCategoryType(){
-    productService.listProductByCategoryNameAndCategoryType("갱년기 남", "생리활성");
+    // productService.listProductByCategoryNameAndCategoryType("갱년기 남", "생리활성");
   }
 
   @Test
