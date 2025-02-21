@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.eeerrorcode.pilllaw.dto.member.MemberDto;
 import com.eeerrorcode.pilllaw.entity.member.LoginResult;
 import com.eeerrorcode.pilllaw.entity.member.Member;
+import com.eeerrorcode.pilllaw.entity.member.MemberAccount;
 
 public interface MemberService {
   Long register(MemberDto dto);
@@ -23,6 +24,8 @@ public interface MemberService {
   List<MemberDto> listAll();
 
   LoginResult login(String email, String pw);
+
+  Optional<MemberDto> getByEmailAndAccount(String email, MemberAccount account);
 
   default Member toEntity(MemberDto dto) {
     Member member = Member.builder()

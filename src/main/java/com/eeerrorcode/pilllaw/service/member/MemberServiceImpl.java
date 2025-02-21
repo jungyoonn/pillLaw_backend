@@ -55,9 +55,15 @@ public class MemberServiceImpl implements MemberService{
       return null;
     }
 
+    dto.addRole(MemberRole.USER);
+    
+    // 소셜 멤버일 때
+    if(dto.getAccounts().contains(MemberAccount.SOCIAL)) {
+      return repository.save(toEntity(dto)).getMno();
+    }
+
     String pw = dto.getPassword();
     dto.setPassword(encoder.encode(pw));
-    dto.addRole(MemberRole.USER);
     dto.addAccount(MemberAccount.NORMAL);
 
     return repository.save(toEntity(dto)).getMno();
@@ -82,6 +88,12 @@ public class MemberServiceImpl implements MemberService{
     }
 
     return LoginResult.SUCCESS;
+  }
+
+  @Override
+  public Optional<MemberDto> getByEmailAndAccount(String email, MemberAccount account) {
+    return repository.findByEmailAndAccountType(email, account).isPresent() ?
+      toOptionalDto(repository.findByEmailAndAccountType(email, account).get()) : null;
   }
 }
 
