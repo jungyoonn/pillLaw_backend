@@ -51,7 +51,7 @@ public class SecurityConfig {
   public CustomLoginFilter customLoginFilter(AuthenticationManager authenticationManager) {
     CustomLoginFilter customLoginFilter = new CustomLoginFilter("/api/member/signin", jwtUtil);
     customLoginFilter.setAuthenticationManager(authenticationManager);
-    customLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler(encoder));
+    customLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
     customLoginFilter.setAuthenticationFailureHandler(loginFailHandler());
     return customLoginFilter;
   }
@@ -86,25 +86,26 @@ public class SecurityConfig {
     http
       .cors(c -> c.configurationSource(configurationSource()))
       .csrf(csrf -> csrf.disable())
-      // .oauth2Login(o -> o.successHandler(loginSuccessHandler()))
+      .oauth2Login(o -> o.successHandler(loginSuccessHandler()))
+      // .oauth2Login(o -> o.defaultSuccessUrl("//localhost:3000/pilllaw/oauth2/redirect"))
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/swagger-ui.html").permitAll()
         .requestMatchers("/api/member/**", "/").permitAll()
         .anyRequest().permitAll()
         )
       // .addFilterBefore(signCheckFilter(), UsernamePasswordAuthenticationFilter.class)
-      .addFilterBefore(customLoginFilter(authenticationManager(userDetailsService)), UsernamePasswordAuthenticationFilter.class)
-      .rememberMe(r -> r.tokenValiditySeconds(60 * 60 * 24 * 14) // 토큰 유지 시간 (밀리초)
-        .userDetailsService(userDetailsService)
-        .rememberMeCookieName("remember-email")
-      );
+      .addFilterBefore(customLoginFilter(authenticationManager(userDetailsService)), UsernamePasswordAuthenticationFilter.class);
+      // .rememberMe(r -> r.tokenValiditySeconds(60 * 60 * 24 * 14) // 토큰 유지 시간 (밀리초)
+      //   .userDetailsService(userDetailsService)
+      //   .rememberMeCookieName("remember-email")
+      // );
     
       // customLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
       return http.build();
   }
 
   @Bean
-  public LoginSuccessHandler loginSuccessHandler(PasswordEncoder encoder) {
-    return new LoginSuccessHandler(encoder);
+  public LoginSuccessHandler loginSuccessHandler() {
+    return new LoginSuccessHandler();
   }
 }
