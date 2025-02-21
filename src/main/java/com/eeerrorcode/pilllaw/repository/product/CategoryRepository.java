@@ -2,6 +2,7 @@ package com.eeerrorcode.pilllaw.repository.product;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long>{
   @Query("SELECT DISTINCT c FROM tbl_category c JOIN c.typeSet t WHERE t = :type")
   List<Category> findByType(@Param("type") CategoryType type);
   
+  List<Category> findByCnameIn(Set<String> cnames);
+
 }

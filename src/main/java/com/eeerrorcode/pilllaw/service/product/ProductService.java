@@ -2,9 +2,12 @@ package com.eeerrorcode.pilllaw.service.product;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
+import com.eeerrorcode.pilllaw.dto.product.ProductInfoViewDto;
+import com.eeerrorcode.pilllaw.dto.product.ProductWithCategoryDto;
 import com.eeerrorcode.pilllaw.entity.product.CategoryType;
 import com.eeerrorcode.pilllaw.entity.product.Product;
 import com.eeerrorcode.pilllaw.entity.product.ProductType;
@@ -27,8 +30,14 @@ public interface ProductService {
 
   List<ProductDto> listProductByCategoryName(String Category);
 
-  List<ProductDto> listProductByCategoryNameAndCategoryType(String CategoryName, String CategoryType);
+  List<ProductDto> listProductByCategoryNameAndCategoryType(Set<String> categoryNames, Set<String> categoryTypes);
+
+  Optional<ProductInfoViewDto> viewProductUsingView(Long pno);
   
+  List<ProductInfoViewDto> listAllProductUsingView();
+
+  public List<ProductWithCategoryDto> listAllProductWithCategory();
+
   default Product toEntity(ProductDto dto){
     Product product = Product
       .builder()
