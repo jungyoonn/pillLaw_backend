@@ -32,11 +32,11 @@ public class ProductDetailController {
   private ProductDetailService productDetailService;
 
   // 포스트맨 통과 !!!
-  @GetMapping(value = "{pno}")
-  public ResponseEntity<?> viewDetail(@PathVariable("pno")Long pno) {
-    log.info("showDetail ::::::::::::::::::::::::::::::::::::::::::::::::");
-      return ResponseEntity.ok(pno + "상품의 상세정보를 조회합니다." + productDetailService.showDetailsByPno(pno));
-  }
+  // @GetMapping(value = "{pno}")
+  // public ResponseEntity<?> viewDetail(@PathVariable("pno")Long pno) {
+  //   log.info("showDetail ::::::::::::::::::::::::::::::::::::::::::::::::");
+  //     return ResponseEntity.ok(pno + "상품의 상세정보를 조회합니다." + productDetailService.showDetailsByPno(pno));
+  // }
   
 
   // 포스트맨 통과 !!!

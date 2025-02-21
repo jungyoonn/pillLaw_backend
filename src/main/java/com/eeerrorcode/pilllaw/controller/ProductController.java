@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eeerrorcode.pilllaw.dto.common.CommonResponseDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
+import com.eeerrorcode.pilllaw.dto.product.ProductWithCategoryDto;
 import com.eeerrorcode.pilllaw.service.product.ProductService;
 
 import lombok.extern.log4j.Log4j2;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -36,14 +35,14 @@ public class ProductController {
   // private CategoryService categoryService;
   
   // 포스트맨 통과!
-  @GetMapping("list")
-  public List<ProductDto> allList(@RequestParam(required = false) List<String> categoryNames) {
-      log.info("showlist :::::::::::::::::::::::::::::::::::::::::::::: " + categoryNames);
-      if (categoryNames != null && !categoryNames.isEmpty()) {
-          return productService.listProductByCategoryNameList(categoryNames);
-      }
-      return productService.listAllProduct();
-  }
+  // @GetMapping("list")
+  // public List<ProductDto> allList(@RequestParam(required = false) List<String> categoryNames) {
+  //     log.info("showlist :::::::::::::::::::::::::::::::::::::::::::::: " + categoryNames);
+  //     if (categoryNames != null && !categoryNames.isEmpty()) {
+  //         return productService.listProductByCategoryNameList(categoryNames);
+  //     }
+  //     return productService.listAllProduct();
+  // }
   
 
   // @GetMapping("list")
@@ -99,8 +98,17 @@ public class ProductController {
     productService.deleteProduct(pno);
     return new ResponseEntity<>(pno + "removed", HttpStatus.OK);
   }
-
-
+  
+  @GetMapping("/detail/{pno}")
+  public ResponseEntity<?> getMethodName(@PathVariable("pno") Long pno) {
+    log.info("delete::::::::::::::::::::::::::::::::::::::::::::::::::::"); 
+    return ResponseEntity.ok(productService.viewProductUsingView(pno));
+  }
+  
+  @GetMapping("/list")
+  public List<ProductWithCategoryDto> allListWithCategory() {
+    return productService.listAllProductWithCategory();
+  }
   
   
 }
