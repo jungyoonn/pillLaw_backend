@@ -1,5 +1,7 @@
 package com.eeerrorcode.pilllaw.service.product;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -8,7 +10,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.eeerrorcode.pilllaw.dto.product.ProductCategoryDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
+import com.eeerrorcode.pilllaw.dto.product.ProductInfoViewDto;
+import com.eeerrorcode.pilllaw.dto.product.ProductWithCategoryDto;
 import com.eeerrorcode.pilllaw.entity.product.Category;
 import com.eeerrorcode.pilllaw.entity.product.CategoryType;
 import com.eeerrorcode.pilllaw.entity.product.Product;
@@ -16,6 +21,7 @@ import com.eeerrorcode.pilllaw.entity.product.ProductCategory;
 import com.eeerrorcode.pilllaw.entity.product.ProductType;
 import com.eeerrorcode.pilllaw.repository.product.CategoryRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductCategoryRepository;
+import com.eeerrorcode.pilllaw.repository.product.ProductInfoViewRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductRepository;
 
 import jakarta.transaction.Transactional;
@@ -34,6 +40,8 @@ public class ProductServiceImpl implements ProductService {
   private final CategoryRepository categoryRepository;
 
   private final ProductCategoryRepository productCategoryRepository;
+
+  private final ProductInfoViewRepository productInfoViewRepository;
 
   // 테스트 완료!
   @Override
@@ -130,20 +138,44 @@ public class ProductServiceImpl implements ProductService {
   
   // 테스트 완료!
   @Override
-  public List<ProductDto> listProductByCategoryNameAndCategoryType(String categoryName, String categoryType) {
-      Category category = categoryRepository.findByCname(categoryName)
-          .orElseThrow(() -> new RuntimeException("카테고리 없음 ::: " + categoryName));
+  public List<ProductDto> listProductByCategoryNameAndCategoryType(Set<String> categoryNames, Set<String> categoryTypes) {
+    Set<Category> categories = new HashSet<>(categoryRepository.findByCnameIn(categoryNames));
+
+    List<ProductDto> productList = productCategoryRepository.findByCategoryIn(categories)
+        .stream()
+        .filter(pc -> !Collections.disjoint(pc.getCategory().getTypeSet(), categoryTypes))
+        .map(pc -> this.toDto(pc.getProduct()))
+        .toList();
+
+    return productList;
+  }
   
-      List<ProductDto> productList = productCategoryRepository.findByCategory(category)
-          .stream()
-          .filter(pc -> pc.getCategory().getTypeSet().contains(categoryType)) 
-          .map(pc -> this.toDto(pc.getProduct())) 
-          .toList();
-  
-      return productList;
+
+  @Override
+  public Optional<ProductInfoViewDto> viewProductUsingView(Long pno) {
+    return productInfoViewRepository
+      .findById(pno)
+      .map(ProductInfoViewDto::new);
+  }
+
+  @Override
+  public List<ProductInfoViewDto> listAllProductUsingView() {
+    return productInfoViewRepository
+      .findAll()
+      .stream()
+      .map(ProductInfoViewDto::new)
+      .toList();
+  }
+
+  @Override
+  public List<ProductWithCategoryDto> listAllProductWithCategory() {
+    return productRepository.findAll().stream().map(product -> {
+      List<ProductCategoryDto> categories = productCategoryRepository.findByProduct(product).stream().map(ProductCategoryDto::new).toList();
+      return new ProductWithCategoryDto(new ProductDto(product), categories);
+    }).toList();
   }
   
   
-
+  
 
 }
