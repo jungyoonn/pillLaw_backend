@@ -87,7 +87,8 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
     dto.addAccount(MemberAccount.SOCIAL);
     dto.addRole(MemberRole.USER);
     
-    dto.setMno(service.register(dto));
+    service.register(dto);
+    // dto.setMno(service.register(dto));
 
     return dto;
   }
