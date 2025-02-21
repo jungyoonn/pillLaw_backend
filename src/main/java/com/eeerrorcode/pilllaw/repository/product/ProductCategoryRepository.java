@@ -11,6 +11,7 @@ import com.eeerrorcode.pilllaw.entity.product.Category;
 import com.eeerrorcode.pilllaw.entity.product.Product;
 import com.eeerrorcode.pilllaw.entity.product.ProductCategory;
 import java.util.List;
+import java.util.Set;
 
 
 @Repository
@@ -31,4 +32,5 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
   @Query("SELECT pc.product FROM ProductCategory pc JOIN pc.category c WHERE c.cname IN :categoryNames")
   List<Product> findProductsByCategoryNames(@Param("categoryNames") List<String> categoryNames);
 
+  List<ProductCategory> findByCategoryIn(Set<Category> categories);
 }
