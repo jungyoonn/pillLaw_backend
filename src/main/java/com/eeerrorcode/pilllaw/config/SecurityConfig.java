@@ -42,10 +42,10 @@ public class SecurityConfig {
     return new LoginFailHandler();
   }
 
-  @Bean
-  public SignCheckFilter signCheckFilter(){
-    return new SignCheckFilter("/api/**", this.jwtUtil);
-  }
+  // @Bean
+  // public SignCheckFilter signCheckFilter(){
+  //   return new SignCheckFilter("/api/**", this.jwtUtil);
+  // }
 
   @Bean
   public CustomLoginFilter customLoginFilter(AuthenticationManager authenticationManager) {
@@ -92,7 +92,7 @@ public class SecurityConfig {
         .requestMatchers("/api/member/**", "/").permitAll()
         .anyRequest().permitAll()
         )
-      .addFilterBefore(signCheckFilter(), UsernamePasswordAuthenticationFilter.class)
+      // .addFilterBefore(signCheckFilter(), UsernamePasswordAuthenticationFilter.class)
       .addFilterBefore(customLoginFilter(authenticationManager(userDetailsService)), UsernamePasswordAuthenticationFilter.class)
       .rememberMe(r -> r.tokenValiditySeconds(60 * 60 * 24 * 14) // 토큰 유지 시간 (밀리초)
         .userDetailsService(userDetailsService)
