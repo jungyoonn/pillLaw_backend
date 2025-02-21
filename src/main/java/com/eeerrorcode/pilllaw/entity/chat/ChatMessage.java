@@ -1,4 +1,4 @@
-package com.eeerrorcode.pilllaw.entity.follow;
+package com.eeerrorcode.pilllaw.entity.chat;
 
 import java.time.LocalDateTime;
 
