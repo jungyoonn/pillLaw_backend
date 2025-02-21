@@ -10,7 +10,6 @@ import org.springframework.test.annotation.Rollback;
 
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
 import com.eeerrorcode.pilllaw.repository.product.ProductCategoryRepository;
-import com.eeerrorcode.pilllaw.repository.product.ProductRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
@@ -21,9 +20,6 @@ import lombok.extern.log4j.Log4j2;
 public class ProductServiceTests {
   @Autowired
   private ProductService productService;
-
-  @Autowired
-  private ProductRepository productRepository;
 
   @Autowired
   private ProductCategoryRepository productCategoryRepository;
