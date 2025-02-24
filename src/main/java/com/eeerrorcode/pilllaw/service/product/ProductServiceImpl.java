@@ -169,7 +169,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public List<ProductWithCategoryDto> listAllProductWithCategory() {
-    return productRepository.findAll().stream().map(product -> {
+    return productRepository.findByState(true).stream().map(product -> {
       List<ProductCategoryDto> categories = productCategoryRepository.findByProduct(product).stream().map(ProductCategoryDto::new).toList();
       return new ProductWithCategoryDto(new ProductDto(product), categories);
     }).toList();
