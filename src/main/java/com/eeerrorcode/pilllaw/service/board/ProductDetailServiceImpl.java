@@ -23,9 +23,9 @@ public class ProductDetailServiceImpl implements ProductDetailService{
 
   // 테스트 통과!!
   @Override
-  public ProductDetail showDetailsByPno(Long pno) {
+  public ProductDetailDto showDetailsByPno(Long pno) {
     log.info("showDetailsByPno :::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-    ProductDetail returnDetail = productDetailRepository.findByProduct(pno).get();
+    ProductDetailDto returnDetail = toDto(productDetailRepository.findByProduct(pno).get());
     return returnDetail;
   }
   

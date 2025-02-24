@@ -17,7 +17,7 @@ public interface ProductDetailService {
 
   void registerDetail(ProductDetailDto dto);
   
-  ProductDetail showDetailsByPno(Long pno);
+  ProductDetailDto showDetailsByPno(Long pno);
   
   void modifyDetail(ProductDetailDto dto);
   

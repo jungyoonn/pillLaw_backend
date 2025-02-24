@@ -48,6 +48,7 @@ public interface ProductService {
         .keep(dto.getKeep())
         .effect(dto.getEffect())
         .precautions(dto.getPrecautions())
+        .state(dto.isState())
         .typeSet(dto
           .getType()
           .stream()
@@ -68,6 +69,7 @@ public interface ProductService {
       .keep(product.getKeep())
       .effect(product.getEffect())
       .precautions(product.getPrecautions())
+      .state(product.isState())
       .type(product.getTypeSet().stream()
         .map(Enum::name)
         .collect(Collectors.toList()))

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
-@RequestMapping("api/v1/product/review")
+@RequestMapping("api/v1/product/detail/review")
 @Log4j2
 public class ProductReviewController {
   

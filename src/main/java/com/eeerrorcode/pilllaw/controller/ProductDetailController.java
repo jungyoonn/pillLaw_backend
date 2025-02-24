@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 
-
 @RestController
 @Log4j2
 @RequestMapping("api/v1/product/detail")
@@ -31,12 +30,7 @@ public class ProductDetailController {
   @Autowired
   private ProductDetailService productDetailService;
 
-  // 포스트맨 통과 !!!
-  // @GetMapping(value = "{pno}")
-  // public ResponseEntity<?> viewDetail(@PathVariable("pno")Long pno) {
-  //   log.info("showDetail ::::::::::::::::::::::::::::::::::::::::::::::::");
-  //     return ResponseEntity.ok(pno + "상품의 상세정보를 조회합니다." + productDetailService.showDetailsByPno(pno));
-  // }
+
   
 
   // 포스트맨 통과 !!!
@@ -71,6 +65,13 @@ public class ProductDetailController {
     log.info("list ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
     Page<ProductDetailDto> returnList = productDetailService.showAll(pageable);
     return ResponseEntity.ok(returnList);
+  }
+  
+  
+  @GetMapping("/info/{pno}")  
+  public ResponseEntity<?> getDetail(@PathVariable("pno") Long pno) {
+      log.info("getDetail ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+      return ResponseEntity.ok(productDetailService.showDetailsByPno(pno));
   }
   
 

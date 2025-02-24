@@ -1,14 +1,22 @@
 package com.eeerrorcode.pilllaw.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eeerrorcode.pilllaw.dto.board.ProductReviewDto;
+import com.eeerrorcode.pilllaw.dto.product.ProductDetailDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductWithCategoryDto;
+import com.eeerrorcode.pilllaw.service.board.ProductDetailService;
+import com.eeerrorcode.pilllaw.service.board.ProductReviewService;
 import com.eeerrorcode.pilllaw.service.product.ProductService;
 
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +38,12 @@ public class ProductController {
 
   @Autowired
   private ProductService productService;
+
+  @Autowired
+  private ProductDetailService productDetailService;
+
+  @Autowired
+  private ProductReviewService productReviewService;
 
   // @Autowired
   // private CategoryService categoryService;
@@ -53,27 +67,38 @@ public class ProductController {
   
 
   // 포스트맨 통과!
-  @GetMapping(value = "{pno}")
-  public ResponseEntity<?> showDetail(@PathVariable("pno") Long pno) {
-    log.info("showdetail::::::::::::::::::::::::::::::::::::::::::::::::::::");
-    return ResponseEntity.ok(pno + "번 글 조회" + productService.viewProduct(pno));
-    // try {
-    //   return ResponseEntity.ok(CommonResponseDto
-    //   .builder()
-    //     .msg(productService.viewProduct(pno) + "조회 완료")
-    //     .ok(true)
-    //     .statusCode(HttpStatus.OK.value())
-    //   .build());
-    // } catch(Exception e){
-    //   return ResponseEntity.badRequest().body(
-    //     CommonResponseDto.builder()
-    //       .msg("존재하지 않는 상품입니다. 다시 시도해 주세요.")
-    //       .ok(false)
-    //       .statusCode(HttpStatus.BAD_REQUEST.value())
-    //       .build()
-    //   );
-    // }
-  }
+@GetMapping(value = "{pno}")
+public ResponseEntity<?> showDetail(@PathVariable("pno") Long pno) {
+    log.info("showDetail::::::::::::::::::::::::::::::::::::::::");
+
+    ProductDto product = productService.viewProduct(pno).orElse(null);
+    if (product == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("cannot find detail");
+    }
+
+    ProductDetailDto detail = null;
+    try {
+        detail = productDetailService.showDetailsByPno(pno);
+    } catch (NoSuchElementException e) {
+        log.warn("Not product Details" + pno);
+    }
+
+    List<ProductReviewDto> reviews = productReviewService.showReviewsByProduct(pno);
+    if (reviews == null) {
+        reviews = new ArrayList<>(); 
+    }
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("product", product);
+    response.put("detail", detail); 
+    response.put("reviews", reviews);
+
+    return ResponseEntity.ok(response);
+}
+
+
+
+
 
   // 포스트맨 통과!
   @PostMapping("")
@@ -91,6 +116,7 @@ public class ProductController {
     log.info(productDto);
     return new ResponseEntity<>(productDto.getPname() + "modified", HttpStatus.OK);
   }
+
   // 포스트맨 통과!
   @DeleteMapping(value = "/{pno}")
   public ResponseEntity<?> remove(@PathVariable("pno") Long pno){
@@ -99,16 +125,11 @@ public class ProductController {
     return new ResponseEntity<>(pno + "removed", HttpStatus.OK);
   }
   
-  @GetMapping("/detail/{pno}")
-  public ResponseEntity<?> getMethodName(@PathVariable("pno") Long pno) {
-    log.info("delete::::::::::::::::::::::::::::::::::::::::::::::::::::"); 
-    return ResponseEntity.ok(productService.viewProductUsingView(pno));
-  }
-  
   @GetMapping("/list")
   public List<ProductWithCategoryDto> allListWithCategory() {
     return productService.listAllProductWithCategory();
   }
   
+
   
 }
