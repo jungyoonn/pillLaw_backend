@@ -33,8 +33,20 @@ public class SocialMemberServiceImpl implements SocialMemberService{
 
   @Override
   public Optional<SocialMemberDto> getByProviderIdAndProvider(String providerId, SocialProvider provider) {
-    return repository.findByProviderIdAndProviders(providerId, provider).isPresent() ?
-      toOptionalDto(repository.findByProviderIdAndProviders(providerId, provider).get()) : null;
+    return repository.findByProviderIdAndSocialProvider(providerId, provider).isPresent() ?
+      toOptionalDto(repository.findByProviderIdAndSocialProvider(providerId, provider).get()) : null;
+  }
+
+  @Override
+  public Optional<SocialMemberDto> getByProviderId(String providerId) {
+    return repository.findByProviderId(providerId).isPresent() ?
+      toOptionalDto(repository.findByProviderId(providerId).get()) : null;
+  }
+
+  @Override
+  public Optional<SocialMemberDto> getByMno(Long mno) {
+    return repository.findByMno(mno).isPresent() ? 
+      toOptionalDto(repository.findByMno(mno).get()) : null;
   }
   
 }

@@ -1,8 +1,5 @@
 package com.eeerrorcode.pilllaw.entity.member;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
 
 import jakarta.persistence.*;
@@ -22,11 +19,10 @@ public class SocialMember extends BaseEntity{
   @JoinColumn(name = "mno")
   private Member member;
 
-  @Builder.Default
-  @ElementCollection(fetch = FetchType.LAZY)
-  private Set<SocialProvider> socialProviders = new HashSet<>();
+  @Enumerated(EnumType.STRING)
+  private SocialProvider socialProvider;
 
-  public void addSocial(SocialProvider socialProvider) {
-    socialProviders.add(socialProvider);
-  }
+  // public void addSocial(SocialProvider socialProvider) {
+  //   socialProviders.add(socialProvider);
+  // }
 }

@@ -11,6 +11,12 @@ import java.util.Optional;
 
 
 public interface SocialMemberRepository extends JpaRepository<SocialMember, String>{
-  @Query("SELECT s FROM tbl_social_member s WHERE s.providerId = :providerId AND :provider MEMBER OF s.socialProviders")
-  Optional<SocialMember> findByProviderIdAndProviders(@Param("providerId") String providerId, @Param("provider") SocialProvider provider);
+  // @Query("SELECT s FROM tbl_social_member s WHERE s.providerId = :providerId AND :provider MEMBER OF s.socialProviders")
+  // Optional<SocialMember> findByProviderIdAndProviders(@Param("providerId") String providerId, @Param("provider") SocialProvider provider);
+
+  Optional<SocialMember> findByProviderIdAndSocialProvider(String providerId, SocialProvider socialProvider);
+  Optional<SocialMember> findByProviderId(String providerId);
+
+  @Query("SELECT s FROM tbl_social_member s WHERE s.member.mno = :mno")
+  Optional<SocialMember> findByMno(@Param("mno") Long mno);
 }

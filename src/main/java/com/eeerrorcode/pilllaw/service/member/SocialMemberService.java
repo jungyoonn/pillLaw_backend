@@ -1,7 +1,5 @@
 package com.eeerrorcode.pilllaw.service.member;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Optional;
 
 import com.eeerrorcode.pilllaw.dto.member.SocialMemberDto;
@@ -14,11 +12,15 @@ public interface SocialMemberService {
 
   Optional<SocialMemberDto> getByProviderIdAndProvider(String providerId, SocialProvider provider);
 
+  Optional<SocialMemberDto> getByProviderId(String providerId);
+
+  Optional<SocialMemberDto> getByMno(Long mno);
+
   default SocialMember toEntity(SocialMemberDto dto) {
     SocialMember member = SocialMember.builder()
       .providerId(dto.getProviderId())
       .member(Member.builder().mno(dto.getMno()).build())
-      .socialProviders(new HashSet<>(dto.getProviders()))
+      .socialProvider(dto.getSocialProvider())
       .build();
 
     return member;
@@ -28,7 +30,7 @@ public interface SocialMemberService {
     SocialMemberDto dto = SocialMemberDto.builder()
       .providerId(member.getProviderId())
       .mno(member.getMember().getMno())
-      .providers(new ArrayList<>(member.getSocialProviders()))
+      .socialProvider(member.getSocialProvider())
       .build();
 
     return dto;
@@ -42,7 +44,7 @@ public interface SocialMemberService {
     SocialMemberDto dto = SocialMemberDto.builder()
       .providerId(member.getProviderId())
       .mno(member.getMember().getMno())
-      .providers(new ArrayList<>(member.getSocialProviders()))
+      .socialProvider(member.getSocialProvider())
       .build();
 
     return Optional.of(dto);
