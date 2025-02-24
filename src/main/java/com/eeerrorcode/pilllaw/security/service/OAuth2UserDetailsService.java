@@ -1,5 +1,6 @@
 package com.eeerrorcode.pilllaw.security.service;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -49,12 +50,27 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
       log.info("value => {}", v);
     });
 
+    Map<String, Object> attributes = new HashMap<>();;
     String email = null;
+    String nickname = null;
+
     if(clientName.equalsIgnoreCase("google")) {
       email = oAuth2User.getAttributes().get("email").toString();
+      nickname = oAuth2User.getAttributes().get("name").toString();
+      attributes = oAuth2User.getAttributes();  // 구글은 그대로 사용
+    } else if(clientName.equalsIgnoreCase("naver")) {
+      @SuppressWarnings("unchecked")
+      Map<String, Object> response = (Map<String, Object>) oAuth2User.getAttributes().get("response");
+      log.info("naver response => {}", response);  // 로그 추가
+      
+      email = response.get("email").toString();
+      nickname = response.get("nickname").toString();
+      log.info("naver response email => {}", email); 
+      log.info("naver response nickname => {}", nickname); 
+
+      attributes = response;
     }
 
-    String nickname = oAuth2User.getAttributes().get("name").toString();
 
     MemberDto memberDto = saveSocialMember(email, clientName, nickname);
     SocialMemberDto socialDto = saveSocialInfo(email, clientName, memberDto);
@@ -63,7 +79,7 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
     , memberDto.getMno(), memberDto.getAccounts(), memberDto.getRoles(), memberDto.getStatus()
     , memberDto.getName(), memberDto.getNickname(), memberDto.getTel(), memberDto.isFirstLogin()
     , memberDto.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.name())).toList()
-    , oAuth2User.getAttributes(), socialDto);
+    , attributes, socialDto);
 
     return authMemberDto;
   }
