@@ -54,9 +54,9 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
       email = oAuth2User.getAttributes().get("email").toString();
     }
 
-    // String nickname = oAuth2User.getAttributes().get("name").toString();
+    String nickname = oAuth2User.getAttributes().get("name").toString();
 
-    MemberDto memberDto = saveSocialMember(email, clientName);
+    MemberDto memberDto = saveSocialMember(email, clientName, nickname);
     SocialMemberDto socialDto = saveSocialInfo(email, clientName, memberDto);
 
     AuthMemberDto authMemberDto = new AuthMemberDto(memberDto.getEmail(), memberDto.getPassword()
@@ -69,7 +69,7 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
   }
   
   @Transactional
-  private MemberDto saveSocialMember(String email, String clientName) {
+  private MemberDto saveSocialMember(String email, String clientName, String nickname) {
     Optional<MemberDto> optional = Optional.ofNullable(
       service.getByEmailAndAccount(email, MemberAccount.SOCIAL)
     ).orElse(Optional.empty());
@@ -80,7 +80,7 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
 
     MemberDto dto = MemberDto.builder()
       .email(email)
-      .nickname(email)
+      .nickname(nickname)
       .password(null)
       .build();
 
