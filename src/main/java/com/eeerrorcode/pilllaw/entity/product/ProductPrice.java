@@ -1,5 +1,4 @@
 package com.eeerrorcode.pilllaw.entity.product;
-import java.math.BigDecimal;
 
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import jakarta.persistence.Entity;

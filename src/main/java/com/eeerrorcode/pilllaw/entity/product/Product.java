@@ -44,6 +44,7 @@ public class Product extends BaseEntity {
   private String keep;
   private boolean state;
   private String href;
+  // private Long price;
   
   @Builder.Default
   @ElementCollection(fetch = FetchType.LAZY)
