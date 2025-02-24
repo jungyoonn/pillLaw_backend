@@ -1,6 +1,5 @@
 package com.eeerrorcode.pilllaw.entity.product;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,6 +43,7 @@ public class Product extends BaseEntity {
   private String precautions;
   private String keep;
   private boolean state;
+  private String href;
   
   @Builder.Default
   @ElementCollection(fetch = FetchType.LAZY)

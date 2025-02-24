@@ -32,6 +32,7 @@ public class ProductDto {
 
   private List<String> type;
   private List<CategoryDto> categories;
+  private ProductPriceDto priceInfo;
 
   private LocalDateTime regDate, modDate;
 
