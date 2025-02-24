@@ -56,7 +56,7 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
 
     // String nickname = oAuth2User.getAttributes().get("name").toString();
 
-    MemberDto memberDto = saveSocialMember(email);
+    MemberDto memberDto = saveSocialMember(email, clientName);
     SocialMemberDto socialDto = saveSocialInfo(email, clientName, memberDto);
 
     AuthMemberDto authMemberDto = new AuthMemberDto(memberDto.getEmail(), memberDto.getPassword()
@@ -69,7 +69,7 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
   }
   
   @Transactional
-  private MemberDto saveSocialMember(String email) {
+  private MemberDto saveSocialMember(String email, String clientName) {
     Optional<MemberDto> optional = Optional.ofNullable(
       service.getByEmailAndAccount(email, MemberAccount.SOCIAL)
     ).orElse(Optional.empty());
@@ -87,8 +87,32 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
     dto.addAccount(MemberAccount.SOCIAL);
     dto.addRole(MemberRole.USER);
     
-    service.register(dto);
-    // dto.setMno(service.register(dto));
+    Long mno = service.register(dto);
+    log.info("mno는 => {} ", mno);
+
+    SocialProvider provider = null;
+
+    try {
+      provider = SocialProvider.valueOf(clientName.toUpperCase());
+    } catch(IllegalArgumentException e) {
+      return null;
+    }
+
+    Optional<SocialMemberDto> socialOptional = Optional.ofNullable(
+      socialService.getByProviderIdAndProvider(email, provider)
+    ).orElse(Optional.empty());
+
+    if(socialOptional.isPresent()) {
+      return optional.get();
+    }
+
+    SocialMemberDto socialDto = SocialMemberDto.builder()
+      .providerId(email)
+      .mno(mno)
+      .build();
+
+    socialDto.addProvider(provider);
+    socialService.register(socialDto);
 
     return dto;
   }
