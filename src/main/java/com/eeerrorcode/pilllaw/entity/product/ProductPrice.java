@@ -1,4 +1,6 @@
 package com.eeerrorcode.pilllaw.entity.product;
+import java.math.BigDecimal;
+
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,4 +33,11 @@ public class ProductPrice extends BaseEntity{
 
   private Long salePrice; // 할인가
 
+  public Long getFinalPrice() {
+    return salePrice != null ? salePrice : price;
+  }
+
+  public boolean isDiscounted() {
+    return salePrice != null && salePrice.compareTo(price) < 0;
+  }
 }
