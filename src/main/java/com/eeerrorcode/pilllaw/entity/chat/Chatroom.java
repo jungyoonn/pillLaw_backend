@@ -33,15 +33,15 @@ public class Chatroom extends BaseEntity{
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long chatRoomId;
   
-    @ManyToOne
-    @JoinColumn(name = "creator_id", nullable = false)
-    private Member creator;
+  @ManyToOne
+  @JoinColumn(name = "creator_id", nullable = false)
+  private Member creator;
 
-    @CreationTimestamp
-    private LocalDateTime chatCreatedAt;
+  @CreationTimestamp
+  private LocalDateTime chatCreatedAt;
 
-    private LocalDateTime lastMessage;
+  private LocalDateTime lastMessage;
 
-    @Column(length = 250)
-    private String lastMsgContent;
+  @Column(length = 250)
+  private String lastMsgContent;
 }

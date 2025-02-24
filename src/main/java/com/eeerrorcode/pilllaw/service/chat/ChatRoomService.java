@@ -8,5 +8,6 @@ import com.eeerrorcode.pilllaw.entity.chat.Chatroom;
 public interface ChatRoomService {
   List<Chatroom>findByChatrooms(long chatRoomId);
   // void insertChat(long receiver, long sender);
+  Chatroom saveChatroom(Chatroom chatroom);
 
 }
