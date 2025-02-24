@@ -31,6 +31,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     log.info("oauth2user => {}", oAuth2User);
     AuthMemberDto authMemberDto = (AuthMemberDto) oAuth2User;
 
+    Long mno = authMemberDto.getMno();
     String email = authMemberDto.getEmail();
     String token = jwtUtil.generateToken(email);
     String targetUrl = request.getParameter("redirect_uri");
@@ -45,6 +46,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     String finalUrl = UriComponentsBuilder.fromUriString(targetUrl)
       .queryParam("token", token)
       .queryParam("email", email)
+      .queryParam("mno", mno)
       .build().toUriString();
 
     log.info("redirectUri => {}", finalUrl);
