@@ -33,7 +33,7 @@ public class FollowController {
   private MemberService memberService;
   @Autowired
   private FollowRepository repository;
- 
+ //
   // 팔로우 목록 불러오기
   @GetMapping("/{mno}")
   // public ResponseEntity<List<Follow>> getReceiver_Mno(@PathVariable long receiverMno) {
