@@ -25,7 +25,7 @@ public class ChatroomController {
         this.chatRoomService = chatRoomService;
     }
 
-    // 특정 채팅방 ID로 채팅방 조회
+    // // 특정 채팅방 ID로 채팅방 조회
     @GetMapping("/{chatRoomId}")
     public ResponseEntity<List<Chatroom>> getChatroomsByChatRoomId(@PathVariable long chatRoomId) {
         List<Chatroom> chatrooms = chatRoomService.findByChatrooms(chatRoomId);
