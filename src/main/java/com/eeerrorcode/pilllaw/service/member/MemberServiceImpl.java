@@ -51,15 +51,15 @@ public class MemberServiceImpl implements MemberService{
 
   @Override
   public Long register(MemberDto dto) {
-    if(repository.findByEmail(dto.getEmail()).isPresent()) {
-      return null;
-    }
-
     dto.addRole(MemberRole.USER);
-    
+
     // 소셜 멤버일 때
     if(dto.getAccounts().contains(MemberAccount.SOCIAL)) {
       return repository.save(toEntity(dto)).getMno();
+    }
+    
+    if(repository.findByEmail(dto.getEmail()).isPresent()) {
+      return null;
     }
 
     String pw = dto.getPassword();
