@@ -49,42 +49,43 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
       log.info("value => {}", v);
     });
 
-    Map<String, Object> attributes = new HashMap<>();;
-    String email = null;
-    String nickname = null;
+    Map<String, Object> attributes = new HashMap<>();
+    // String email = null;
+    String providerId = null;
+    // String nickname = null;
 
     if(clientName.equalsIgnoreCase("google")) {
-      email = oAuth2User.getAttributes().get("email").toString();
-      nickname = oAuth2User.getAttributes().get("name").toString();
+      providerId = oAuth2User.getAttributes().get("sub").toString();
+      // email = oAuth2User.getAttributes().get("email").toString();
+      // nickname = oAuth2User.getAttributes().get("name").toString();
       attributes = oAuth2User.getAttributes();  // 구글은 그대로 사용
     } else if(clientName.equalsIgnoreCase("naver")) {
       @SuppressWarnings("unchecked")
       Map<String, Object> response = (Map<String, Object>) oAuth2User.getAttributes().get("response");
       log.info("naver response => {}", response);  // 로그 추가
       
-      email = response.get("email").toString();
-      nickname = response.get("nickname").toString();
-      log.info("naver response email => {}", email); 
-      log.info("naver response nickname => {}", nickname); 
+      providerId = response.get("id").toString();
+      // nickname = response.get("nickname").toString();
+      log.info("naver response email => {}", providerId); 
+      // log.info("naver response nickname => {}", nickname); 
 
       attributes = response;
     } else if(clientName.equalsIgnoreCase("kakao")) {
-      @SuppressWarnings("unchecked")
-      Map<String, Object> kakaoAccount = (Map<String, Object>) oAuth2User.getAttributes().get("kakao_account");
-      @SuppressWarnings("unchecked")
-      Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+      // Map<String, Object> kakaoAccount = (Map<String, Object>) oAuth2User.getAttributes().get("kakao_account");
+      // Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
 
-      email = kakaoAccount.get("email").toString();
-      nickname = profile.get("nickname").toString();
+      providerId = oAuth2User.getAttributes().get("id").toString();
+      // email = kakaoAccount.get("email").toString();
+      // nickname = profile.get("nickname").toString();
       
       attributes = oAuth2User.getAttributes();
     }
 
 
-    MemberDto memberDto = saveSocialMember(email, clientName, nickname);
-    SocialMemberDto socialDto = saveSocialInfo(email, clientName, memberDto);
+    MemberDto memberDto = saveSocialMember(providerId, clientName);
+    SocialMemberDto socialDto = saveSocialInfo(providerId, clientName, memberDto);
 
-    AuthMemberDto authMemberDto = new AuthMemberDto(memberDto.getEmail(), memberDto.getPassword()
+    AuthMemberDto authMemberDto = new AuthMemberDto(providerId, memberDto.getPassword()
     , memberDto.getMno(), memberDto.getAccounts(), memberDto.getRoles(), memberDto.getStatus()
     , memberDto.getName(), memberDto.getNickname(), memberDto.getTel(), memberDto.isFirstLogin()
     , memberDto.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.name())).toList()
@@ -96,27 +97,7 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
   }
   
   @Transactional
-  private MemberDto saveSocialMember(String email, String clientName, String nickname) {
-    Optional<MemberDto> optional = Optional.ofNullable(
-      service.getByEmailAndAccount(email, MemberAccount.SOCIAL)
-    ).orElse(Optional.empty());
-    
-    if(optional.isPresent()) {
-      return optional.get();
-    }
-
-    MemberDto dto = MemberDto.builder()
-      .email(email)
-      .nickname(nickname)
-      .password(null)
-      .build();
-
-    dto.addAccount(MemberAccount.SOCIAL);
-    dto.addRole(MemberRole.USER);
-    
-    Long mno = service.register(dto);
-    log.info("mno는 => {} ", mno);
-
+  private MemberDto saveSocialMember(String providerId, String clientName) {
     SocialProvider provider = null;
 
     try {
@@ -126,26 +107,45 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
     }
 
     Optional<SocialMemberDto> socialOptional = Optional.ofNullable(
-      socialService.getByProviderIdAndProvider(email, provider)
+      socialService.getByProviderIdAndProvider(providerId, provider)
     ).orElse(Optional.empty());
 
     if(socialOptional.isPresent()) {
-      return optional.get();
+      return service.get(socialOptional.get().getMno()).get();
     }
 
-    SocialMemberDto socialDto = SocialMemberDto.builder()
-      .providerId(email)
-      .mno(mno)
+    // Optional<MemberDto> optional = Optional.ofNullable(
+    //   service.getByEmailAndAccount(email, MemberAccount.SOCIAL)
+    // ).orElse(Optional.empty());
+    
+    // if(optional.isPresent()) {
+    //   return optional.get();
+    // }
+
+    MemberDto dto = MemberDto.builder()
+      .password(null)
       .build();
 
-    socialDto.addProvider(provider);
+    dto.addAccount(MemberAccount.SOCIAL);
+    dto.addRole(MemberRole.USER);
+    
+    Long mno = service.register(dto);
+    log.info("mno는 => {} ", mno);
+    dto.setMno(mno);
+
+    SocialMemberDto socialDto = SocialMemberDto.builder()
+      .providerId(providerId)
+      .mno(mno)
+      .socialProvider(provider)
+      .build();
+
     socialService.register(socialDto);
 
     return dto;
   }
 
   @Transactional
-  private SocialMemberDto saveSocialInfo(String email, String clientName, MemberDto memberDto) {
+  private SocialMemberDto saveSocialInfo(String providerId, String clientName, MemberDto memberDto) {
     SocialProvider provider = null;
 
     try {
@@ -155,7 +155,7 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
     }
 
     Optional<SocialMemberDto> optional = Optional.ofNullable(
-      socialService.getByProviderIdAndProvider(email, provider)
+      socialService.getByProviderIdAndProvider(providerId, provider)
     ).orElse(Optional.empty());
 
     if(optional.isPresent()) {
@@ -163,11 +163,11 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
     }
 
     SocialMemberDto dto = SocialMemberDto.builder()
-      .providerId(email)
+      .providerId(providerId)
       .mno(memberDto.getMno())
+      .socialProvider(provider)
       .build();
 
-    dto.addProvider(provider);
     socialService.register(dto);
 
     return dto;
