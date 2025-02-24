@@ -76,7 +76,9 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
     log.info("=============== custom Login filter ===================");
     
     saveLoginHistory(authResult);
-
+    AuthMemberDto authMember = (AuthMemberDto) authResult.getPrincipal();
+    Long mno = authMember.getMno();
+    
     try {
       String email = authResult.getName();
       String token = jwtUtil.generateToken(email);
@@ -86,6 +88,8 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
       
       Map<String, String> responseMap = new HashMap<>();
       responseMap.put("token", token);
+      responseMap.put("mno", mno.toString());
+      log.info("mno => {}", mno);
       
       String jsonResponse = objectMapper.writeValueAsString(responseMap);
       response.getWriter().write(jsonResponse);
