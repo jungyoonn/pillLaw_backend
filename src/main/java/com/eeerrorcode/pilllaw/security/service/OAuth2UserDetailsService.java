@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
 import com.eeerrorcode.pilllaw.dto.member.MemberDto;
 import com.eeerrorcode.pilllaw.dto.member.SocialMemberDto;
 import com.eeerrorcode.pilllaw.entity.member.MemberAccount;
@@ -69,6 +68,16 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
       log.info("naver response nickname => {}", nickname); 
 
       attributes = response;
+    } else if(clientName.equalsIgnoreCase("kakao")) {
+      @SuppressWarnings("unchecked")
+      Map<String, Object> kakaoAccount = (Map<String, Object>) oAuth2User.getAttributes().get("kakao_account");
+      @SuppressWarnings("unchecked")
+      Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+
+      email = kakaoAccount.get("email").toString();
+      nickname = profile.get("nickname").toString();
+      
+      attributes = oAuth2User.getAttributes();
     }
 
 
@@ -80,6 +89,8 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService{
     , memberDto.getName(), memberDto.getNickname(), memberDto.getTel(), memberDto.isFirstLogin()
     , memberDto.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.name())).toList()
     , attributes, socialDto);
+
+    log.info(":::: authMemberDto => {}", authMemberDto);
 
     return authMemberDto;
   }

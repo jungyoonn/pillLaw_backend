@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.eeerrorcode.pilllaw.security.dto.AuthMemberDto;
 import com.eeerrorcode.pilllaw.security.util.JWTUtil;
 
 import jakarta.servlet.ServletException;
@@ -27,9 +28,14 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     log.info("on authentication success!");
 
     OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-    String email = oAuth2User.getAttribute("email");
+    log.info("oauth2user => {}", oAuth2User);
+    AuthMemberDto authMemberDto = (AuthMemberDto) oAuth2User;
+
+    String email = authMemberDto.getEmail();
     String token = jwtUtil.generateToken(email);
     String targetUrl = request.getParameter("redirect_uri");
+
+    log.info("email => {}", email);
 
     if (targetUrl == null || targetUrl.isEmpty()) {
       targetUrl = "http://localhost:3000/pilllaw/oauth2/redirect";  // 기본 리다이렉트 URL
@@ -40,6 +46,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
       .queryParam("token", token)
       .queryParam("email", email)
       .build().toUriString();
+
+    log.info("redirectUri => {}", finalUrl);
 
     // 리다이렉트
     getRedirectStrategy().sendRedirect(request, response, finalUrl);
