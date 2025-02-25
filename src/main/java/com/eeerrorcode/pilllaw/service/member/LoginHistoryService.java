@@ -21,6 +21,8 @@ public interface LoginHistoryService {
       .device(history.getDevice())
       .loginResult(history.getLoginResult())
       .failureReason(history.getFailureReason())
+      .provider(history.getProvider())
+      .loginType(history.getLoginType())
       .mno(history.getMember().getMno())
       .build();
     
@@ -35,6 +37,8 @@ public interface LoginHistoryService {
       .device(dto.getDevice())
       .loginResult(dto.getLoginResult())
       .failureReason(dto.getFailureReason())
+      .provider(dto.getProvider())
+      .loginType(dto.getLoginType())
       .member(dto.getMno() == null ? null : Member.builder().mno(dto.getMno()).build())
       .build();
 
