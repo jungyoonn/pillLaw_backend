@@ -4,6 +4,7 @@ spring:
     - mail
     - jwt
     - oauth
+    - iamport
   application:
     name: pilllaw
   servlet:
@@ -13,7 +14,7 @@ spring:
   datasource:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     url: jdbc:log4jdbc:mariadb://np.eeerrorcode.com:3306/pilllaw
-    username: 
+    username:  
     password: 
   jpa:
     hibernate:

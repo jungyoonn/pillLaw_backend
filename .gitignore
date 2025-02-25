@@ -40,3 +40,4 @@ application-mail.yml
 application-jwt.yml
 application-oauth.yml
 application-s3.yml
+application-iamport.yml
