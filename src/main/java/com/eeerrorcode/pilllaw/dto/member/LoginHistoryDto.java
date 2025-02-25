@@ -3,6 +3,7 @@ package com.eeerrorcode.pilllaw.dto.member;
 import java.time.LocalDateTime;
 
 import com.eeerrorcode.pilllaw.entity.member.LoginResult;
+import com.eeerrorcode.pilllaw.entity.member.MemberAccount;
 
 import lombok.*;
 
@@ -19,5 +20,7 @@ public class LoginHistoryDto {
   private String device;
   private LoginResult loginResult;
   private String failureReason;
+  private String provider;
+  private MemberAccount loginType;
   private Long mno;
 }

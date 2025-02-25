@@ -29,6 +29,11 @@ public class LoginHistory extends BaseEntity{
 
   private String failureReason;
 
+  private String provider;
+
+  @Enumerated(EnumType.STRING)
+  private MemberAccount loginType;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "mno")
   private Member member;
