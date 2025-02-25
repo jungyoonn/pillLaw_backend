@@ -28,20 +28,22 @@ public class MainController {
     log.info("findById => {}", memberService.get(Long.valueOf(mno)));
 
     Optional<MemberDto> memberDto = memberService.get(Long.valueOf(mno));
-    
-    if (memberDto.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-
-    MemberDto dto = memberDto.get();
     Optional<SocialMemberDto> socialDto = socialMemberService.getByMno(Long.valueOf(mno));
 
-    // 일반 회원인 경우
-    if(socialDto.isEmpty()) {
-      return ResponseEntity.ok(dto);
+    // 소셜 회원
+    if(socialDto.isPresent()) {
+      return ResponseEntity.ok(socialDto.get());
     }
 
-    return ResponseEntity.ok(socialDto.get());
+    // 일반 회원인 경우
+    if (memberDto.isPresent()) {
+      MemberDto dto = memberDto.get();
+      return ResponseEntity.ok(dto);
+    }
+    
+    return ResponseEntity.notFound().build();
   }
-  
+    
 }
+  
+

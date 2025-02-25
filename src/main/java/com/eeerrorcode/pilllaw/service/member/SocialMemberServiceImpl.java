@@ -46,7 +46,7 @@ public class SocialMemberServiceImpl implements SocialMemberService{
   @Override
   public Optional<SocialMemberDto> getByMno(Long mno) {
     return repository.findByMno(mno).isPresent() ? 
-      toOptionalDto(repository.findByMno(mno).get()) : null;
+      toOptionalDto(repository.findByMno(mno).get()) : Optional.empty();
   }
   
 }
