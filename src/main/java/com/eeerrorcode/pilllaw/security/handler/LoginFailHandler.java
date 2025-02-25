@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import com.eeerrorcode.pilllaw.dto.member.LoginHistoryDto;
 import com.eeerrorcode.pilllaw.dto.member.MemberDto;
 import com.eeerrorcode.pilllaw.entity.member.LoginResult;
+import com.eeerrorcode.pilllaw.entity.member.MemberAccount;
 import com.eeerrorcode.pilllaw.security.dto.LoginDto;
 import com.eeerrorcode.pilllaw.security.util.CustomWebAuthenticationDetails;
 import com.eeerrorcode.pilllaw.service.member.LoginHistoryService;
@@ -61,6 +62,7 @@ public class LoginFailHandler implements AuthenticationFailureHandler{
       .device(details.getDevice())
       .loginResult(result)
       .failureReason(failureReason)
+      .loginType(MemberAccount.NORMAL)
       .mno(optional.isPresent() ? optional.get().getMno() : null)
       .build();
 

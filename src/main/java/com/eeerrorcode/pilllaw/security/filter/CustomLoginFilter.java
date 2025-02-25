@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 
 import com.eeerrorcode.pilllaw.dto.member.LoginHistoryDto;
 import com.eeerrorcode.pilllaw.entity.member.LoginResult;
+import com.eeerrorcode.pilllaw.entity.member.MemberAccount;
 import com.eeerrorcode.pilllaw.security.dto.AuthMemberDto;
 import com.eeerrorcode.pilllaw.security.dto.LoginDto;
 import com.eeerrorcode.pilllaw.security.util.CustomWebAuthenticationDetails;
@@ -115,6 +116,7 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
       .ip(details.getIp())
       .device(details.getDevice())
       .loginResult(LoginResult.SUCCESS)
+      .loginType(MemberAccount.NORMAL)
       .mno(authMember.getMno())  // Member 엔티티 참조 필요
       .build();
     
