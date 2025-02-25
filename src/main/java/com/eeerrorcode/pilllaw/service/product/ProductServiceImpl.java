@@ -1,5 +1,6 @@
 package com.eeerrorcode.pilllaw.service.product;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.eeerrorcode.pilllaw.dto.product.CategoryDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductCategoryDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductInfoViewDto;
@@ -18,10 +20,12 @@ import com.eeerrorcode.pilllaw.entity.product.Category;
 import com.eeerrorcode.pilllaw.entity.product.CategoryType;
 import com.eeerrorcode.pilllaw.entity.product.Product;
 import com.eeerrorcode.pilllaw.entity.product.ProductCategory;
+import com.eeerrorcode.pilllaw.entity.product.ProductPrice;
 import com.eeerrorcode.pilllaw.entity.product.ProductType;
 import com.eeerrorcode.pilllaw.repository.product.CategoryRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductCategoryRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductInfoViewRepository;
+import com.eeerrorcode.pilllaw.repository.product.ProductPriceRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductRepository;
 
 import jakarta.transaction.Transactional;
@@ -43,11 +47,23 @@ public class ProductServiceImpl implements ProductService {
 
   private final ProductInfoViewRepository productInfoViewRepository;
 
+  private final ProductPriceRepository productPriceRepository;
+
+  private final ProductPriceService productPriceService;
+
+  // private final CategoryDto categoryDto;
+
   // 테스트 완료!
   @Override
   public Optional<ProductDto> viewProduct(Long pno) {
-    return productRepository.findById(pno).map(this::toDto);
+    return productRepository.findById(pno)
+    .map(this::toDto)
+    .map(dto -> {
+      productPriceRepository.findByProductPno(pno).ifPresent(p -> dto.setPriceInfo(productPriceService.toDto(p)));
+      return dto;
+    }); 
   }
+  
 
   // 테스트 완료!
   @Override
@@ -107,10 +123,8 @@ public class ProductServiceImpl implements ProductService {
   // 테스트 
   @Override
   public List<ProductDto> listProductByCategoryNameList(List<String> categoryNames) {
-    List<Product> productList = productCategoryRepository.findProductsByCategoryNames(categoryNames);
-    return productList.stream()
-            .map(ProductDto::new)
-            .collect(Collectors.toList());
+    List<ProductDto> productList = productCategoryRepository.findProductsByCategoryNames(categoryNames).stream().map(this::toDto).toList();
+    return productList;
 }
 
   @Override
@@ -169,11 +183,46 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public List<ProductWithCategoryDto> listAllProductWithCategory() {
-    return productRepository.findByState(true).stream().map(product -> {
-      List<ProductCategoryDto> categories = productCategoryRepository.findByProduct(product).stream().map(ProductCategoryDto::new).toList();
-      return new ProductWithCategoryDto(new ProductDto(product), categories);
+    return productRepository.findByState(true).stream()
+    .map(product -> {
+      List<ProductCategoryDto> categories = productCategoryRepository.findByProduct(product)
+          .stream()
+          .map(ProductCategoryDto::new)
+          .toList();
+
+      ProductPrice price = productPriceRepository.findByProductPno(product.getPno())
+          .orElse(null);  // 가격이 없는 경우 처리
+
+      List<CategoryDto> categoryDtos = categories.stream().map(c -> {
+        List<String> categoryTypeList = new ArrayList<>();
+        if (c.getCategoryType() != null) {
+          categoryTypeList.add(c.getCategoryType());
+        }
+
+      return CategoryDto.builder()
+        .cno(c.getCno())
+        .cname(c.getCname())
+        .type(categoryTypeList)  // List<String> 타입으로 전달
+        .build();
+      }).toList();
+
+        // ProductDto 생성
+      ProductDto productDto = new ProductDto(toDto(product), productPriceService.toDto(price) , categoryDtos);
+
+      // ProductWithCategoryDto 생성 및 반환
+      return new ProductWithCategoryDto(
+        productDto, 
+        productPriceService.toDto(price), 
+        categories
+      );
     }).toList();
   }
+  
+  
+  
+  
+
+
   
   
   

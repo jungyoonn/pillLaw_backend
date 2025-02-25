@@ -1,6 +1,10 @@
 package com.eeerrorcode.pilllaw.dto.product;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
+
+import com.eeerrorcode.pilllaw.entity.product.Product;
+import com.eeerrorcode.pilllaw.entity.product.ProductPrice;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,9 +25,12 @@ public class ProductPriceDto {
 
   private Long pno;
 
-  private Long price;
+  private String price;
 
   private Long salePrice;
 
+  private Integer rate;
+
   private LocalDateTime regDate, modDate;
+
 }

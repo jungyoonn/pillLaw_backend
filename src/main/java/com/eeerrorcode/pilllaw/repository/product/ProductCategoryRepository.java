@@ -19,8 +19,8 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
   List<ProductCategory> findByProduct(Product product);
   List<ProductCategory> findByCategory(Category category);
   
-  @Query("SELECT pc.category FROM ProductCategory pc WHERE pc.product.pno = :pno")
-  List<ProductCategory> findCategoriesByProduct(@Param("pno") Long pno);
+  @Query("SELECT c FROM ProductCategory pc JOIN pc.category c WHERE pc.product.pno = :pno")
+  List<Category> findCategoriesByProduct(@Param("pno") Long pno);
 
   @Query("SELECT pc.product FROM ProductCategory pc WHERE pc.category = :category")
   List<Product> findProductsByCategory(@Param("category") Category category);
@@ -33,4 +33,9 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
   List<Product> findProductsByCategoryNames(@Param("categoryNames") List<String> categoryNames);
 
   List<ProductCategory> findByCategoryIn(Set<Category> categories);
+  @Query("""
+    SELECT pc FROM ProductCategory pc
+    WHERE pc.product.pno = :pno
+  """)
+  List<ProductCategory> findByProductPno(@Param("pno") Long pno);
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eeerrorcode.pilllaw.dto.board.ProductReviewDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDetailDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
+import com.eeerrorcode.pilllaw.dto.product.ProductPriceDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductWithCategoryDto;
+import com.eeerrorcode.pilllaw.entity.product.ProductPrice;
 import com.eeerrorcode.pilllaw.service.board.ProductDetailService;
 import com.eeerrorcode.pilllaw.service.board.ProductReviewService;
+import com.eeerrorcode.pilllaw.service.product.ProductPriceService;
 import com.eeerrorcode.pilllaw.service.product.ProductService;
 
 import lombok.extern.log4j.Log4j2;
@@ -45,6 +49,9 @@ public class ProductController {
   @Autowired
   private ProductReviewService productReviewService;
 
+  @Autowired
+  private ProductPriceService productPriceService;
+
   // @Autowired
   // private CategoryService categoryService;
   
@@ -67,34 +74,45 @@ public class ProductController {
   
 
   // 포스트맨 통과!
-@GetMapping(value = "{pno}")
-public ResponseEntity<?> showDetail(@PathVariable("pno") Long pno) {
-    log.info("showDetail::::::::::::::::::::::::::::::::::::::::");
-
-    ProductDto product = productService.viewProduct(pno).orElse(null);
-    if (product == null) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("cannot find detail");
-    }
-
-    ProductDetailDto detail = null;
-    try {
-        detail = productDetailService.showDetailsByPno(pno);
-    } catch (NoSuchElementException e) {
-        log.warn("Not product Details" + pno);
-    }
-
-    List<ProductReviewDto> reviews = productReviewService.showReviewsByProduct(pno);
-    if (reviews == null) {
-        reviews = new ArrayList<>(); 
-    }
-
-    Map<String, Object> response = new HashMap<>();
-    response.put("product", product);
-    response.put("detail", detail); 
-    response.put("reviews", reviews);
-
-    return ResponseEntity.ok(response);
-}
+  @GetMapping(value = "{pno}")
+  public ResponseEntity<?> showDetail(@PathVariable("pno") Long pno) {
+      log.info("showDetail :::::::::::::::::::::::::::::::::::::::::::: {}", pno);
+  
+      Optional<ProductDto> optionalProduct = productService.viewProduct(pno);
+      if (optionalProduct.isEmpty()) {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND)
+              .body("Product not found: " + pno);
+      }
+      ProductDto product = optionalProduct.get();
+      log.info("product => {}", product);
+  
+      ProductDetailDto detail = null;
+      try {
+          detail = productDetailService.showDetailsByPno(pno);
+          log.info("detail => {}", detail);
+      } catch (NoSuchElementException e) {
+          log.warn("No product details found for pno: {}", pno);
+      }
+  
+      List<ProductReviewDto> reviews = productReviewService.showReviewsByProduct(pno);
+      if (reviews == null) {
+          reviews = new ArrayList<>(); 
+      }
+      log.info("reviews => {}", reviews);
+  
+      Optional<ProductPriceDto> optionalPrice = productPriceService.getProductPrice(pno);
+      ProductPriceDto price = optionalPrice.orElse(null);
+      log.info("price => {}", price);
+  
+      Map<String, Object> response = new HashMap<>();
+      response.put("product", product);
+      response.put("detail", detail);
+      response.put("reviews", reviews);
+      response.put("price", price);
+  
+      return ResponseEntity.ok(response);
+  }
+  
 
 
 
@@ -128,6 +146,8 @@ public ResponseEntity<?> showDetail(@PathVariable("pno") Long pno) {
   @GetMapping("/list")
   public List<ProductWithCategoryDto> allListWithCategory() {
     return productService.listAllProductWithCategory();
+    // List<ProductWithCategoryDto> products = productService.listAllProductWithCategory();
+    // return ResponseEntity.ok(products);
   }
   
 

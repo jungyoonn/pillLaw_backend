@@ -17,7 +17,7 @@ public class ProductPriceServiceImpl implements ProductPriceService {
 
     @Override
     public Optional<ProductPriceDto> getProductPrice(Long pno) {
-        return productPriceRepository.findByProduct_Pno(pno)
+        return productPriceRepository.findByProductPno(pno)
             .map(this::toDto); 
     }
     

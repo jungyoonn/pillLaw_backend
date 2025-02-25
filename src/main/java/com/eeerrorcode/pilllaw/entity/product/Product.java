@@ -1,26 +1,10 @@
 package com.eeerrorcode.pilllaw.entity.product;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
-
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "tbl_product")
@@ -29,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 public class Product extends BaseEntity {
-  
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long pno;
@@ -37,15 +21,21 @@ public class Product extends BaseEntity {
   private String pname;
   private String company;
   private String bestBefore;
+
   @Column(length = 1000)
   private String effect;
+
   @Column(length = 1000)
   private String precautions;
+
   private String keep;
   private boolean state;
   private String href;
-  // private Long price;
-  
+
+  // ✅ 가격 정보: ProductPrice와의 관계 설정 (fetch = FetchType.LAZY 유지)
+  // @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  // private List<ProductPrice> productPrices = new ArrayList<>();
+
   @Builder.Default
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(name = "tbl_product_type_set", joinColumns = @JoinColumn(name = "pno"))
@@ -56,4 +46,14 @@ public class Product extends BaseEntity {
   public void addProductType(ProductType pt) {
     typeSet.add(pt);
   }
+
+  // public Long getCurrentPrice() {
+  //   if (productPrices.isEmpty()) return null;
+  //   return productPrices.get(productPrices.size() - 1).getFinalPrice();
+  // }
+
+  // public Integer getCurrentDiscountRate() {
+  //   if (productPrices.isEmpty()) return 0;
+  //   return productPrices.get(productPrices.size() - 1).getRate();
+  // }
 }

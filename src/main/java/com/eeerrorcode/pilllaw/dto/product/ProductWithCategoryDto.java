@@ -12,11 +12,17 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @ToString
 public class ProductWithCategoryDto {
   
   private ProductDto product;
+  private ProductPriceDto productPrice;
   private List<ProductCategoryDto> categories;
+
+  public ProductWithCategoryDto(ProductDto product, ProductPriceDto productPrice, List<ProductCategoryDto> categories) {
+    this.product = product;
+    this.productPrice = productPrice;
+    this.categories = categories;
+  }
 }

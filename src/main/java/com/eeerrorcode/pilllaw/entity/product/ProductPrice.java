@@ -1,6 +1,7 @@
 package com.eeerrorcode.pilllaw.entity.product;
 
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -28,15 +29,33 @@ public class ProductPrice extends BaseEntity{
   @JoinColumn(name = "pno", nullable = false)
   private Product product;
 
-  private Long price; // 정상가
+  private String price; // 정상가
 
   private Long salePrice; // 할인가
 
-  public Long getFinalPrice() {
-    return salePrice != null ? salePrice : price;
-  }
+  private Integer rate; // 할인율
 
-  public boolean isDiscounted() {
-    return salePrice != null && salePrice.compareTo(price) < 0;
-  }
+  // @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  // private List<ProductPrice> productPrices = new ArrayList<>();
+
+
+  // public Long getFinalPrice() {
+  //   return salePrice != null ? salePrice : price;
+  // }
+
+  // public boolean isDiscounted() {
+  //   return salePrice != null && salePrice.compareTo(price) < 0;
+  // }
+
+  // public Integer calculateDiscountRate() {
+  //   if (isDiscounted()) {
+  //     return Math.round((1 - (float) salePrice / price) * 100); // 할인율 계산
+  //   }
+  //   return 0; // 할인이 없으면 0%
+  // }
+
+  // 할인율을 자동 업데이트
+  // public void updateRate() {
+  //   this.rate = calculateDiscountRate();
+  // }
 }

@@ -10,5 +10,5 @@ import com.eeerrorcode.pilllaw.entity.product.ProductPrice;
 
 @Repository
 public interface ProductPriceRepository extends JpaRepository<ProductPrice, Long>{
-  Optional<ProductPrice> findByProduct_Pno(Long pno); 
+  Optional<ProductPrice> findByProductPno(Long pno); 
 }
