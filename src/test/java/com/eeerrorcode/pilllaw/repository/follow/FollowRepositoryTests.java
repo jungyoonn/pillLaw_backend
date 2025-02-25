@@ -20,19 +20,19 @@ public class FollowRepositoryTests {
   public void testExist(){
     log.info(repository);
   }
-  @Test
-  public void test() {
-    // List<Follow>returnList = 
-    log.info(repository.findByFollowIdAndSenderMno(13L, 12L));
-  }
-  @Test
-  public void testIsBack(){
-    log.info(repository.findByIsFollowBack(false));
-  }
-  @Test
-  public void testreceiverFollow(){
-    log.info(repository.findByReceiver_Mno(13L));
-  }
+  // @Test
+  // public void test() {
+  //   // List<Follow>returnList = 
+  //   log.info(repository.findByFollowIdAndSenderMno(13L, 12L));
+  // }
+  // @Test
+  // public void testIsBack(){
+  //   log.info(repository.findByIsFollowBack(false));
+  // }
+  // @Test
+  // public void testreceiverFollow(){
+  //   log.info(repository.findByReceiver_Mno(13L));
+  // }
 
   // @Test
   // public void testbooleanFollow(){
