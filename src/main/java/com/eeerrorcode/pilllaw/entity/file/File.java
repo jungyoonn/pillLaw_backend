@@ -30,7 +30,6 @@ import lombok.NoArgsConstructor;
 public class File extends BaseEntity{
   
   @Id
-  // @GeneratedValue(strategy = GenerationType.UUID)
   private String uuid;
 
   @Column(nullable = false)

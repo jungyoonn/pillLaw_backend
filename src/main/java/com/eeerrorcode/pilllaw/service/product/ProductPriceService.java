@@ -21,7 +21,8 @@ public interface ProductPriceService {
   }
 
     default ProductPriceDto toDto(ProductPrice price) {
-        return ProductPriceDto.builder()
+        return ProductPriceDto
+        .builder()
             .ppno(price.getPpno())
             .pno(price.getProduct().getPno())
             .price(price.getPrice())
@@ -29,6 +30,6 @@ public interface ProductPriceService {
             .rate(price.getRate())
             .regDate(price.getRegDate())
             .modDate(price.getModDate())
-            .build();
+        .build();
   }
 }

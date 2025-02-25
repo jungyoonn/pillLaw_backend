@@ -3,6 +3,7 @@ package com.eeerrorcode.pilllaw.dto.file;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.eeerrorcode.pilllaw.entity.file.File;
 import com.eeerrorcode.pilllaw.entity.file.FileType;
 
 import lombok.Builder;
@@ -44,5 +45,17 @@ public class FileDto {
     this.regDate = regDate;
     this.modDate = modDate;
   }
+
+  public FileDto(File file) {
+    this.uuid = file.getUuid();
+    this.origin = file.getOrigin();
+    this.path = file.getPath();
+    this.fname = file.getFname();
+    this.mime = file.getMime();
+    this.size = file.getSize();
+    this.ext = file.getExt();
+    this.url = file.getUrl();
+    this.type = file.getType();
+}
 
 }

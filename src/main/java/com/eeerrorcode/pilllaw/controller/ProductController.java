@@ -17,7 +17,6 @@ import com.eeerrorcode.pilllaw.dto.product.ProductDetailDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductPriceDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductWithCategoryDto;
-import com.eeerrorcode.pilllaw.entity.product.ProductPrice;
 import com.eeerrorcode.pilllaw.service.board.ProductDetailService;
 import com.eeerrorcode.pilllaw.service.board.ProductReviewService;
 import com.eeerrorcode.pilllaw.service.product.ProductPriceService;
@@ -51,27 +50,6 @@ public class ProductController {
 
   @Autowired
   private ProductPriceService productPriceService;
-
-  // @Autowired
-  // private CategoryService categoryService;
-  
-  // 포스트맨 통과!
-  // @GetMapping("list")
-  // public List<ProductDto> allList(@RequestParam(required = false) List<String> categoryNames) {
-  //     log.info("showlist :::::::::::::::::::::::::::::::::::::::::::::: " + categoryNames);
-  //     if (categoryNames != null && !categoryNames.isEmpty()) {
-  //         return productService.listProductByCategoryNameList(categoryNames);
-  //     }
-  //     return productService.listAllProduct();
-  // }
-  
-
-  // @GetMapping("list")
-  // public List<CategoryDto> categoryList(@RequestParam CategoryType type) {
-  //   log.info("listCategoryByType::::::::::::::::::::::::::::::::::::::::::::::::::::");
-  //   return categoryService.listCategoryByType(type);
-  // }
-  
 
   // 포스트맨 통과!
   @GetMapping(value = "{pno}")
@@ -113,11 +91,6 @@ public class ProductController {
       return ResponseEntity.ok(response);
   }
   
-
-
-
-
-
   // 포스트맨 통과!
   @PostMapping("")
   public ResponseEntity<?> register(@RequestBody ProductDto productDto) {
@@ -146,10 +119,6 @@ public class ProductController {
   @GetMapping("/list")
   public List<ProductWithCategoryDto> allListWithCategory() {
     return productService.listAllProductWithCategory();
-    // List<ProductWithCategoryDto> products = productService.listAllProductWithCategory();
-    // return ResponseEntity.ok(products);
   }
-  
-
   
 }

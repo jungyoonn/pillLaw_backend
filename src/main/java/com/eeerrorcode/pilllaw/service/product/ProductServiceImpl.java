@@ -51,8 +51,6 @@ public class ProductServiceImpl implements ProductService {
 
   private final ProductPriceService productPriceService;
 
-  // private final CategoryDto categoryDto;
-
   // 테스트 완료!
   @Override
   public Optional<ProductDto> viewProduct(Long pno) {
