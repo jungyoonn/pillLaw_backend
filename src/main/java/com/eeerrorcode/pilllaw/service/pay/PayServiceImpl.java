@@ -93,7 +93,7 @@ public class PayServiceImpl implements PayService{
     }
   
     /**
-     * 주문 번호(orderNo)를 기준으로 결제 정보 조회
+     * 주문 번호(ono)를 기준으로 결제 정보 조회
      */
     public Pay getPaymentByOrder(Long ono) {
         return payRepository.findByOrderOno(ono)

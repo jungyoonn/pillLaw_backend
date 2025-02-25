@@ -6,7 +6,7 @@ import com.eeerrorcode.pilllaw.entity.pay.Pay;
 
 
 public interface PayService {
-  Pay requestPayment(Long orderNo, Pay.PaymentMethod method, int totalPrice, String impUid);
+  Pay requestPayment(Long ono, Pay.PaymentMethod method, int totalPrice, String impUid);
 
   boolean verifyPayment(Long payNo, int verifiedAmount);
 
@@ -14,7 +14,7 @@ public interface PayService {
 
   Pay failPayment(Long payNo);
 
-  Pay getPaymentByOrder(Long orderNo);
+  Pay getPaymentByOrder(Long ono);
   
   // List<AdminPayDto> findList();
 }

@@ -58,7 +58,7 @@ public class PayController {
    */
   @PostMapping("/complete")
   public ResponseEntity<?> completePayment(@RequestBody Map<String, Object> requestData) {
-    Long orderNo = requestData.containsKey("orderNo") ? ((Number) requestData.get("orderNo")).longValue() : null;
+    Long ono = requestData.containsKey("ono") ? ((Number) requestData.get("ono")).longValue() : null;
     String imp_uid = (String) requestData.get("imp_uid");
 
     try {
@@ -69,7 +69,7 @@ public class PayController {
       }
       // 결제된 금액 확인
       int paidAmount = ((Number) paymentInfo.get("amount")).intValue(); // 아임포트에서 받은 결제 금액
-      Pay pay = payService.getPaymentByOrder(orderNo); // DB에 저장된 결제 정보
+      Pay pay = payService.getPaymentByOrder(ono); // DB에 저장된 결제 정보
       if (pay == null) {
         return ResponseEntity.badRequest().body("결제 검증 실패: 해당 주문의 결제 정보가 없습니다.");
       }
@@ -84,7 +84,7 @@ public class PayController {
       Pay updatedPay = payService.successPayment(pay.getNo());
       
       // 배송상태 추가
-      // orderService.addDelivery(orderNo);
+      // orderService.addDelivery(ono);
 
       return ResponseEntity.ok(new PayDto(updatedPay));
 
