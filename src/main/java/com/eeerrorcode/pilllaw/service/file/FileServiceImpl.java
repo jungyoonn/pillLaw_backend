@@ -1,5 +1,7 @@
 package com.eeerrorcode.pilllaw.service.file;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.eeerrorcode.pilllaw.dto.file.FileDto;
@@ -32,5 +34,12 @@ public class FileServiceImpl implements FileService{
     file = fileRepository.save(file);
     return new FileDto(file);
   }
+
+  @Override
+  public Optional<FileDto> getFileByUuid(String uuid) {
+      return fileRepository.findById(uuid).map(FileDto::new);
+  }
+  
+
   
 }

@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 
 
@@ -28,24 +31,23 @@ public class S3Service {
     this.s3Client = s3Client;
   }
 
-  public String uploadFile(MultipartFile file, String folder){
-    String ext = getFileExtension(file.getOriginalFilename());
-    String fileName = folder + "/" + UUID.randomUUID() + "." + ext;
-
-    try{
+  public String uploadFile(MultipartFile file, String key) {
+    try {
       PutObjectRequest putObjectRequest = PutObjectRequest
       .builder()
         .bucket(bucketName)
-        .key(fileName)
+        .key(key)
         .contentType(file.getContentType())
       .build();
 
       s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
-      return baseUrl + "/" + fileName;
-    }catch( S3Exception | IOException e){
-      throw new RuntimeException("파일 업로드 실패!!!!!!", e);
+
+      return baseUrl + "/" + key; // 업로드된 S3 URL 반환
+    } catch (S3Exception | IOException e) {
+      throw new RuntimeException("파일 업로드 실패!", e);
     }
   }
+
   
   private String getFileExtension(String fileName) {
     if (fileName == null || !fileName.contains(".")) {
@@ -53,4 +55,20 @@ public class S3Service {
     }
     return fileName.substring(fileName.lastIndexOf(".") + 1);
   }
+
+  public byte[] fileDownload(String key) {
+    try {
+      GetObjectRequest getObjectRequest = GetObjectRequest
+      .builder()
+        .bucket(bucketName)
+        .key(key)
+      .build();
+
+      ResponseInputStream<GetObjectResponse> response = s3Client.getObject(getObjectRequest);
+      return response.readAllBytes();
+    } catch (S3Exception | IOException e) {
+      throw new RuntimeException("파일 다운로드 실패: " + key, e);
+    }
+}
+
 }
