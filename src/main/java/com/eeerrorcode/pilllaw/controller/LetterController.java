@@ -7,6 +7,8 @@ import com.eeerrorcode.pilllaw.dto.letter.LetterResponseDto;
 import com.eeerrorcode.pilllaw.entity.follow.Letter;
 import com.eeerrorcode.pilllaw.service.letter.LetterService;
 
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -19,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 
-
+@Log4j2
 // @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/letter")
@@ -40,6 +42,7 @@ public class LetterController {
     @GetMapping("/{receiverId}")
     public ResponseEntity<?> getReceivedLetters(@PathVariable Long receiverId) {
         List<LetterResponseDto> letters = letterService.getReceivedLetters(receiverId);
+        log.info(receiverId);
         return ResponseEntity.ok(letters);
     }
 
