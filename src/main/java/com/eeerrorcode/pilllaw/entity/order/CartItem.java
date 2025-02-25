@@ -22,7 +22,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Setter
 @ToString(exclude = { "cart", "product" })
-public class CartItem {
+public class CartItem extends BaseEntity{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long cino;
@@ -34,6 +34,8 @@ public class CartItem {
   @ManyToOne
   @JoinColumn(name = "pno", nullable = false)
   private Product product;
+  
+  @Column(nullable = false)
   private Long price;
   private long subday;
 

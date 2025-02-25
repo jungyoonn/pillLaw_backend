@@ -5,51 +5,59 @@ import com.eeerrorcode.pilllaw.entity.order.CartItem;
 import com.eeerrorcode.pilllaw.entity.product.ProductPrice;
 //import com.eeerrorcode.pilllaw.repository.product.ProductPriceRepository;
 import com.eeerrorcode.pilllaw.repository.order.CartItemRepository;
+import com.eeerrorcode.pilllaw.repository.product.ProductPriceRepository;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class CartItemServiceImpl implements CartItemService {
-    // productpricerepository만들어지면 주석풀기
-    // @Autowired
-    // private ProductPriceRepository productPriceRepository;
+    @Autowired
+    private ProductPriceRepository productPriceRepository;
 
     @Autowired
     private CartItemRepository cartItemRepository;
 
+    @Transactional
     public Long addCartItem(CartItemDto cartItemDto) {
-        // DTO -> Entity 변환
         CartItem cartItem = toEntity(cartItemDto);
-
-        // // ProductPrice 조회 및 가격 설정
-        // ProductPrice productPrice = productPriceRepository
-        // .findTopByProductPnoOrderByRegdateDesc(cartItem.getProduct().getPno());
-        // if (productPrice != null) {
-        // cartItem.setPrice(productPrice.getPrice());
-        // } else {
-        // throw new RuntimeException("Product price not found for pno: " +
-        // cartItem.getProduct().getPno());
-        // }
-
+    
+        // ProductPrice 조회 및 가격 설정
+        ProductPrice price = productPriceRepository
+                .findByProductPno(cartItem.getProduct().getPno())
+                .orElseThrow(() -> new RuntimeException("Product price not found for pno: " +
+                        cartItem.getProduct().getPno()));
+    
+        log.info("Found sale price: {}", price.getSalePrice()); // 값 확인
+        if (price.getSalePrice() != null) {
+            cartItem.setPrice(price.getSalePrice());
+        } else {
+            throw new RuntimeException("Sale price is null for product with pno: " + cartItem.getProduct().getPno());
+        }    
         // pno와 subday가 동일한 CartItem이 있는지 확인
         CartItem existingCartItem = cartItemRepository
                 .findByCartAndProductAndSubday(cartItem.getCart(), cartItem.getProduct(), cartItem.getSubday());
-
+    
         if (existingCartItem != null) {
-            // 이미 존재하는 경우 수량을 증가시킴
             existingCartItem.setQuantity(existingCartItem.getQuantity() + cartItem.getQuantity());
-            cartItemRepository.save(existingCartItem); // 업데이트된 CartItem 저장
+            existingCartItem.setPrice(price.getSalePrice()); // 기존 아이템 가격 업데이트 추가
+            cartItemRepository.save(existingCartItem);
+            log.info("Updated existing cart item price: {}", existingCartItem.getPrice());
             return existingCartItem.getCino();
         }
-
+    
         // CartItem이 존재하지 않으면 새로 저장
-        cartItemRepository.save(cartItem);
-        return cartItem.getCino();
+        CartItem savedCartItem = cartItemRepository.save(cartItem);
+        log.info("Saved cart item price: {}", savedCartItem.getPrice());
+        return savedCartItem.getCino();
     }
 
     @Override
