@@ -21,7 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.eeerrorcode.pilllaw.security.filter.CustomLoginFilter;
 import com.eeerrorcode.pilllaw.security.filter.SignCheckFilter;
 import com.eeerrorcode.pilllaw.security.handler.LoginFailHandler;
-import com.eeerrorcode.pilllaw.security.handler.LoginSuccessHandler;
+import com.eeerrorcode.pilllaw.security.handler.OAuthLoginSuccessHandler;
 import com.eeerrorcode.pilllaw.security.util.JWTUtil;
 
 @Configuration
@@ -82,7 +82,7 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authManager
-  , LoginSuccessHandler loginSuccessHandler) throws Exception {
+  , OAuthLoginSuccessHandler loginSuccessHandler) throws Exception {
     http
       .cors(c -> c.configurationSource(configurationSource()))
       .csrf(csrf -> csrf.disable())
@@ -105,7 +105,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  public LoginSuccessHandler loginSuccessHandler() {
-    return new LoginSuccessHandler();
+  public OAuthLoginSuccessHandler loginSuccessHandler() {
+    return new OAuthLoginSuccessHandler();
   }
 }
