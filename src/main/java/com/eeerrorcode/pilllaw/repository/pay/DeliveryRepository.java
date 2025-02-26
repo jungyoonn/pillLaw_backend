@@ -7,5 +7,5 @@ import com.eeerrorcode.pilllaw.entity.pay.Delivery;
 import java.util.Optional;
 
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
-  // Optional<Delivery> findByOrderOno(Long ono);
+  Optional<Delivery> findByOrderOno(Long ono);
 }
