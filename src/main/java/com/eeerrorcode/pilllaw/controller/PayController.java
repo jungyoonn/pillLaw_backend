@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/v1/pay")
+@RequestMapping("/api/pay")
 @Log4j2
 public class PayController {
 
@@ -33,7 +33,7 @@ public class PayController {
   /**
    * 결제 요청 (Pay 엔티티 생성)
    */
-  @PostMapping()
+  @PostMapping("/req")
   public ResponseEntity<?> requestPayment(@RequestBody PayRequestDto requestDto) {
     try {
       // 결제 방법 검증

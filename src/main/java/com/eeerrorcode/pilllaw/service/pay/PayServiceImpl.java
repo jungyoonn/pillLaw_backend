@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.eeerrorcode.pilllaw.entity.order.Order;
 import com.eeerrorcode.pilllaw.entity.pay.Pay;
 import com.eeerrorcode.pilllaw.repository.order.OrderRepository;
-import com.eeerrorcode.pilllaw.repository.order.PayRepository;
+import com.eeerrorcode.pilllaw.repository.pay.PayRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -27,20 +27,27 @@ public class PayServiceImpl implements PayService{
    * 1️⃣ 결제 요청
    */
   @Transactional
-  public Pay requestPayment(Long ono, Pay.PaymentMethod method, int totalPrice, String impUid) {
+public Pay requestPayment(Long ono, Pay.PaymentMethod method, int totalPrice, String impUid) {
+    // Order가 정상적으로 조회되는지 확인
     Order order = orderRepository.findById(ono)
-      .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+        .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+    log.info("Order found: {}", order);  // Order 정보 로그 출력
 
     Pay pay = Pay.builder()
-          .order(order)
-          .method(method)
-          .status(Pay.PaymentStatus.실패) // 기본값은 실패로 설정
-          .totalPrice(totalPrice)
-          .impUid(impUid)
-        .build();
+            .order(order)
+            .method(method)
+            .status(Pay.PaymentStatus.실패) // 기본값은 실패로 설정
+            .totalPrice(totalPrice)
+            .impUid(impUid)
+            .build();
 
-    return payRepository.save(pay);
-  }
+    log.info("Payment object created: {}", pay);  // 생성된 Pay 객체 로그 출력
+
+    Pay savedPay = payRepository.save(pay);
+    log.info("Payment saved: {}", savedPay);  // 저장된 Pay 객체 로그 출력
+
+    return savedPay;
+}
 
     /**
      * 2️⃣ 결제 검증 (DB 내 결제 정보와 실제 결제 정보 비교)

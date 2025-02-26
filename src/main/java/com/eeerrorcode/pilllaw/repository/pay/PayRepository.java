@@ -1,10 +1,9 @@
-package com.eeerrorcode.pilllaw.repository.order;
+package com.eeerrorcode.pilllaw.repository.pay;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.eeerrorcode.pilllaw.entity.order.Payment;
 import com.eeerrorcode.pilllaw.entity.pay.Pay;
 
 

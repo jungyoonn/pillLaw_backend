@@ -1,12 +1,11 @@
 package com.eeerrorcode.pilllaw.service.pay;
 
-import java.util.List;
 
 import com.eeerrorcode.pilllaw.entity.pay.Pay;
 
 
 public interface PayService {
-  Pay requestPayment(Long ono, Pay.PaymentMethod method, int totalPrice, String impUid);
+  public Pay requestPayment(Long ono, Pay.PaymentMethod method, int totalPrice, String impUid);
 
   boolean verifyPayment(Long payNo, int verifiedAmount);
 
