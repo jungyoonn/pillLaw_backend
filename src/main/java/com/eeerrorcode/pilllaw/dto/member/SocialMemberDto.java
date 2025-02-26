@@ -18,6 +18,7 @@ public class SocialMemberDto {
   private String providerId;
   private Long mno;
   private SocialProvider socialProvider;
+  private String nickname;
 
   public SocialMember toEntity(EntityManager entityManager, MemberRepository memberRepository) {
     // mno가 없거나 0인 경우 새로운 Member 생성

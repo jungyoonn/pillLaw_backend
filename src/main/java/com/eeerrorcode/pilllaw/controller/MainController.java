@@ -27,18 +27,23 @@ public class MainController {
     log.info("mno => {}", mno);
     log.info("findById => {}", memberService.get(Long.valueOf(mno)));
 
-    Optional<MemberDto> memberDto = memberService.get(Long.valueOf(mno));
-    Optional<SocialMemberDto> socialDto = socialMemberService.getByMno(Long.valueOf(mno));
+    Optional<MemberDto> memberOptional = memberService.get(Long.valueOf(mno));
+    Optional<SocialMemberDto> socialOptional = socialMemberService.getByMno(Long.valueOf(mno));
 
     // 소셜 회원
-    if(socialDto.isPresent()) {
-      return ResponseEntity.ok(socialDto.get());
+    if(socialOptional.isPresent()) {
+      SocialMemberDto socialDto =socialOptional.get(); 
+      String nickname = memberOptional.get().getNickname();
+      if(nickname != null) {
+        socialDto.setNickname(nickname);
+      }
+      return ResponseEntity.ok(socialDto);
     }
 
     // 일반 회원인 경우
-    if (memberDto.isPresent()) {
-      MemberDto dto = memberDto.get();
-      return ResponseEntity.ok(dto);
+    if (memberOptional.isPresent()) {
+      MemberDto memberDto = memberOptional.get();
+      return ResponseEntity.ok(memberDto);
     }
     
     return ResponseEntity.notFound().build();
