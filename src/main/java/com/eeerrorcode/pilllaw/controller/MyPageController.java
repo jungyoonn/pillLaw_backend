@@ -17,6 +17,8 @@ import com.eeerrorcode.pilllaw.service.member.SocialMemberService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -31,7 +33,7 @@ public class MyPageController {
   private FollowService followService;
 
   @GetMapping("/myinfo/{mno}")
-  public ResponseEntity<?> getMethodName(@PathVariable("mno") String mno) {
+  public ResponseEntity<?> getInfo(@PathVariable("mno") String mno) {
     if(mno == null) {
       return ResponseEntity.notFound().build();
     }
@@ -41,8 +43,9 @@ public class MyPageController {
     Optional<SocialMemberDto> socialOptional = socialMemberService.getByMno(reqMno);
     MyInfoDto infoDto = new MyInfoDto();
 
-    infoDto.setFollower(followService.getSender_Mno(Long.valueOf(reqMno)).size());
-    infoDto.setFollowing(followService.getReceiver_Mno(Long.valueOf(reqMno)).size());
+    // 팔로잉과 팔로워 숫자 받아오기
+    infoDto.setFollower(followService.getReceiver_Mno(Long.valueOf(reqMno)).size());
+    infoDto.setFollowing(followService.getSender_Mno(Long.valueOf(reqMno)).size());
     
     // 소셜 회원
     if(socialOptional.isPresent()) {
@@ -61,6 +64,12 @@ public class MyPageController {
       infoDto.setMemberDto(memberDto);
     }
     return ResponseEntity.ok(infoDto);
+  }
+
+  @PutMapping("modify/{mno}")
+  public ResponseEntity<?> modify(@RequestBody MemberDto dto) {
+    
+    return ResponseEntity.ok("success");
   }
   
 }
