@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.eeerrorcode.pilllaw.dto.file.FileDto;
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +31,8 @@ public class ProductReviewDto {
 
   private Long mno;
 
+  // @JsonRawValue
+  // @JsonDeserialize(using = JsonDeserializer.None.class)
   private String content;
 
   private Integer rating;

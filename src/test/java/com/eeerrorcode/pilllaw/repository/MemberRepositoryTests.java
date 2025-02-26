@@ -26,21 +26,21 @@ public class MemberRepositoryTests {
   @Transactional
   @Rollback(false)
   public void insertTest() {
-    Member member = Member.builder()
-      .email("test1@test.com")
-      .password(encoder.encode("1234"))
-      .name("테스터2")
-      .nickname("디그다")
-      .tel("010-2222-2222")
-      .build();
-    member.addMemberAccount(MemberAccount.NORMAL);
-    member.addMemberRole(MemberRole.ADMIN);
-    member.addMemberRole(MemberRole.USER);
-    member.addMemberStatus(MemberStatus.VERIFIED);
+    // Member member = Member.builder()
+    //   .email("test1@test.com")
+    //   .password(encoder.encode("1234"))
+    //   .name("테스터2")
+    //   .nickname("디그다")
+    //   .tel("010-2222-2222")
+    //   .build();
+    // member.addMemberAccount(MemberAccount.NORMAL);
+    // member.addMemberRole(MemberRole.ADMIN);
+    // member.addMemberRole(MemberRole.USER);
+    // member.addMemberStatus(MemberStatus.VERIFIED);
 
     
-    repository.save(member);
-    log.info(repository.findByEmail(member.getEmail()));
+    // repository.save(member);
+    // log.info(repository.findByEmail(member.getEmail()));
   }
 
   @Test

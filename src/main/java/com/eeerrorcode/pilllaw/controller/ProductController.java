@@ -52,14 +52,14 @@ public class ProductController {
   private ProductPriceService productPriceService;
 
   // 포스트맨 통과!
-  @GetMapping(value = "{pno}")
+  @GetMapping(value = "/{pno}", produces = "application/json")
   public ResponseEntity<?> showDetail(@PathVariable("pno") Long pno) {
       log.info("showDetail :::::::::::::::::::::::::::::::::::::::::::: {}", pno);
   
       Optional<ProductDto> optionalProduct = productService.viewProduct(pno);
       if (optionalProduct.isEmpty()) {
-          return ResponseEntity.status(HttpStatus.NOT_FOUND)
-              .body("Product not found: " + pno);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+          .body("Product not found: " + pno);
       }
       ProductDto product = optionalProduct.get();
       log.info("product => {}", product);
@@ -78,15 +78,16 @@ public class ProductController {
       }
       log.info("reviews => {}", reviews);
   
-      Optional<ProductPriceDto> optionalPrice = productPriceService.getProductPrice(pno);
-      ProductPriceDto price = optionalPrice.orElse(null);
-      log.info("price => {}", price);
+      // Optional<ProductPriceDto> optionalPrice = productPriceService.getProductPrice(pno);
+      // ProductPriceDto price = optionalPrice.orElse(null);
+      // ProductPriceDto price = product.getPriceInfo();
+      // log.info("price => {}", price);
   
       Map<String, Object> response = new HashMap<>();
       response.put("product", product);
       response.put("detail", detail);
       response.put("reviews", reviews);
-      response.put("price", price);
+      // response.put("price", price);
   
       return ResponseEntity.ok(response);
   }
@@ -119,6 +120,7 @@ public class ProductController {
   @GetMapping("/list")
   public List<ProductWithCategoryDto> allListWithCategory() {
     return productService.listAllProductWithCategory();
+    // 여기까진 문제없이 통과.
   }
   
 }

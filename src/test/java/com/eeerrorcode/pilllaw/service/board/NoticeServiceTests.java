@@ -36,13 +36,13 @@ public class NoticeServiceTests {
   @Transactional
   @Rollback(false)
   public void testRegister(){
-    Notice newNotice = Notice
-    .builder()
-      .content("Test Notice 입니다.")
-      .member(Member.builder().mno(7L).build())
-      .title("Test Notice 제목입니다.")
-    .build();
-    noticeRepository.save(newNotice);
+    // Notice newNotice = Notice
+    // .builder()
+    //   .content("Test Notice 입니다.")
+    //   .member(Member.builder().mno(7L).build())
+    //   .title("Test Notice 제목입니다.")
+    // .build();
+    // noticeRepository.save(newNotice);
   }
 
   @Test

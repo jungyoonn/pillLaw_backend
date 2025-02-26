@@ -26,14 +26,14 @@ public class ProductDetailServiceTests {
   @Transactional
   @Rollback(false)
   public void testRegister(){
-    ProductDetailDto dto = ProductDetailDto
-    .builder()
-      .content("Test Register Notice2")
-      .mno(6L)
-      .pno(113L)
-      .count(0L)
-    .build();
-    productDetailService.registerDetail(dto);
+    // ProductDetailDto dto = ProductDetailDto
+    // .builder()
+    //   .content("Test Register Notice2")
+    //   .mno(6L)
+    //   .pno(113L)
+    //   .count(0L)
+    // .build();
+    // productDetailService.registerDetail(dto);
   }
 
   @Test

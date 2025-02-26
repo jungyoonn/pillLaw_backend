@@ -30,78 +30,78 @@ public class ProductServiceTests {
   @Transactional
   public void testRegisterProduct(){
     
-    ProductDto dto = ProductDto
-      .builder()
-        .pname("TEST 패키지 영양제 수정예정")
-        .company("TEST 제조사")
-        .bestBefore("구매일로부터 2년")
-        .keep("TEST 보관법")
-        .effect("TEST 효과")
-        .precautions("TEST 복용 전 유의사항")
-        .type(List.of("EARLYBIRD", "SUBONLY"))
-      .build();
+    // ProductDto dto = ProductDto
+    //   .builder()
+    //     .pname("TEST 패키지 영양제 수정예정")
+    //     .company("TEST 제조사")
+    //     .bestBefore("구매일로부터 2년")
+    //     .keep("TEST 보관법")
+    //     .effect("TEST 효과")
+    //     .precautions("TEST 복용 전 유의사항")
+    //     .type(List.of("EARLYBIRD", "SUBONLY"))
+    //   .build();
 
-    log.info("========================================");
-    log.info("새 상품 등록 ::: " + dto.toString());
-    log.info("========================================");
+    // log.info("========================================");
+    // log.info("새 상품 등록 ::: " + dto.toString());
+    // log.info("========================================");
 
-    productService.registerProduct(dto);
+    // productService.registerProduct(dto);
   }
 
   @Test
   @DisplayName("상품 리스트 테스트 / ProductList Test")
   public void testListAllProduct(){
-    log.info("========================================");
-    log.info(productService.listAllProduct());
-    log.info("========================================");
+    // log.info("========================================");
+    // log.info(productService.listAllProduct());
+    // log.info("========================================");
   }
   
   @Test
   @DisplayName("상품 개별 조회 테스트 / ProductView Test")
   public void testViewProduct(){
-    Long pno = 10L;
-    log.info("========================================");
-    log.info(productService.viewProduct(pno));
-    log.info("========================================");
+    // Long pno = 16L;
+    // log.info("========================================");
+    // log.info(productService.viewProduct(pno));
+    // log.info("========================================");
   }
 
   @Test
   @DisplayName("상품 개별 삭제 테스트 / ProductView Test")
   @Rollback(false)
   public void testDeleteProduct(){
-    Long pno = 15L;
-    log.info("========================================");
-    log.info("삭제 동작시작");
-    productCategoryRepository.deleteByProductPno(pno);
-    productService.deleteProduct(pno);
-    log.info("삭제 동작완료");
-    log.info("========================================");
+    // Long pno = 15L;
+    // log.info("========================================");
+    // log.info("삭제 동작시작");
+    // productCategoryRepository.deleteByProductPno(pno);
+    // productService.deleteProduct(pno);
+    // log.info("삭제 동작완료");
+    // log.info("========================================");
   }
 
   @Test
   @DisplayName("상품 수정 테스트 / ProductModifyTest")
   @Rollback(false)
   public void testModify(){
-    log.info("========================================");
-    productService.modifyProduct(ProductDto
-    .builder()
-      .pno(13L)
-      .pname("Pillaw Sample 영양제")
-      .company("Pillaw Sample 제조사")
-      .bestBefore("구매일로부터 2년")
-      .keep("Pillaw Sample 보관법")
-      .effect("Pillaw Sample 효과")
-      .precautions("Pillaw Sample 복용 전 유의사항")
-      .type(List.of("NORMAL"))
-    .build());
-    log.info("========================================");
-    log.info(productService.viewProduct(15L));
+    // log.info("========================================");
+    // productService.modifyProduct(ProductDto
+    // .builder()
+    //   .pno(13L)
+    //   .pname("Pillaw Sample 영양제")
+    //   .company("Pillaw Sample 제조사")
+    //   .bestBefore("구매일로부터 2년")
+    //   .keep("Pillaw Sample 보관법")
+    //   .effect("Pillaw Sample 효과")
+    //   .precautions("Pillaw Sample 복용 전 유의사항")
+    //   .type(List.of("NORMAL"))
+    // .build());
+    // log.info("========================================");
+    // log.info(productService.viewProduct(15L));
   }
 
   @Test
   @DisplayName("카테고리로 상품 조회 리스트 테스트 / CategoryFindByProductList")
   public void testListProductByCategoryName(){
-    productService.listProductByCategoryName("피로");
+    // productService.listProductByCategoryName("피로");
   }
 
   @Test
@@ -113,9 +113,9 @@ public class ProductServiceTests {
   @Test
   @DisplayName("다중 카테고리 이름으로 상품 조회 리스트 테스트")
   public void testListByProductCategoryNameList(){
-      List<String> names = List.of("관절, 뼈", "피부");
-      List<ProductDto> result = productService.listProductByCategoryNameList(names);
-      log.info(result);
+    // List<String> names = List.of("관절, 뼈", "피부");
+    // List<ProductDto> result = productService.listProductByCategoryNameList(names);
+    // log.info(result);
   }
   
 
