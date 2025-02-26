@@ -39,16 +39,16 @@ public class FollowController {
   private FollowRepository repository;
  //
 // 1. 팔로워 목록 조회 (나를 팔로우한 사람들)
+@GetMapping("/sender/{mno}")
+public ResponseEntity<List<Follow>> getSender_Mno(@PathVariable ("mno") String senderMno) {
+  List<Follow> followList = followService.getSender_Mno(Long.valueOf(senderMno));  // 팔로잉 목록 가져오기
+  
+  return ResponseEntity.ok(followList);
+}
+// 2. 팔로잉 목록 (내가 팔로우한 사람들)
   @GetMapping("/{mno}")
   public ResponseEntity<List<Follow>> getReceiver_Mno(@PathVariable ("mno") String receiverMno) {
     List<Follow> followList = followService.getReceiver_Mno(Long.valueOf(receiverMno));  // 팔로워 목록 가져오기
-    
-    return ResponseEntity.ok(followList);
-  }
-// 2. 팔로잉 목록 (내가 팔로우한 사람들)
-  @GetMapping("/sender/{mno}")
-  public ResponseEntity<List<Follow>> getSender_Mno(@PathVariable ("mno") String senderMno) {
-    List<Follow> followList = followService.getSender_Mno(Long.valueOf(senderMno));  // 팔로잉 목록 가져오기
     
     return ResponseEntity.ok(followList);
   }
