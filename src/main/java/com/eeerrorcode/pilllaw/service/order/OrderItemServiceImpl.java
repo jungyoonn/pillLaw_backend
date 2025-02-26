@@ -33,6 +33,9 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Autowired
     private CartItemRepository cartItemRepository;
 
+    @Autowired
+    private CartService cartService;
+
     @Transactional
     @Override
     public List<Long> addOrderItems(Long mno, Long ono) {
@@ -61,8 +64,14 @@ public class OrderItemServiceImpl implements OrderItemService {
                         .build())
                 .collect(Collectors.toList()); // List<OrderItem>을 명확하게 지정
 
-        orderItemRepository.saveAll(orderItems); // 저장 로직 추가
-        return orderItems.stream().map(OrderItem::getOino).collect(Collectors.toList()); // 결과 리스트 반환
+        // 4. OrderItem들을 저장
+        orderItemRepository.saveAll(orderItems);
+
+        // 5. 장바구니 자체 삭제 (옵션: 장바구니 항목 삭제 후 장바구니를 삭제)
+        cartService.removeCart(cart.getCno()); // 장바구니 자체 삭제
+
+        // 6. 생성된 OrderItem의 ID를 반환
+        return orderItems.stream().map(OrderItem::getOino).collect(Collectors.toList());
     }
 
     @Override

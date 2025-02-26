@@ -34,21 +34,21 @@ public class CartController {
 
   // 장바구니 내역 조회(회원번호로)
   @GetMapping("/{mno}/items")
-  public ResponseEntity<List<CartItemDto>> getCartItems(@PathVariable Long mno) {
+  public ResponseEntity<List<CartItemDto>> getCartItems(@PathVariable("mno") Long mno) {
     List<CartItemDto> cartItems = cartService.getItemsByMemberMno(mno);
     return ResponseEntity.ok(cartItems);
   }
 
   // 장바구니 아이템 추가
   @PostMapping("/{cno}/items")
-  public ResponseEntity<Long> addCartItem(@PathVariable Long cno, @RequestBody CartItemDto cartItemDto) {
+  public ResponseEntity<Long> addCartItem(@PathVariable("cno") Long cno, @RequestBody CartItemDto cartItemDto) {
     Long cino = cartItemService.addCartItem(cartItemDto);
     return ResponseEntity.ok(cino);
   }
 
   // 장바구니 아이템 수정
   @PutMapping("/items/{cino}")
-  public ResponseEntity<Integer> updateCartItem(@PathVariable Long cino, @RequestBody CartItemDto cartItemDto) {
+  public ResponseEntity<Integer> updateCartItem(@PathVariable("cino") Long cino, @RequestBody CartItemDto cartItemDto) {
     // cino를 통해 CartItemDto의 cno를 설정
     cartItemDto.setCino(cino);
 
@@ -59,14 +59,14 @@ public class CartController {
 
   // 장바구니 아이템 삭제
   @DeleteMapping("/items/{cino}")
-  public ResponseEntity<Integer> removeCartItem(@PathVariable Long cino) {
+  public ResponseEntity<Integer> removeCartItem(@PathVariable("cino") Long cino) {
     int removed = cartItemService.removeCartItem(cino);
     return ResponseEntity.ok(removed);
   }
 
   // 장바구니 전체 삭제
   @DeleteMapping("/{cno}")
-  public ResponseEntity<Integer> removeCart(@PathVariable Long cno) {
+  public ResponseEntity<Integer> removeCart(@PathVariable("cno") Long cno) {
     int removed = cartService.removeCart(cno);
     return ResponseEntity.ok(removed);
   }
