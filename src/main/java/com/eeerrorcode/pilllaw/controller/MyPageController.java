@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eeerrorcode.pilllaw.dto.member.MemberDto;
+import com.eeerrorcode.pilllaw.dto.member.ModifyInfoDto;
 import com.eeerrorcode.pilllaw.dto.member.MyInfoDto;
 import com.eeerrorcode.pilllaw.dto.member.SocialMemberDto;
 import com.eeerrorcode.pilllaw.service.follow.FollowService;
@@ -67,9 +68,10 @@ public class MyPageController {
   }
 
   @PutMapping("modify/{mno}")
-  public ResponseEntity<?> modify(@RequestBody MemberDto dto) {
-    
-    return ResponseEntity.ok("success");
+  public ResponseEntity<?> modify(@RequestBody ModifyInfoDto dto) {
+    log.info("수정된 나의 정보 => ", dto);
+    // return ResponseEntity.ok("success");
+    return null;
   }
   
 }
