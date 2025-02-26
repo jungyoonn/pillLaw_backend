@@ -40,8 +40,9 @@ logging:
     jdbc.audit: WARN
     jdbc.connection: WARN
     jdbc.resultset: WARN
-    jdbc.sqltiming: INFO
+    jdbc.sqltiming: WARN
     com.zaxxer.hikari: WARN
+    jdbc.sqlonly: WARN
     org.hibernate: WARN
 app:
   domain: https://pilllaw.eeerrorcode.com
