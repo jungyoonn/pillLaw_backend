@@ -17,6 +17,7 @@ spring:
     url: jdbc:log4jdbc:mariadb://np.eeerrorcode.com:3306/pilllaw
     username: 
     password: 
+    
   jpa:
     hibernate:
       ddl-auto: update
