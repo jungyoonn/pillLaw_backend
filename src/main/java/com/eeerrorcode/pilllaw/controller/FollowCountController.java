@@ -35,8 +35,8 @@ public class FollowCountController {
     Long reqMno = Long.valueOf(mno);
 
     FollowCountDto countDto = new FollowCountDto();
-    countDto.setFollower(followService.getSender_Mno(Long.valueOf(reqMno)).size());
-    countDto.setFollowing(followService.getReceiver_Mno(Long.valueOf(reqMno)).size());
+    countDto.setFollowing(followService.getSender_Mno(Long.valueOf(reqMno)).size());
+    countDto.setFollower(followService.getReceiver_Mno(Long.valueOf(reqMno)).size());
     return ResponseEntity.ok(countDto);
     
   }
