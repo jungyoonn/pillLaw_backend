@@ -22,7 +22,7 @@ public class MemberAddress extends BaseEntity{
 
   private String postalCode;
 
-  private String readAddress;
+  private String roadAddress;
 
   private String detailAddress;
 
