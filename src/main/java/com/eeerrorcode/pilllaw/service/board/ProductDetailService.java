@@ -52,7 +52,7 @@ public interface ProductDetailService {
           .ext(fileDto.getExt())
           .url(fileDto.getUrl())
           .productDetail(productDetail)
-          .type(FileType.REVIEW)
+          .type(FileType.DETAIL)
         .build();
         productDetail.getFiles().add(file);
       });

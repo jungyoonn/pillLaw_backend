@@ -2,7 +2,9 @@ package com.eeerrorcode.pilllaw.dto.board;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.eeerrorcode.pilllaw.dto.file.FileDto;
 import com.fasterxml.jackson.annotation.JsonRawValue;
@@ -43,6 +45,16 @@ public class ProductReviewDto {
   private List<FileDto> fileDtos = new ArrayList<>();
 
   private LocalDateTime regDate, modDate;
+
+  public List<String> getImageUrls() {
+    if (fileDtos == null || fileDtos.isEmpty()) {
+        return Collections.emptyList();
+    }
+    return fileDtos.stream()
+        .map(FileDto::getUrl)  // ✅ 파일 URL 리스트 반환
+        .collect(Collectors.toList());
+  }
+
 
   public ProductReviewDto(Long prno, Long pno, Long mno, String content, Integer rating, Long count, LocalDateTime regDate, LocalDateTime modDate, List<FileDto> fileDtos) {
     this.prno = prno;

@@ -21,6 +21,7 @@ public class ProductDto {
   private String keep;
   private boolean state;
   private LocalDateTime regDate, modDate;
+  private String imageUrl;
   
   private List<String> type;
   private List<CategoryDto> categories;

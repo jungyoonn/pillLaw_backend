@@ -14,7 +14,7 @@ public interface ProductReviewService {
   
   List<ProductReviewDto> showReviews();
 
-  void register(ProductReviewDto dto);
+  Long register(ProductReviewDto dto);
 
   void delete(Long prno);
 

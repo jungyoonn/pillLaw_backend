@@ -1,10 +1,15 @@
 package com.eeerrorcode.pilllaw.service.board;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.eeerrorcode.pilllaw.dto.file.FileDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDetailDto;
 import com.eeerrorcode.pilllaw.entity.product.ProductDetail;
 import com.eeerrorcode.pilllaw.repository.product.ProductDetailRepository;
@@ -25,9 +30,24 @@ public class ProductDetailServiceImpl implements ProductDetailService{
   @Override
   public ProductDetailDto showDetailsByPno(Long pno) {
     log.info("showDetailsByPno :::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-    ProductDetailDto returnDetail = toDto(productDetailRepository.findByProduct(pno).get());
-    return returnDetail;
+    
+    ProductDetail productDetail = productDetailRepository.findByProduct(pno)
+        .orElseThrow(() -> new NoSuchElementException("❌ 해당 제품의 상세 정보를 찾을 수 없습니다: " + pno));
+
+    List<FileDto> fileDtos = productDetail.getFiles().stream()
+      .map(FileDto::new)
+      .collect(Collectors.toList());
+
+    return ProductDetailDto.builder()
+      .pdno(productDetail.getPdno())
+      .pno(productDetail.getProduct().getPno())
+      .content(productDetail.getContent())
+      .count(productDetail.getCount())
+      .mno(productDetail.getMember().getMno())
+      .fileDtos(fileDtos) // ✅ 파일 DTO 리스트 추가
+      .build();
   }
+
   
   // 테스트 통과!!
   @Override

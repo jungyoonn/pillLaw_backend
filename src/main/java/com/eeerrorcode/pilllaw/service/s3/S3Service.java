@@ -1,6 +1,10 @@
 package com.eeerrorcode.pilllaw.service.s3;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,8 +15,10 @@ import lombok.extern.log4j.Log4j2;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.model.S3Object;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 
@@ -28,16 +34,71 @@ public class S3Service {
   @Value("${aws.s3.base-url}")
   private String baseUrl;
 
-  // 🔹 S3Client를 GlobalConfig에서 주입받도록 변경
+  @Value("${aws.s3.folder-structure.product}")
+  private String productPathTemplate;
+
+  @Value("${aws.s3.folder-structure.review}")
+  private String reviewPathTemplate;
+
+  public String generateProductImageUrl(Long pno, String fileName) {
+    String year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
+    String path = productPathTemplate.replace("{year}", year).replace("{pno}", String.valueOf(pno));
+    if (!path.endsWith("/")) {
+        path += "/";
+    }
+    
+    // 실제 S3 키 확인을 위한 로깅
+    String s3Key = path + fileName;
+    String fullUrl = baseUrl + bucketName + "/" + s3Key;
+    
+    log.info("생성된 S3 키: {}", s3Key);
+    log.info("생성된 전체 URL: {}", fullUrl);
+    
+    // S3에 해당 키가 존재하는지 확인 (옵션)
+    try {
+        s3Client.headObject(builder -> builder.bucket(bucketName).key(s3Key).build());
+        log.info("S3에 파일 존재: {}", s3Key);
+    } catch (Exception e) {
+        log.warn("S3에 파일이 존재하지 않음: {}", s3Key);
+    }
+    
+    return fullUrl;
+}
+
+  public String getProductMainImage(Long pno) {
+    String year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
+    String prefix = "uploads/" + year + "/product/" + pno + "/img/";
+
+    ListObjectsRequest listObjects = ListObjectsRequest.builder()
+        .bucket(bucketName)
+        .prefix(prefix)
+        .build();
+
+    List<String> fileList = s3Client.listObjects(listObjects).contents().stream()
+        .map(S3Object::key)
+        .sorted()  // 🔹 파일명 정렬 (01_~, 02_~ 순서 유지)
+        .collect(Collectors.toList());
+
+    if (fileList.isEmpty()) {
+        return "https://via.placeholder.com/500";  // 기본 이미지 반환
+    }
+
+    return baseUrl + "/" + fileList.get(0); 
+}
+
+  public String generateReviewImagePath(Long prno) {
+    return reviewPathTemplate.replace("{prno}", String.valueOf(prno));
+  }
+
   public S3Service(S3Client s3Client) {
     this.s3Client = s3Client;
   }
 
   @PostConstruct
   public void init() {
-    log.info("✅ S3Service 초기화 완료");
-    log.info("✅ 사용 중인 S3 Bucket: {}", bucketName);
-    log.info("✅ Base URL: {}", baseUrl);
+    log.info(" S3Service 초기화 완료");
+    log.info(" 사용 중인 S3 Bucket: {}", bucketName);
+    log.info(" Base URL: {}", baseUrl);
   }
 
   public String uploadFile(MultipartFile file, String key) {

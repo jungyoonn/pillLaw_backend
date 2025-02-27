@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,7 +53,7 @@ public class ProductReviewController {
   public ResponseEntity<List<ProductReviewDto>> getListByProductReview(@PathVariable("pno")Long pno) {
     log.info("listByPno :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
-    if(!productService.viewProduct(pno).get().isState()){
+    if(productService.viewProduct(pno).get().isState()){
       List<ProductReviewDto> reviewDtos = productReviewService.showReviewsByProduct(pno);
       return ResponseEntity.ok(reviewDtos);
     }
@@ -71,61 +72,71 @@ public class ProductReviewController {
   // 포스트맨 통과!!
   @PostMapping(value = "/register", consumes = "multipart/form-data")
   public ResponseEntity<?> register(
-      @RequestParam("pno") Long pno,
-      @RequestParam("mno") Long mno,
-      @RequestParam("content") String content,
-      @RequestParam("rating") Integer rating,
-      @RequestParam(value = "files", required = false) List<MultipartFile> files) {
-  
-      log.info("리뷰 등록 요청 - 상품 번호: {}, 작성자: {}, 평점: {}", pno, mno, rating);
-  
-      List<FileDto> uploadedFiles = new ArrayList<>();
-      if (files != null && !files.isEmpty()) {
-          for (MultipartFile file : files) {
-              try {
-                  String key = "uploads/review/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
-                  String fileUrl = s3Service.uploadFile(file, key); // 🔹 파일 S3 업로드
-                  
-                  FileDto fileDto = FileDto.builder()
-                          .uuid(UUID.randomUUID().toString())
-                          .origin(file.getOriginalFilename())
-                          .fname(file.getOriginalFilename())
-                          .mime(file.getContentType())
-                          .path(key)
-                          .url(fileUrl)
-                          .ext(getFileExtension(file.getOriginalFilename()))
-                          .size(file.getSize())
-                          .type(FileType.REVIEW) // ✅ `FileType.REVIEW` 할당!
-                          .build();
-                  
-                  log.info("파일 DTO 생성 완료: {}", fileDto);  // ✅ DTO 값 확인
-  
-                  uploadedFiles.add(fileDto);
-              } catch (Exception e) {
-                  log.error("파일 업로드 실패: {}", e.getMessage());
-              }
-          }
+    @RequestParam("pno") Long pno,
+    @RequestParam("mno") Long mno,
+    @RequestParam("content") String content,
+    @RequestParam("rating") Integer rating,
+    @RequestParam(value = "files", required = false) List<MultipartFile> files) {
+    log.info("리뷰 등록 요청 - 상품 번호: {}, 작성자: {}, 평점: {}", pno, mno, rating);
+    List<FileDto> uploadedFiles = new ArrayList<>();
+    if (files != null && !files.isEmpty()) {
+        for (MultipartFile file : files) {
+            try {
+              String key = "uploads/review/" + pno + UUID.randomUUID() + "_" + file.getOriginalFilename();
+              String fileUrl = s3Service.uploadFile(file, key); 
+              FileDto fileDto = FileDto.builder()
+                      .uuid(UUID.randomUUID().toString())
+                      .origin(file.getOriginalFilename())
+                      .fname(file.getOriginalFilename())
+                      .mime(file.getContentType())
+                      .path(key)
+                      .url(fileUrl)
+                      .ext(getFileExtension(file.getOriginalFilename()))
+                      .size(file.getSize())
+                      .type(FileType.REVIEW) 
+                      .build();
+              
+              log.info("파일 DTO 생성 완료: {}", fileDto);  // ✅ DTO 값 확인
+
+              uploadedFiles.add(fileDto);
+            } catch (Exception e) {
+                log.error("파일 업로드 실패: {}", e.getMessage());
+            }
+        }
+    }
+
+    ProductReviewDto reviewDto = ProductReviewDto.builder()
+            .pno(pno)
+            .mno(mno)
+            .content(content)
+            .rating(rating)
+            .fileDtos(uploadedFiles)
+            .build();
+
+    log.info("리뷰 DTO 생성 완료: {}", reviewDto);
+
+    try{
+      Long reviewId = productReviewService.register(reviewDto);
+      if (reviewId == null) {
+        log.error("리뷰 등록 실패: reviewId가 NULL");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("리뷰 ID가 없습니다.");
       }
-  
-      ProductReviewDto reviewDto = ProductReviewDto.builder()
-              .pno(pno)
-              .mno(mno)
-              .content(content)
-              .rating(rating)
-              .fileDtos(uploadedFiles)
-              .build();
-  
-      log.info("리뷰 DTO 생성 완료: {}", reviewDto);
-  
-      productReviewService.register(reviewDto);
-  
+
+      String jsonResponse = "{\"reviewId\": " + reviewId + "}";
+      log.info("서버 응답: {}", jsonResponse);
+      
       // ✅ `saveFile`이 실행되는지 확인하기 위해 로깅 추가
-      uploadedFiles.forEach(file -> {
-          log.info("파일 저장 요청: {}", file);
-          fileService.saveFile(file);
-      });
-  
-      return ResponseEntity.ok("리뷰 등록 성공");
+      if(!uploadedFiles.isEmpty()){
+        uploadedFiles.forEach(file -> {
+        log.info("파일 저장 요청: {}", file);
+        fileService.saveFile(file);
+        });
+      }
+      return ResponseEntity.ok().body(jsonResponse);
+    }catch (Exception e) {
+      log.error(" 리뷰 등록 중 오류 발생: {}", e.getMessage(), e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("리뷰 등록 중 오류 발생!");
+    }
   }
   
 

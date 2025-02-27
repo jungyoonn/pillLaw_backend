@@ -30,9 +30,6 @@ public class ProductDetailController {
   @Autowired
   private ProductDetailService productDetailService;
 
-
-  
-
   // 포스트맨 통과 !!!
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody ProductDetailDto dto) {

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import com.eeerrorcode.pilllaw.dto.product.ProductCategoryDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductInfoViewDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductWithCategoryDto;
+import com.eeerrorcode.pilllaw.entity.file.File;
 import com.eeerrorcode.pilllaw.entity.product.Category;
 import com.eeerrorcode.pilllaw.entity.product.CategoryType;
 import com.eeerrorcode.pilllaw.entity.product.Product;
@@ -27,6 +29,8 @@ import com.eeerrorcode.pilllaw.repository.product.ProductCategoryRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductInfoViewRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductPriceRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductRepository;
+import com.eeerrorcode.pilllaw.service.file.FileService;
+import com.eeerrorcode.pilllaw.service.s3.S3Service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -51,16 +55,38 @@ public class ProductServiceImpl implements ProductService {
 
   private final ProductPriceService productPriceService;
 
+  private final S3Service s3Service;
+
+  private final FileService fileService;
+
   // 테스트 완료!
   @Override
   public Optional<ProductDto> viewProduct(Long pno) {
-    return productRepository.findById(pno)
+  return productRepository.findById(pno)
     .map(this::toDto)
     .map(dto -> {
-      productPriceRepository.findByProductPno(pno).ifPresent(p -> dto.setPriceInfo(productPriceService.toDto(p)));
+      // 가격 정보 설정
+      productPriceRepository.findByProductPno(pno)
+          .ifPresent(p -> dto.setPriceInfo(productPriceService.toDto(p)));
+      
+      // 이미지 URL 설정 - 디버깅 로그 추가
+      try {
+          String returnUUID = fileService.getFirstUUIDByPNO(pno);
+          log.info("UUID: {}", returnUUID);
+          
+          String imageUrl = s3Service.generateProductImageUrl(pno, returnUUID);
+          log.info("생성된 이미지 URL: {}", imageUrl);
+          
+          dto.setImageUrl(imageUrl);
+          log.info("DTO에 이미지 URL 설정: {}", dto.getImageUrl());
+      } catch (Exception e) {
+          log.error("이미지 정보를 가져오는 중 오류 발생: " + e.getMessage(), e);
+      }
+      
       return dto;
-    }); 
+    });
   }
+  
   
 
   // 테스트 완료!

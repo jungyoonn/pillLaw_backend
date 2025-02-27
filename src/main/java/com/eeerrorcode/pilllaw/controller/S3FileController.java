@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.eeerrorcode.pilllaw.dto.file.FileDto;
+import com.eeerrorcode.pilllaw.entity.file.FileType;
 import com.eeerrorcode.pilllaw.service.file.FileService;
 import com.eeerrorcode.pilllaw.service.s3.S3Service;
 
@@ -48,39 +49,41 @@ public class S3FileController {
         return ResponseEntity.badRequest().body(null);
       }
 
+      log.info("🔹 파일 업로드 요청 - productReviewId={}, productDetailId={}, noticeId={}", 
+      productReviewId, productDetailId, noticeId);
     List<FileDto> uploadedFiles = new ArrayList<>();
 
     for (MultipartFile file : files){
       try{
         String origin = file.getOriginalFilename();
-        String path = getUploadPath();
         String uuid = UUID.randomUUID().toString();   
         String ext = getFileExtension(origin);
         String fileName = uuid + "." + ext;
         String mimeType = file.getContentType();
-        byte[] content = file.getBytes();
-        String key = "uploads" + path + "/" + fileName;
 
-        String fileUrl = s3Service.uploadFile(file, key);
-        
-        FileDto fileDto = FileDto
-        .builder()
-          .uuid(uuid)
-          .origin(origin)
-          .fname(fileName)
-          .mime(mimeType)
-          .path(path)
-          .url(fileUrl)
-          .ext(ext)
-          .size(file.getSize())
-        .build();
-        fileService.saveFile(fileDto);
-
-        uploadedFiles.add(fileDto);
+        if(productReviewId != null){
+          String folderPath = "uploads/review/" + productReviewId + "/";
+          String key = folderPath + fileName;
+          String fileUrl = s3Service.uploadFile(file, key);
+          FileDto fileDto = FileDto
+          .builder()  
+            .uuid(uuid)
+            .origin(origin)
+            .fname(fileName)
+            .mime(mimeType)
+            .path(folderPath)
+            .url(fileUrl)
+            .ext(ext)
+            .size(file.getSize())
+            .type(FileType.REVIEW)  // ✅ 파일 타입 설정
+            .prno(productReviewId)  // ✅ 리뷰 번호 설정
+          .build();
+          fileService.saveFile(fileDto);
+          uploadedFiles.add(fileDto);
+        }
       } catch (Exception e){
         log.error("파일 업로드 실패: {}", e.getMessage());
       }
-
     }
     return ResponseEntity.ok(uploadedFiles);
   }

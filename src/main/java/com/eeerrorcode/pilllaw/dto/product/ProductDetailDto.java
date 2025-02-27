@@ -2,7 +2,9 @@ package com.eeerrorcode.pilllaw.dto.product;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.eeerrorcode.pilllaw.dto.file.FileDto;
 
@@ -33,4 +35,12 @@ public class ProductDetailDto {
 
   private LocalDateTime regDate, modDate;
   
+  public List<String> getImageUrls() {
+    if (fileDtos == null || fileDtos.isEmpty()) {
+        return Collections.emptyList();
+    }
+    return fileDtos.stream()
+        .map(FileDto::getUrl)
+        .collect(Collectors.toList());
+  }
 }

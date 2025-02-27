@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eeerrorcode.pilllaw.dto.board.ProductReviewDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDetailDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
-import com.eeerrorcode.pilllaw.dto.product.ProductPriceDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductWithCategoryDto;
 import com.eeerrorcode.pilllaw.service.board.ProductDetailService;
 import com.eeerrorcode.pilllaw.service.board.ProductReviewService;
@@ -48,9 +47,6 @@ public class ProductController {
   @Autowired
   private ProductReviewService productReviewService;
 
-  @Autowired
-  private ProductPriceService productPriceService;
-
   // 포스트맨 통과!
   @GetMapping(value = "/{pno}", produces = "application/json")
   public ResponseEntity<?> showDetail(@PathVariable("pno") Long pno) {
@@ -78,15 +74,11 @@ public class ProductController {
       }
       log.info("reviews => {}", reviews);
   
-      // Optional<ProductPriceDto> optionalPrice = productPriceService.getProductPrice(pno);
-      // ProductPriceDto price = optionalPrice.orElse(null);
-      // ProductPriceDto price = product.getPriceInfo();
-      // log.info("price => {}", price);
-  
       Map<String, Object> response = new HashMap<>();
       response.put("product", product);
       response.put("detail", detail);
       response.put("reviews", reviews);
+      // response.put("imageUrls", detail != null ? detail.getImageUrls() : new ArrayList<>()); // ✅ 상세 이미지 추가
       // response.put("price", price);
   
       return ResponseEntity.ok(response);

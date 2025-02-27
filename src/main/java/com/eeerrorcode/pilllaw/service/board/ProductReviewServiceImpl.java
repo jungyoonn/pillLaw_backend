@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eeerrorcode.pilllaw.dto.board.ProductReviewDto;
+import com.eeerrorcode.pilllaw.dto.file.FileDto;
 import com.eeerrorcode.pilllaw.entity.board.ProductReview;
 import com.eeerrorcode.pilllaw.entity.file.File;
 import com.eeerrorcode.pilllaw.entity.file.FileType;
@@ -88,59 +89,73 @@ public class ProductReviewServiceImpl implements ProductReviewService{
 
   @Override
   @Transactional
-  public void register(ProductReviewDto dto) {
+  public Long register(ProductReviewDto dto) {
     log.info("🚀 리뷰 등록 요청: pno={}, mno={}", dto.getPno(), dto.getMno());
-    Product product = productRepository.findById(dto.getPno())
-            .orElseThrow(() -> new NoSuchElementException("❌ 상품을 찾을 수 없습니다: " + dto.getPno()));
-    Member member = memberRepository.findById(dto.getMno())
-            .orElseThrow(() -> new NoSuchElementException("❌ 회원 정보를 찾을 수 없습니다: " + dto.getMno()));
-    log.info("✅ 회원 및 상품 조회 완료 - mno={}, pno={}", member.getMno(), product.getPno());
-    ProductReview productReview = ProductReview.builder()
-            .product(product)  // FK 연결 (영속 상태 객체)
-            .member(member)  // FK 연결 (영속 상태 객체)
-            .content(dto.getContent())
-            .rating(dto.getRating() != null ? dto.getRating() : 1)
-            .count(dto.getCount() != null ? dto.getCount() : 0L)
-            .build();
-    // final ProductReview savedReview = productReviewRepository.save(ProductReview
-    // .builder()
-    //   .product(product)
-    //   .member(member)
-    //   .content(dto.getContent())
-    //   .rating(dto.getRating() != null ? dto.getRating() : 1)
-    //   .count(dto.getCount() != null ? dto.getCount() : 0L)
-    // .build());
-    productReviewRepository.save(productReview);
-    productReviewRepository.flush();  // ✅ 즉시 DB 반영하여 `prno` 값 확인
-    log.info("✅ 리뷰 저장 완료: prno={}", productReview.getPrno());
-    if (dto.getFileDtos() != null && !dto.getFileDtos().isEmpty()) {
-        List<File> files = dto.getFileDtos().stream()
-          .map(fileDto -> File.builder()
-            .uuid(fileDto.getUuid())
-            .origin(fileDto.getOrigin())
-            .path(fileDto.getPath())
-            .fname(fileDto.getFname())
-            .mime(fileDto.getMime())
-            .size(fileDto.getSize())
-            .ext(fileDto.getExt())
-            .url(fileDto.getUrl())
-            .type(FileType.REVIEW)  // 파일 타입 지정
-            .productReview(productReview)  // FK 연결
-            .build())
-          .collect(Collectors.toList());
-      log.info("✅ 파일 개수: {}", files.size());
-      if (!files.isEmpty()) {
-          productReview.updateFiles(files); 
-          productReviewRepository.save(productReview);
+    try{
+      Product product = productRepository.findById(dto.getPno())
+              .orElseThrow(() -> new NoSuchElementException("❌ 상품을 찾을 수 없습니다: " + dto.getPno()));
+      Member member = memberRepository.findById(dto.getMno())
+              .orElseThrow(() -> new NoSuchElementException("❌ 회원 정보를 찾을 수 없습니다: " + dto.getMno()));
+      log.info("회원 및 상품 조회 완료 - mno={}, pno={}", member.getMno(), product.getPno());
+      ProductReview productReview = ProductReview.builder()
+              .product(product)  // FK 연결 (영속 상태 객체)
+              .member(member)  // FK 연결 (영속 상태 객체)
+              .content(dto.getContent())
+              .rating(dto.getRating() != null ? dto.getRating() : 1)
+              .count(dto.getCount() != null ? dto.getCount() : 0L)
+              .build();
+
+      productReviewRepository.save(productReview);
+      productReviewRepository.flush();  // ✅ 즉시 DB 반영하여 `prno` 값 확인
+      log.info(" 리뷰 저장 완료: prno={}", productReview.getPrno());
+      if (dto.getFileDtos() != null && !dto.getFileDtos().isEmpty()) {
+          List<File> files = dto.getFileDtos().stream()
+            .map(fileDto -> File.builder()
+              .uuid(fileDto.getUuid())
+              .origin(fileDto.getOrigin())
+              .path(fileDto.getPath())
+              .fname(fileDto.getFname())
+              .mime(fileDto.getMime())
+              .size(fileDto.getSize())
+              .ext(fileDto.getExt())
+              .url(fileDto.getUrl())
+              .type(FileType.REVIEW)  // 파일 타입 지정
+              .productReview(productReview)  // FK 연결
+              .build())
+            .collect(Collectors.toList());
+        log.info("✅ 파일 개수: {}", files.size());
+        if (!files.isEmpty()) {
+            productReview.updateFiles(files); 
+            productReviewRepository.save(productReview);
+        }
       }
+      return productReview.getPrno();
+    }catch(Exception e){
+      log.error("❌ 리뷰 등록 중 예외 발생: {}", e.getMessage(), e);
+      throw e;
     }
     // return new ProductReviewDto(productReview);
   }
 
   @Override
   public List<ProductReviewDto> showReviewsByProduct(Long pno) {
-    List<ProductReviewDto> returnList = productReviewRepository.findReviewsByProduct(pno).stream().map(this::toDto).toList();
-    return returnList;
+ return productReviewRepository.findReviewsByProduct(pno).stream()
+        .map(review -> {
+            List<FileDto> fileDtos = review.getFiles().stream()
+                .map(FileDto::new)
+                .collect(Collectors.toList());
+
+            return ProductReviewDto.builder()
+                .prno(review.getPrno())
+                .pno(review.getProduct().getPno())
+                .mno(review.getMember().getMno())
+                .content(review.getContent())
+                .rating(review.getRating())
+                .count(review.getCount())
+                .fileDtos(fileDtos)  // ✅ 리뷰 이미지 파일 리스트 추가
+                .build();
+        })
+        .collect(Collectors.toList());
   }
 
 
