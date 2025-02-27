@@ -1,5 +1,7 @@
 package com.eeerrorcode.pilllaw.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,13 +16,23 @@ import com.eeerrorcode.pilllaw.dto.pay.PointDto;
 import com.eeerrorcode.pilllaw.service.pay.PointService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequestMapping("/api/v1/point")
 @RequiredArgsConstructor
+@Log4j2
 public class PointController {
     @Autowired
     private PointService pointService;
+
+    // 포인트 이력 조회 API
+    @GetMapping("/member/{mno}")
+    public ResponseEntity<List<PointDto>> getPointHistory(@PathVariable("mno") Long mno) {
+        log.info("Fetching point history for member: {}", mno);
+        List<PointDto> pointHistory = pointService.getPointHistory(mno);
+        return ResponseEntity.ok(pointHistory);
+    }
 
      // 포인트 적립 API
     @PostMapping("/{mno}/add")
@@ -39,6 +51,7 @@ public class PointController {
     // 총 포인트 조회 API
     @GetMapping("/{mno}/total")
     public ResponseEntity<Long> getTotalPoints(@PathVariable("mno") Long mno) {
+        log.info("Fetching total points for member: {}", mno);
         long totalPoints = pointService.getTotalPoints(mno);
         return ResponseEntity.ok(totalPoints);
     }

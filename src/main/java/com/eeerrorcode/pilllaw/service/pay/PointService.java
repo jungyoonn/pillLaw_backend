@@ -1,5 +1,7 @@
 package com.eeerrorcode.pilllaw.service.pay;
 
+import java.util.List;
+
 import com.eeerrorcode.pilllaw.dto.pay.PointDto;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 import com.eeerrorcode.pilllaw.entity.pay.Point;
@@ -15,6 +17,8 @@ public interface PointService {
     long getTotalPoints(Long mno);
 
     int deleteExpiredPoints();
+
+    public List<PointDto> getPointHistory(Long mno);
 
     // DTO -> Entity 변환
     default Point toEntity(PointDto pointDto) {

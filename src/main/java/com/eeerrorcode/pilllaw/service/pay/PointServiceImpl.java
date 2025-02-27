@@ -2,6 +2,7 @@ package com.eeerrorcode.pilllaw.service.pay;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -109,6 +110,12 @@ public class PointServiceImpl implements PointService {
         return points.stream()
                 .mapToLong(Point::getPoint)
                 .sum();
+    }
+
+    @Override
+    public List<PointDto> getPointHistory(Long mno) {
+        List<Point> points = pointRepository.findByMemberMno(mno);
+        return points.stream().map(this::toDto).collect(Collectors.toList());
     }
 
     @Override
