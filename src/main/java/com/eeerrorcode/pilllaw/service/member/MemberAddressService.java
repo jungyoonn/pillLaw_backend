@@ -1,6 +1,7 @@
 package com.eeerrorcode.pilllaw.service.member;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.eeerrorcode.pilllaw.dto.member.AddressDto;
 import com.eeerrorcode.pilllaw.entity.member.Member;
@@ -16,6 +17,10 @@ public interface MemberAddressService {
   public List<AddressDto> getAddressesByMno(Long mno);
 
   public boolean isDuplicateAddress(AddressDto addressDto);
+
+  Optional<AddressDto> getByMnoAndDefaultAddr(Long mno, boolean defaultAddr);
+
+  List<AddressDto> getByMno(Long mno);
 
   default AddressDto toDto(MemberAddress address) {
     AddressDto dto = AddressDto.builder()
@@ -45,5 +50,24 @@ public interface MemberAddressService {
       .build();
 
     return address;
+  }
+
+  default Optional<AddressDto> toOptionalDto(MemberAddress address) {
+    if (address == null) {
+      return Optional.empty();
+    }
+
+    AddressDto dto = AddressDto.builder()
+      .addrno(address.getAddrno())
+      .recipient(address.getRecipient())
+      .tel(address.getTel())
+      .postalCode(address.getPostalCode())
+      .roadAddress(address.getRoadAddress())
+      .detailAddress(address.getDetailAddress())
+      .defaultAddr(address.isDefaultAddr())
+      .mno(address.getMember().getMno())
+      .build();
+
+    return Optional.of(dto);
   }
 }

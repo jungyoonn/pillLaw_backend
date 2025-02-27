@@ -54,4 +54,15 @@ public class MemberAddressServiceImpl implements MemberAddressService {
         addressDto.getTel());
     return existingAddress.isPresent();
    }
+
+  @Override
+  public Optional<AddressDto> getByMnoAndDefaultAddr(Long mno, boolean defaultAddress) {
+    return repository.findByMnoAndDefaultAddr(mno, defaultAddress).isPresent() ? 
+      toOptionalDto(repository.findByMnoAndDefaultAddr(mno, defaultAddress).get()) : Optional.empty();
+  }
+
+  @Override
+  public List<AddressDto> getByMno(Long mno) {
+    return repository.findByMno(mno).stream().map(this::toDto).toList();
+  }
 }
