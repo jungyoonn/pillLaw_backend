@@ -44,6 +44,7 @@ public class MemberServiceImpl implements MemberService{
     return repository.findAll().stream().map(this::toDto).toList();
   }
 
+  @Transactional
   @Override
   public void modify(MemberDto dto) {
     repository.save(toEntity(dto));    
