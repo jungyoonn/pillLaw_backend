@@ -55,7 +55,7 @@ public class MailServiceImpl implements MailService{
     repository.save(toEntity(dto));
 
     // String verificationLink = appDomain + "/api/mail/verify?token=" + verification.getToken();
-    String verificationLink = "http://localhost:3000/pilllaw/signup/email/verify?token=" + dto.getToken();
+    String verificationLink = "http://localhost:3000/pilllaw/mypage/email/verify?token=" + dto.getToken();
 
     String title = "PILL LAW 이메일 인증 링크";
     String content = "<h3 style='color:#7DA9A7'>안녕하세요, PILL LAW입니다!</h3>" +
@@ -68,23 +68,25 @@ public class MailServiceImpl implements MailService{
     return true;
   }
 
-  public boolean verifyEmail(String token) {
+  public Optional<String> verifyEmail(String token) {
     Optional<EmailDto> optional = toOptionalDto(repository.findByToken(token).orElse(null));
 
     if (optional.isEmpty()) {
-      return false; // 토큰이 존재하지 않음
+      return Optional.empty(); // 토큰이 존재하지 않음
     }
 
     EmailDto dto = optional.get();
 
     if (dto.isExpired()) {
       repository.delete(toEntity(dto)); // 만료된 인증 정보 삭제
-      return false;
+      return Optional.empty();
     }
 
     // 이메일 인증 성공 -> 데이터베이스에서 삭제 or 상태 업데이트
+    String email = dto.getEmail();
     repository.delete(toEntity(dto));
-    return true;
+    log.info("인증된 이메일 => {}", email);
+    return Optional.of(email);  
   }
 
   public void sendEmail(String toEmail, String title, String content) {
@@ -123,4 +125,5 @@ public class MailServiceImpl implements MailService{
       throw new RuntimeException("메일 전송 실패", e);
     }
   }
+
 }
