@@ -67,8 +67,7 @@ public class OrderItemServiceImpl implements OrderItemService {
         // 4. OrderItem들을 저장
         orderItemRepository.saveAll(orderItems);
 
-        // 5. 장바구니 자체 삭제 (옵션: 장바구니 항목 삭제 후 장바구니를 삭제)
-        cartService.removeCart(cart.getCno()); // 장바구니 자체 삭제
+        cartService.removeAllItems(cart.getCno());
 
         // 6. 생성된 OrderItem의 ID를 반환
         return orderItems.stream().map(OrderItem::getOino).collect(Collectors.toList());

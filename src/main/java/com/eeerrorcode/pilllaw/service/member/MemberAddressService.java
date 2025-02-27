@@ -1,5 +1,7 @@
 package com.eeerrorcode.pilllaw.service.member;
 
+import java.util.List;
+
 import com.eeerrorcode.pilllaw.dto.member.AddressDto;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 import com.eeerrorcode.pilllaw.entity.member.MemberAddress;
@@ -10,6 +12,10 @@ public interface MemberAddressService {
   void remove(Long addrno);
 
   void modify(AddressDto dto);
+
+  public List<AddressDto> getAddressesByMno(Long mno);
+
+  public boolean isDuplicateAddress(AddressDto addressDto);
 
   default AddressDto toDto(MemberAddress address) {
     AddressDto dto = AddressDto.builder()

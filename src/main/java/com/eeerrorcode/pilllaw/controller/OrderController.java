@@ -1,14 +1,20 @@
 package com.eeerrorcode.pilllaw.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.eeerrorcode.pilllaw.dto.member.AddressDto;
 import com.eeerrorcode.pilllaw.dto.order.OrderDto;
 import com.eeerrorcode.pilllaw.dto.order.OrderItemDto;
+import com.eeerrorcode.pilllaw.entity.member.MemberAddress;
 import com.eeerrorcode.pilllaw.entity.order.Order;
 import com.eeerrorcode.pilllaw.service.order.OrderService;
+import com.eeerrorcode.pilllaw.service.member.MemberAddressService;
 import com.eeerrorcode.pilllaw.service.order.OrderItemService;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +22,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/order")
 @RequiredArgsConstructor
+@Log4j2
 public class OrderController {
 
     @Autowired
@@ -24,6 +31,9 @@ public class OrderController {
     @Autowired
     private OrderItemService orderItemService;
 
+    // @Autowired
+    // private MemberAddressService addressService;
+
     // 주문 추가
     @PostMapping("/")
     public ResponseEntity<Long> addOrder(@RequestBody OrderDto orderDto) {
@@ -31,16 +41,35 @@ public class OrderController {
         return ResponseEntity.ok(ono);
     }
 
+    // // 주소 추가
+    // @PostMapping("/address")
+    // public ResponseEntity<?> saveAddress(@RequestBody AddressDto addressDto) {
+    //     try {
+    //         // 2️⃣ 주소 저장
+    //         Long addrno = addressService.register(addressDto);
+    //         return ResponseEntity.ok(addrno);
+    //     } catch (Exception e) {
+    //         log.error("주소 저장 실패", e);
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주소 저장 실패");
+    //     }
+    // }
+    
+
+
+
+
+
+
     // 회원 번호로 주문 리스트 조회
     @GetMapping("/member/{mno}")
-    public ResponseEntity<List<OrderDto>> getOrdersByMember(@PathVariable Long mno) {
+    public ResponseEntity<List<OrderDto>> getOrdersByMember(@PathVariable("mno") Long mno) {
         List<OrderDto> orders = orderService.getOrderByMemeber(mno);
         return ResponseEntity.ok(orders);
     }
 
     // 주문 번호로 단일 주문 조회
     @GetMapping("/{ono}")
-    public ResponseEntity<Optional<OrderDto>> getOrderById(@PathVariable Long ono) {
+    public ResponseEntity<Optional<OrderDto>> getOrderById(@PathVariable("ono") Long ono) {
         Optional<OrderDto> order = orderService.getOrderById(ono);
         return ResponseEntity.ok(order);
     }
@@ -55,14 +84,14 @@ public class OrderController {
 
     // 주문 삭제
     @DeleteMapping("/{ono}")
-    public ResponseEntity<Integer> removeOrder(@PathVariable Long ono) {
+    public ResponseEntity<Integer> removeOrder(@PathVariable("ono") Long ono) {
         int removed = orderService.removeOrder(ono);
         return ResponseEntity.ok(removed);
     }
 
     // 특정 주문의 주문 아이템 조회
     @GetMapping("/{ono}/items")
-    public ResponseEntity<List<OrderItemDto>> getOrderItems(@PathVariable Long ono) {
+    public ResponseEntity<List<OrderItemDto>> getOrderItems(@PathVariable("ono") Long ono) {
         List<OrderItemDto> orderItems = orderItemService.getOrderItemsByOrder(ono);
         return ResponseEntity.ok(orderItems);
     }
@@ -70,14 +99,16 @@ public class OrderController {
     // 주문 아이템 추가
     // 장바구니의 모든 아이템을 주문 아이템으로 추가
     @PostMapping("/{mno}/{ono}")
-    public ResponseEntity<List<Long>> addOrderItems(@PathVariable Long mno, @PathVariable Long ono) {
+    public ResponseEntity<List<Long>> addOrderItems(@PathVariable("mno") Long mno, @PathVariable Long ono) {
         List<Long> orderItemIds = orderItemService.addOrderItems(mno, ono);
         return ResponseEntity.ok(orderItemIds);
     }
+
+    
     
     // 주문 아이템 삭제
     @DeleteMapping("/items/{oino}")
-    public ResponseEntity<Integer> removeOrderItem(@PathVariable Long oino) {
+    public ResponseEntity<Integer> removeOrderItem(@PathVariable("oino") Long oino) {
         int removed = orderItemService.removeOrderItem(oino);
         return ResponseEntity.ok(removed);
     }

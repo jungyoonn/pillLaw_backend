@@ -24,21 +24,21 @@ public class PointController {
 
      // 포인트 적립 API
     @PostMapping("/{mno}/add")
-    public ResponseEntity<PointDto> addPoints(@PathVariable Long mno, @RequestParam long pointAmount) {
+    public ResponseEntity<PointDto> addPoints(@PathVariable("mno") Long mno, @RequestParam(name = "pointAmount") long pointAmount) {
         PointDto pointDto = pointService.addPoints(mno, pointAmount);
         return ResponseEntity.ok(pointDto);
     }
 
     // 포인트 사용 API
     @PostMapping("/{mno}/use")
-    public ResponseEntity<PointDto> usePoints(@PathVariable Long mno, @RequestParam long pointAmount) {
+    public ResponseEntity<PointDto> usePoints(@PathVariable("mno") Long mno, @RequestParam(name = "pointAmount") long pointAmount) {
         PointDto pointDto = pointService.usePoints(mno, pointAmount);
         return ResponseEntity.ok(pointDto);
     }
 
     // 총 포인트 조회 API
     @GetMapping("/{mno}/total")
-    public ResponseEntity<Long> getTotalPoints(@PathVariable Long mno) {
+    public ResponseEntity<Long> getTotalPoints(@PathVariable("mno") Long mno) {
         long totalPoints = pointService.getTotalPoints(mno);
         return ResponseEntity.ok(totalPoints);
     }

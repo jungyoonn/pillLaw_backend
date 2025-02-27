@@ -26,6 +26,8 @@ public interface CartService {
     // 장바구니 삭제
     int removeCart(Long cno);
 
+    int removeAllItems(Long cno);
+
     // DTO -> Entity 변환
     default Cart toEntity(CartDto cartDto) {
         return Cart.builder()
