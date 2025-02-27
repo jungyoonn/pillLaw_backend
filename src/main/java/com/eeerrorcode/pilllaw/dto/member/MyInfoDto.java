@@ -13,4 +13,5 @@ public class MyInfoDto {
   private SocialMemberDto socialDto;
   private Integer follower;
   private Integer following;
+  private AddressDto addressDto;
 }
