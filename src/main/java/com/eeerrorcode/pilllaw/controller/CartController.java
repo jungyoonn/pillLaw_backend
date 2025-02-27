@@ -25,6 +25,21 @@ public class CartController {
   @Autowired
   private CartItemService cartItemService;
 
+
+   // mno를 받아서 cno를 반환하는 API
+   @GetMapping("/{mno}")
+public ResponseEntity<Long> getCartCnoByMember(@PathVariable("mno") Long mno) {
+    return cartService.getCartByMember(mno)
+            .map(cartDto -> {
+                System.out.println("✅ 가져온 cno: " + cartDto.getCno()); // 로그 추가
+                return ResponseEntity.ok(cartDto.getCno());
+            })
+            .orElseGet(() -> {
+                System.out.println("❌ 해당 mno의 장바구니 없음");
+                return ResponseEntity.notFound().build();
+            });
+}
+
   // 장바구니 생성
   @PostMapping("/")
   public ResponseEntity<Long> addCart(@RequestBody CartDto cartDto) {
