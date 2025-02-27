@@ -1,6 +1,8 @@
 package com.eeerrorcode.pilllaw.controller;
 
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eeerrorcode.pilllaw.dto.common.CommonResponseDto;
 import com.eeerrorcode.pilllaw.dto.member.EmailRequestDto;
+import com.eeerrorcode.pilllaw.dto.member.EmailVerificationCompleteDto;
 import com.eeerrorcode.pilllaw.dto.member.SignUpDto;
 import com.eeerrorcode.pilllaw.service.member.MailServiceImpl;
 import com.eeerrorcode.pilllaw.service.member.MemberService;
@@ -68,12 +71,12 @@ public class SignupController {
   public ResponseEntity<CommonResponseDto> verifyEmail(@RequestParam("token") String token) {
     log.info("토큰 생성 여부 확인 => {}", token);
     try {
-      boolean isVerified = mailService.verifyEmail(token);
+      Optional<String> verifiedEmail = mailService.verifyEmail(token);
       
-      if (isVerified) {
+      if (verifiedEmail.isPresent()) {
         return ResponseEntity.ok(
           CommonResponseDto.builder()
-            .msg("이메일 인증이 완료되었습니다.")
+            .msg(verifiedEmail.get())
             .ok(true)
             .statusCode(HttpStatus.OK.value())
             .build()
@@ -127,4 +130,38 @@ public class SignupController {
     }
   }
   
+  @PostMapping("/email/verification-complete")
+  public ResponseEntity<?> completeEmailVerification(@RequestBody EmailVerificationCompleteDto dto) {
+    log.info("이메일 인증 완료 요청: {}", dto);
+    try {
+      boolean result = memberService.updateEmailVerificationStatus(dto.getMno(), dto.getEmail());
+        
+      if (result) {
+        return ResponseEntity.ok(
+          CommonResponseDto.builder()
+            .msg("이메일 인증 상태가 업데이트되었습니다.")
+            .ok(true)
+            .statusCode(HttpStatus.OK.value())
+            .build()
+        );
+      } else {
+        return ResponseEntity.badRequest().body(
+          CommonResponseDto.builder()
+            .msg("이메일 인증 상태 업데이트에 실패했습니다.")
+            .ok(false)
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .build()
+        );
+      }
+    } catch (Exception e) {
+      return ResponseEntity.internalServerError().body(
+        CommonResponseDto.builder()
+          .msg("이메일 인증 상태 업데이트 중 오류가 발생했습니다.")
+          .ok(false)
+          .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+          .build()
+      );
+    }
+  }
+
 }
