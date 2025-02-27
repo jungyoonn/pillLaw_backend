@@ -12,6 +12,7 @@ import com.eeerrorcode.pilllaw.dto.member.MemberDto;
 import com.eeerrorcode.pilllaw.entity.member.LoginResult;
 import com.eeerrorcode.pilllaw.entity.member.MemberAccount;
 import com.eeerrorcode.pilllaw.entity.member.MemberRole;
+import com.eeerrorcode.pilllaw.entity.member.MemberStatus;
 import com.eeerrorcode.pilllaw.repository.MemberRepository;
 
 import jakarta.transaction.Transactional;
@@ -95,6 +96,27 @@ public class MemberServiceImpl implements MemberService{
   public Optional<MemberDto> getByEmailAndAccount(String email, MemberAccount account) {
     return repository.findByEmailAndAccountType(email, account).isPresent() ?
       toOptionalDto(repository.findByEmailAndAccountType(email, account).get()) : null;
+  }
+
+  @Override
+  public boolean updateEmailVerificationStatus(Long mno, String email) {
+    Optional<MemberDto> memberOptional = toOptionalDto(repository.findById(mno).orElse(null));
+    
+    if (memberOptional.isEmpty()) {
+      return false;
+    }
+    
+    MemberDto member = memberOptional.get();
+    
+    // 이메일 업데이트 및 인증 상태 변경
+    member.setEmail(email);
+    
+    if (!member.getStatus().contains(MemberStatus.VERIFIED)) {
+      member.getStatus().add(MemberStatus.VERIFIED);
+    }
+    
+    repository.save(toEntity(member));
+    return true;
   }
 }
 

@@ -27,6 +27,8 @@ public interface MemberService {
 
   Optional<MemberDto> getByEmailAndAccount(String email, MemberAccount account);
 
+  boolean updateEmailVerificationStatus(Long mno, String email);
+
   default Member toEntity(MemberDto dto) {
     Member member = Member.builder()
       .mno(dto.getMno())
