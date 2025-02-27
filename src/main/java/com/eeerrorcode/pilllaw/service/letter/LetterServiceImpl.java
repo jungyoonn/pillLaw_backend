@@ -21,49 +21,49 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class LetterServiceImpl implements LetterService{
-    private final LetterRepository repository;
-    private final MemberRepository memberRepository;
-   
-    @Override
-    public LetterRequestDto sendLetter(Long senderId, Long receiverId, String content) {
-      Member sender = memberRepository.findById(senderId)
-        .orElseThrow(() -> new RuntimeException("Sender not found"));
-        Member receiver = memberRepository.findById(receiverId)
-        .orElseThrow(() -> new RuntimeException("Receiver not found"));
-        
-        LetterRequestDto dto = LetterRequestDto.builder()
-        .receiverId(receiverId)
-        .senderId(senderId)
-        .content(content)
-        .build();
-        repository.save(requestDtoToEntity(dto));
-        return dto;
-    }
-    @Override
-    public List<LetterResponseDto> getReceivedLetters(long mno) {
-      List<Letter> letters = repository.findByReceiverId(memberRepository.findById(mno).orElse(null));
-      List<LetterResponseDto> responseDtos = letters.stream()
-      .map(letter -> entityToResponseDto(letter)) // entity -> dto 변환
-      .collect(Collectors.toList());
+  private final LetterRepository repository;
+  private final MemberRepository memberRepository;
+  
+  @Override
+  public LetterRequestDto sendLetter(Long senderId, Long receiverId, String content) {
+    Member sender = memberRepository.findById(senderId)
+      .orElseThrow(() -> new RuntimeException("Sender not found"));
+      Member receiver = memberRepository.findById(receiverId)
+      .orElseThrow(() -> new RuntimeException("Receiver not found"));
+      
+      LetterRequestDto dto = LetterRequestDto.builder()
+      .receiverId(receiverId)
+      .senderId(senderId)
+      .content(content)
+      .build();
+      repository.save(requestDtoToEntity(dto));
+      return dto;
+  }
+  @Override
+  public List<LetterResponseDto> getReceivedLetters(long mno) {
+    List<Letter> letters = repository.findByReceiverId(memberRepository.findById(mno).orElse(null));
+    List<LetterResponseDto> responseDtos = letters.stream()
+    .map(letter -> entityToResponseDto(letter)) // entity -> dto 변환
+    .collect(Collectors.toList());
 
     return responseDtos;
-        
-    }
-    @Override
-    public void deleteReceivedLetter(LetterResponseDto letterDto) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'deleteReceivedLetter'");
-    }
-    @Override
-    public void deleteSendLetter(LetterRequestDto letterDto) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'deleteSendLetter'");
-    }
+      
+  }
+  @Override
+  public void deleteReceivedLetter(LetterResponseDto letterDto) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'deleteReceivedLetter'");
+  }
+  @Override
+  public void deleteSendLetter(LetterRequestDto letterDto) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'deleteSendLetter'");
+  }
 
-    
+  
 
-    
-    // @Override
+  
+  // @Override
     // public Letter sendLetter(LetterRequestDto letterDto) {
     //   Letter letter = sendLetter(letterDto.getSenderId(), letterDto.getReceiverId(), letterDto.getContent());
     //   return sendLetter(letterDto.getSenderId(), letterDto.getReceiverId(), letterDto.getContent());
