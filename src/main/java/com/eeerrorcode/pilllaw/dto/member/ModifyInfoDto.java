@@ -11,5 +11,6 @@ import lombok.*;
 public class ModifyInfoDto {
   private MemberDto memberDto;
   private SocialMemberDto socialDto;
-  private AddressDto address;
+  private AddressDto addressDto;
+  private String confirmPassword;
 }
