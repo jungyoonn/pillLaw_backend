@@ -8,7 +8,7 @@ import com.eeerrorcode.pilllaw.entity.member.EmailVerification;
 public interface MailService {
   boolean sendVerificationLink(String toEmail);
 
-  boolean verifyEmail(String token);
+  Optional<String> verifyEmail(String token);
 
   void sendEmail(String toEmail, String title, String content);
 
