@@ -15,12 +15,11 @@ public class DeliveryController {
   private DeliveryService deliveryService;
 
   @PostMapping("/create")
-  public ResponseEntity<DeliveryDto> createDelivery(@RequestParam("ono") Long ono, @RequestParam("addrno") Long addrno, @RequestParam("trackingNumber") String trackingNumber) {
-    try {
-      DeliveryDto delivery = deliveryService.createDelivery(ono, addrno, trackingNumber);
-      return ResponseEntity.ok(delivery);
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(null);
-    }
+  public ResponseEntity<DeliveryDto> createDelivery(@RequestBody DeliveryDto deliveryDto) {
+      return ResponseEntity.ok(deliveryService.createDelivery(
+          deliveryDto.getOno(),
+          deliveryDto.getAddrno(),
+          deliveryDto.getTrackingNumber()
+      ));
   }
 }

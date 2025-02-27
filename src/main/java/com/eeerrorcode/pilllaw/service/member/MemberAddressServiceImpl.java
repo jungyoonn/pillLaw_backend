@@ -46,19 +46,32 @@ public class MemberAddressServiceImpl implements MemberAddressService {
 
   @Override
   public boolean isDuplicateAddress(AddressDto addressDto) {
-    Optional<MemberAddress> existingAddress = repository.findByMember_MnoAndPostalCodeAndRoadAddressAndDetailAddressAndTel(
+    Optional<MemberAddress> existingAddress = repository
+        .findByMember_MnoAndPostalCodeAndRoadAddressAndDetailAddressAndTel(
+            addressDto.getMno(),
+            addressDto.getPostalCode(),
+            addressDto.getRoadAddress(),
+            addressDto.getDetailAddress(),
+            addressDto.getTel());
+    return existingAddress.isPresent();
+  }
+
+  // AddressService.java (기존 addrno 조회 메서드 추가)
+  @Override
+  public Optional<Long> findExistingAddrno(AddressDto addressDto) {
+    return repository.findByMember_MnoAndPostalCodeAndRoadAddressAndDetailAddressAndTel(
         addressDto.getMno(),
         addressDto.getPostalCode(),
         addressDto.getRoadAddress(),
         addressDto.getDetailAddress(),
-        addressDto.getTel());
-    return existingAddress.isPresent();
-   }
+        addressDto.getTel()).map(MemberAddress::getAddrno); //  기존 주소의 addrno 반환
+  }
 
   @Override
   public Optional<AddressDto> getByMnoAndDefaultAddr(Long mno, boolean defaultAddress) {
-    return repository.findByMnoAndDefaultAddr(mno, defaultAddress).isPresent() ? 
-      toOptionalDto(repository.findByMnoAndDefaultAddr(mno, defaultAddress).get()) : Optional.empty();
+    return repository.findByMnoAndDefaultAddr(mno, defaultAddress).isPresent()
+        ? toOptionalDto(repository.findByMnoAndDefaultAddr(mno, defaultAddress).get())
+        : Optional.empty();
   }
 
   @Override

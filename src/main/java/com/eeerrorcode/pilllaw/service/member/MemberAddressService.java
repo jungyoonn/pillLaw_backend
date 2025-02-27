@@ -22,6 +22,8 @@ public interface MemberAddressService {
 
   List<AddressDto> getByMno(Long mno);
 
+  public Optional<Long> findExistingAddrno(AddressDto addressDto);
+
   default AddressDto toDto(MemberAddress address) {
     AddressDto dto = AddressDto.builder()
       .addrno(address.getAddrno())

@@ -1,6 +1,7 @@
 package com.eeerrorcode.pilllaw.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,23 +37,23 @@ public class MemberAddressController {
   @PostMapping("/")
   public ResponseEntity<?> saveAddress(@RequestBody AddressDto addressDto) {
     try {
-      // 1️⃣ 중복 주소 체크
-       // 1️⃣ 중복 주소 체크
-       if (addressService.isDuplicateAddress(addressDto)) {
-        // 중복된 주소일 때, 그냥 넘어가거나 알림만 주고 성공 상태 반환
-        log.info("중복된 주소 발견, 저장하지 않음: {}", addressDto);
-        return ResponseEntity.ok("중복된 주소이므로 저장하지 않음");
-    }
+      // 1️⃣ 중복된 주소의 addrno 확인
+      Optional<Long> existingAddrno = addressService.findExistingAddrno(addressDto);
 
-      // 2️⃣ 주소 저장
+      if (existingAddrno.isPresent()) {
+        log.info("중복된 주소 발견, 기존 addrno 반환: {}", existingAddrno.get());
+        return ResponseEntity.ok(existingAddrno.get()); // ✅ 기존 addrno 반환
+      }
+
+      // 2️⃣ 새로운 주소 저장
       Long addrno = addressService.register(addressDto);
 
-      // 3️⃣ 주소 ID 반환
+      // 3️⃣ 새 주소의 addrno 반환
       return ResponseEntity.ok(addrno);
     } catch (Exception e) {
       log.error("주소 저장 실패", e);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주소 저장 실패");
     }
   }
-  
+
 }
