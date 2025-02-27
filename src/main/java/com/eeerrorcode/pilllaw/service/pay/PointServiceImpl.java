@@ -53,8 +53,6 @@ public class PointServiceImpl implements PointService {
         return toDto(point); // PointDto로 반환
     }
 
-    // 테스트 아직 안해봄!!!!!!!!!!!!!!!!
-    // 결제 완료 후 1주일 뒤 포인트 적립
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
     @Transactional
     public int addPointsForCompletedPayments() {
@@ -63,9 +61,9 @@ public class PointServiceImpl implements PointService {
 
         for (Pay payment : successfulPayments) {
             LocalDateTime paymentDate = payment.getRegDate();
-            LocalDateTime oneWeekLater = paymentDate.plusWeeks(1);
+            LocalDateTime oneDayLater = paymentDate.plusDays(1); // 하루 뒤로 변경
 
-            if (LocalDateTime.now().isAfter(oneWeekLater)) {
+            if (LocalDateTime.now().isAfter(oneDayLater)) {
                 Member member = payment.getOrder().getMember();
                 double pointRatio = member.getRoleSet().contains(MemberRole.SUBSCRIBER) ? 0.04 : 0.02;
                 long pointsToAdd = (long) (payment.getTotalPrice() * pointRatio);
@@ -83,6 +81,7 @@ public class PointServiceImpl implements PointService {
         }
         return pointCount; // 적립된 포인트 개수 반환
     }
+
     @Override
     @Transactional
     public PointDto usePoints(Long mno, long pointAmount) {

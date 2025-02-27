@@ -7,6 +7,7 @@ import com.eeerrorcode.pilllaw.entity.pay.Point;
 public interface PointService {
 
     PointDto addPoints(Long mno, long pointAmount);
+    
     int addPointsForCompletedPayments();
 
     PointDto usePoints(Long mno, long pointAmount);
