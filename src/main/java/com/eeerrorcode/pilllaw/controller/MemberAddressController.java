@@ -36,10 +36,13 @@ public class MemberAddressController {
   @PostMapping("/")
   public ResponseEntity<?> saveAddress(@RequestBody AddressDto addressDto) {
     try {
-      // // 1️⃣ 중복 주소 체크
-      // if (addressService.isDuplicateAddress(addressDto)) {
-      //   return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 등록된 주소입니다.");
-      // }
+      // 1️⃣ 중복 주소 체크
+       // 1️⃣ 중복 주소 체크
+       if (addressService.isDuplicateAddress(addressDto)) {
+        // 중복된 주소일 때, 그냥 넘어가거나 알림만 주고 성공 상태 반환
+        log.info("중복된 주소 발견, 저장하지 않음: {}", addressDto);
+        return ResponseEntity.ok("중복된 주소이므로 저장하지 않음");
+    }
 
       // 2️⃣ 주소 저장
       Long addrno = addressService.register(addressDto);
@@ -51,4 +54,5 @@ public class MemberAddressController {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주소 저장 실패");
     }
   }
+  
 }

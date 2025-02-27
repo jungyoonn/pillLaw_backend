@@ -7,7 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.eeerrorcode.pilllaw.entity.member.MemberAddress;
 
-public interface MemberAddressRepository extends JpaRepository<MemberAddress, Long>{
+public interface MemberAddressRepository extends JpaRepository<MemberAddress, Long> {
   List<MemberAddress> findByMemberMno(Long mno);
-  
+
+  Optional<MemberAddress> findByMember_MnoAndPostalCodeAndRoadAddressAndDetailAddressAndTel(
+      Long mno, String postalCode, String roadAddress, String detailAddress, String tel);
+      
+  // Optional<MemberAddress>
+  // findByMember_IdAndPostalCodeAndRoadAddressAndDetailAddressAndTel(Long mno,
+  // String postalCode, String roadAddress, String detailAddress, String tel);
+
 }

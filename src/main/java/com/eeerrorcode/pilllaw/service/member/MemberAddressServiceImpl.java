@@ -46,14 +46,12 @@ public class MemberAddressServiceImpl implements MemberAddressService {
 
   @Override
   public boolean isDuplicateAddress(AddressDto addressDto) {
-  //   Optional<MemberAddress> existingAddress = repository.findByMember_IdAndPostalCodeAndRoadAddressAndDetailAddressAndTel(
-  //       addressDto.getMno(),
-  //       addressDto.getPostalCode(),
-  //       addressDto.getRoadAddress(),
-  //       addressDto.getDetailAddress(),
-  //       addressDto.getTel());
-  //   return existingAddress.isPresent();
-  return false;
+    Optional<MemberAddress> existingAddress = repository.findByMember_MnoAndPostalCodeAndRoadAddressAndDetailAddressAndTel(
+        addressDto.getMno(),
+        addressDto.getPostalCode(),
+        addressDto.getRoadAddress(),
+        addressDto.getDetailAddress(),
+        addressDto.getTel());
+    return existingAddress.isPresent();
    }
-
 }
