@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eeerrorcode.pilllaw.dto.common.CommonResponseDto;
 import com.eeerrorcode.pilllaw.dto.member.*;
+import com.eeerrorcode.pilllaw.entity.member.MemberStatus;
 import com.eeerrorcode.pilllaw.service.follow.FollowService;
 import com.eeerrorcode.pilllaw.service.member.*;
 
@@ -97,8 +98,19 @@ public class MyPageController {
             .build()
         );
       }
+
+      if(!memberDto.getEmail().equals(dto.getMemberDto().getEmail()) && 
+        dto.getMemberDto().getStatus().contains(MemberStatus.VERIFIED)) {
+          dto.getMemberDto().getStatus().remove(MemberStatus.VERIFIED);
+      }
   
       dto.getMemberDto().setPassword(encoder.encode(dto.getConfirmPassword()));
+
+      if(!dto.getNewPassword().equals("")) {
+        log.info("공백이왜저장되냐고");
+        dto.getMemberDto().setPassword(encoder.encode(dto.getNewPassword()));
+      }
+
       memberService.modify(dto.getMemberDto());
     }
 
