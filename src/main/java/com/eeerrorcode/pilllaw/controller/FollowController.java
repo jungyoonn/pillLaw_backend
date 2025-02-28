@@ -110,5 +110,5 @@ public class FollowController {
      log.info("팔로우 토글 - senderMno: " + senderMno + ", receiverMno: " + receiverMno);
      return ResponseEntity.ok(Map.of("success", true, "followed", result));
  }
- 
+
 }

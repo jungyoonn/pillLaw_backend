@@ -45,7 +45,7 @@ public class LetterController {
   }
 
   // 3. 보낸 쪽지 조회
-  @GetMapping("/sent/{senderId}")
+  @GetMapping("/send/{senderId}")
   public ResponseEntity<?> getSentLetters(@PathVariable Long senderId) {
       List<LetterResponseDto> letters = letterService.getSentLetters(senderId);
       log.info("보낸 쪽지 조회 - senderId: " + senderId);
