@@ -1,5 +1,6 @@
 package com.eeerrorcode.pilllaw.service.board;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -123,7 +124,7 @@ public class ProductReviewServiceImpl implements ProductReviewService{
               .productReview(productReview)  // FK 연결
               .build())
             .collect(Collectors.toList());
-        log.info("✅ 파일 개수: {}", files.size());
+        log.info("파일 개수: {}", files.size());
         if (!files.isEmpty()) {
             productReview.updateFiles(files); 
             productReviewRepository.save(productReview);
@@ -131,7 +132,7 @@ public class ProductReviewServiceImpl implements ProductReviewService{
       }
       return productReview.getPrno();
     }catch(Exception e){
-      log.error("❌ 리뷰 등록 중 예외 발생: {}", e.getMessage(), e);
+      log.error("리뷰 등록 중 예외 발생: {}", e.getMessage(), e);
       throw e;
     }
     // return new ProductReviewDto(productReview);
@@ -139,24 +140,36 @@ public class ProductReviewServiceImpl implements ProductReviewService{
 
   @Override
   public List<ProductReviewDto> showReviewsByProduct(Long pno) {
- return productReviewRepository.findReviewsByProduct(pno).stream()
-        .map(review -> {
-            List<FileDto> fileDtos = review.getFiles().stream()
-                .map(FileDto::new)
-                .collect(Collectors.toList());
+     log.info("howReviewsByProduct 실행: PNO: {}", pno);
 
-            return ProductReviewDto.builder()
-                .prno(review.getPrno())
-                .pno(review.getProduct().getPno())
-                .mno(review.getMember().getMno())
-                .content(review.getContent())
-                .rating(review.getRating())
-                .count(review.getCount())
-                .fileDtos(fileDtos)  // ✅ 리뷰 이미지 파일 리스트 추가
-                .build();
-        })
-        .collect(Collectors.toList());
+    List<ProductReview> reviews = productReviewRepository.findReviewsByProduct(pno);
+
+    if (reviews == null || reviews.isEmpty()) {
+      log.warn("리뷰 없음: PNO: {}", pno);
+      return Collections.emptyList();
+    }
+
+    log.info("리뷰 개수: {} | PNO: {}", reviews.size(), pno);
+
+    return reviews.stream()
+      .map(review -> {
+        List<FileDto> fileDtos = review.getFiles().stream()
+          .map(FileDto::new)
+          .collect(Collectors.toList());
+
+        return ProductReviewDto.builder()
+          .prno(review.getPrno())
+          .pno(review.getProduct().getPno())
+          .mno(review.getMember().getMno())
+          .content(review.getContent())
+          .rating(review.getRating())
+          .count(review.getCount())
+          .fileDtos(fileDtos)
+          .build();
+      })
+      .collect(Collectors.toList());
   }
+  
 
 
   

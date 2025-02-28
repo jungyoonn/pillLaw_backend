@@ -50,38 +50,36 @@ public class ProductController {
   // 포스트맨 통과!
   @GetMapping(value = "/{pno}", produces = "application/json")
   public ResponseEntity<?> showDetail(@PathVariable("pno") Long pno) {
-      log.info("showDetail :::::::::::::::::::::::::::::::::::::::::::: {}", pno);
-  
-      Optional<ProductDto> optionalProduct = productService.viewProduct(pno);
-      if (optionalProduct.isEmpty()) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-          .body("Product not found: " + pno);
-      }
-      ProductDto product = optionalProduct.get();
-      log.info("product => {}", product);
-  
-      ProductDetailDto detail = null;
-      try {
-          detail = productDetailService.showDetailsByPno(pno);
-          log.info("detail => {}", detail);
-      } catch (NoSuchElementException e) {
-          log.warn("No product details found for pno: {}", pno);
-      }
-  
-      List<ProductReviewDto> reviews = productReviewService.showReviewsByProduct(pno);
-      if (reviews == null) {
-          reviews = new ArrayList<>(); 
-      }
-      log.info("reviews => {}", reviews);
-  
-      Map<String, Object> response = new HashMap<>();
-      response.put("product", product);
-      response.put("detail", detail);
-      response.put("reviews", reviews);
-      // response.put("imageUrls", detail != null ? detail.getImageUrls() : new ArrayList<>()); // ✅ 상세 이미지 추가
-      // response.put("price", price);
-  
-      return ResponseEntity.ok(response);
+    log.info("showDetail :::::::::::::::::::::::::::::::::::::::::::: {}", pno);
+
+    Optional<ProductDto> optionalProduct = productService.viewProduct(pno);
+    if (optionalProduct.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body("Product not found: " + pno);
+    }
+    ProductDto product = optionalProduct.get();
+    log.info("product => {}", product);
+
+    ProductDetailDto detail = null;
+    try {
+        detail = productDetailService.showDetailsByPno(pno);
+        log.info("detail => {}", detail);
+    } catch (NoSuchElementException e) {
+        log.warn("No product details found for pno: {}", pno);
+    }
+
+    List<ProductReviewDto> reviews = productReviewService.showReviewsByProduct(pno);
+    if (reviews == null) {
+        reviews = new ArrayList<>(); 
+    }
+    log.info("reviews => {}", reviews);
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("product", product);
+    response.put("detail", detail);
+    response.put("reviews", reviews);
+
+    return ResponseEntity.ok(response);
   }
   
   // 포스트맨 통과!
@@ -112,7 +110,6 @@ public class ProductController {
   @GetMapping("/list")
   public List<ProductWithCategoryDto> allListWithCategory() {
     return productService.listAllProductWithCategory();
-    // 여기까진 문제없이 통과.
   }
   
 }

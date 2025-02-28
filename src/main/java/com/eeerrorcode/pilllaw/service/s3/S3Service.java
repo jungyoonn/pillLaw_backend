@@ -34,6 +34,9 @@ public class S3Service {
   @Value("${aws.s3.base-url}")
   private String baseUrl;
 
+  @Value("{${aws.s3.folder-structure.detail}}")
+  private String productDetailTemplate;
+
   @Value("${aws.s3.folder-structure.product}")
   private String productPathTemplate;
 
@@ -63,7 +66,7 @@ public class S3Service {
     }
     
     return fullUrl;
-}
+  }
 
   public String getProductMainImage(Long pno) {
     String year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.eeerrorcode.pilllaw.dto.board.ProductReviewDto;
 import com.eeerrorcode.pilllaw.dto.product.CategoryDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductCategoryDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
@@ -29,6 +30,7 @@ import com.eeerrorcode.pilllaw.repository.product.ProductCategoryRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductInfoViewRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductPriceRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductRepository;
+import com.eeerrorcode.pilllaw.service.board.ProductReviewService;
 import com.eeerrorcode.pilllaw.service.file.FileService;
 import com.eeerrorcode.pilllaw.service.s3.S3Service;
 
@@ -57,34 +59,41 @@ public class ProductServiceImpl implements ProductService {
 
   private final S3Service s3Service;
 
+  private final ProductReviewService productReviewService;
+
   private final FileService fileService;
 
   // 테스트 완료!
   @Override
   public Optional<ProductDto> viewProduct(Long pno) {
-  return productRepository.findById(pno)
-    .map(this::toDto)
-    .map(dto -> {
-      // 가격 정보 설정
-      productPriceRepository.findByProductPno(pno)
-          .ifPresent(p -> dto.setPriceInfo(productPriceService.toDto(p)));
-      
-      // 이미지 URL 설정 - 디버깅 로그 추가
-      try {
-          String returnUUID = fileService.getFirstUUIDByPNO(pno);
-          log.info("UUID: {}", returnUUID);
-          
-          String imageUrl = s3Service.generateProductImageUrl(pno, returnUUID);
-          log.info("생성된 이미지 URL: {}", imageUrl);
-          
-          dto.setImageUrl(imageUrl);
-          log.info("DTO에 이미지 URL 설정: {}", dto.getImageUrl());
-      } catch (Exception e) {
-          log.error("이미지 정보를 가져오는 중 오류 발생: " + e.getMessage(), e);
-      }
-      
-      return dto;
-    });
+    return productRepository.findById(pno)
+      .map(this::toDto)
+      .map(dto -> {
+        // 가격 정보 설정
+        productPriceRepository.findByProductPno(pno)
+            .ifPresent(p -> dto.setPriceInfo(productPriceService.toDto(p)));
+        
+        // 이미지 URL 설정 - 디버깅 로그 추가
+        try {
+            String returnUUID = fileService.getFirstUUIDByPNO(pno);
+            log.info("UUID: {}", returnUUID);
+            List<String> returnUUIDList = fileService.getImageListByPno(pno);
+            log.info("UUIDLIST : {}", returnUUIDList);
+            String imageUrl = s3Service.generateProductImageUrl(pno, returnUUID);
+            List<String> imageUrlList = returnUUIDList.stream().map(ul -> s3Service.generateProductImageUrl(pno, ul)).toList();
+            log.info("생성된 이미지 URL 리스트: {}", imageUrlList);
+            
+            dto.setImageUrl(imageUrl);
+            dto.setImageUrlList(imageUrlList);
+            log.info("DTO 전체 목록 확인 : {}", dto);
+            log.info("DTO에 이미지 URL 설정: {}", dto.getImageUrl());
+            log.info("DTO에 이미지 URL 리스트 설정 : {}", dto.getImageUrlList());
+        } catch (Exception e) {
+            log.error("이미지 정보를 가져오는 중 오류 발생: " + e.getMessage(), e);
+        }
+        
+        return dto;
+      });
   }
   
   
@@ -92,9 +101,10 @@ public class ProductServiceImpl implements ProductService {
   // 테스트 완료!
   @Override
   public List<ProductDto> listAllProduct() {
-    List<ProductDto> returnList = productRepository
-    .findAll()
-      .stream().map(this::toDto)
+    List<ProductDto> returnList = productRepository.findAll()
+    .stream()
+    .map(this::toDto)  // Product -> ProductDto 변환
+    .peek(dto -> dto.setImageUrl(fileService.getFirstUUIDByPNO(dto.getPno()))) // 대표 이미지 설정
     .toList();
     return returnList;
   }
@@ -208,39 +218,56 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public List<ProductWithCategoryDto> listAllProductWithCategory() {
     return productRepository.findByState(true).stream()
-    .map(product -> {
-      List<ProductCategoryDto> categories = productCategoryRepository.findByProduct(product)
+      .map(product -> {
+        List<ProductCategoryDto> categories = productCategoryRepository.findByProduct(product)
           .stream()
           .map(ProductCategoryDto::new)
           .toList();
 
-      ProductPrice price = productPriceRepository.findByProductPno(product.getPno())
-          .orElse(null);  // 가격이 없는 경우 처리
+        ProductPrice price = productPriceRepository.findByProductPno(product.getPno())
+          .orElse(null);
 
-      List<CategoryDto> categoryDtos = categories.stream().map(c -> {
-        List<String> categoryTypeList = new ArrayList<>();
-        if (c.getCategoryType() != null) {
-          categoryTypeList.add(c.getCategoryType());
+        List<CategoryDto> categoryDtos = categories.stream().map(c -> {
+          List<String> categoryTypeList = new ArrayList<>();
+          if (c.getCategoryType() != null) {
+            categoryTypeList.add(c.getCategoryType());
+          }
+          return CategoryDto.builder()
+            .cno(c.getCno())
+            .cname(c.getCname())
+            .type(categoryTypeList)
+            .build();
+        }).toList();
+
+        List<ProductReviewDto> reviews;
+        try {
+          log.info("📢 리뷰 조회 시작: PNO: {}", product.getPno());
+          reviews = productReviewService.showReviewsByProduct(product.getPno());
+          log.info("📢 리뷰 개수: {} | PNO: {}", reviews.size(), product.getPno());
+        } catch (Exception e) {
+          log.error("❌ 리뷰 조회 중 오류 발생! PNO: {} | 오류 메시지: {}", product.getPno(), e.getMessage(), e);
+          reviews = Collections.emptyList();
         }
 
-      return CategoryDto.builder()
-        .cno(c.getCno())
-        .cname(c.getCname())
-        .type(categoryTypeList)  // List<String> 타입으로 전달
-        .build();
-      }).toList();
+        ProductDto productDto = new ProductDto(toDto(product), productPriceService.toDto(price), categoryDtos);
 
-        // ProductDto 생성
-      ProductDto productDto = new ProductDto(toDto(product), productPriceService.toDto(price) , categoryDtos);
+        String imageUUID = fileService.getFirstUUIDByPNO(product.getPno());
+        String imageUrl = (imageUUID != null) ? s3Service.generateProductImageUrl(product.getPno(), imageUUID) : null;
+        productDto.setImageUrl(imageUrl);
 
-      // ProductWithCategoryDto 생성 및 반환
-      return new ProductWithCategoryDto(
-        productDto, 
-        productPriceService.toDto(price), 
-        categories
-      );
-    }).toList();
+        log.info("대표 이미지 설정: PNO: {}, UUID: {}, URL: {}", product.getPno(), imageUUID, imageUrl);
+
+        return new ProductWithCategoryDto(
+            productDto,
+            productPriceService.toDto(price),
+            categories,
+            reviews);
+      })
+      .toList();
   }
+  
+
+
   
   
   

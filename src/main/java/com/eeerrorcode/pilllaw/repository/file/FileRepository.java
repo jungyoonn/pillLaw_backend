@@ -24,6 +24,6 @@ public interface FileRepository extends JpaRepository<File, String>{
 
   List<File> findByProductDetail_PdnoOrderByFnameAsc(Long pdno);
   
-  @Query(value = "SELECT * FROM tbl_file WHERE pno = :pno ORDER BY fname ASC", nativeQuery = true)
-  List<File> findFilesByPno(@Param("pno") Long pno);
+  @Query(value = "SELECT UUID FROM tbl_file WHERE pno = :pno ORDER BY fname ASC", nativeQuery = true)
+  List<String> findFilesByPno(@Param("pno") Long pno);
 }

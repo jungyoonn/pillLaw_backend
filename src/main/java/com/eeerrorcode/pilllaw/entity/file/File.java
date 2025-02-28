@@ -69,6 +69,10 @@ public class File extends BaseEntity{
   @JoinColumn(name = "nno")
   private Notice notice;
 
+  @Column(name = "pno", insertable = false, updatable = false)
+  private Long pno;
+
+
   @PrePersist
   public void prePersistMakeUUID() {
     this.uuid = (this.uuid == null) ? UUID.randomUUID().toString() : this.uuid;
