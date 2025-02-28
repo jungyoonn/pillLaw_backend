@@ -18,7 +18,8 @@ public interface FollowService {
   boolean isFollowBack(long senderMno, long receiverMno); 
   // void deleteFollow(long senderMno, long receiverMno); // 나중에 block할때 필요한것.
 
-  boolean toggleFollow(long senderMno, long receiverMno);
+  // 팔로우 토글 메서드
+  boolean toggleFollow(long senderId, long receiverId);
 
   // 맞팔 목록 조회 (isFollowBack이 true인 경우)
   List<Follow> findByReceiver_MnoAndIsFollowBackTrue(long receiverMno);

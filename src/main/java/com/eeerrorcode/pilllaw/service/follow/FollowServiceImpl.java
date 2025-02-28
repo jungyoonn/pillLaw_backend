@@ -96,7 +96,7 @@ public class FollowServiceImpl implements FollowService {
         // receiver가 sender를 팔로우한 관계가 있다면 삭제
         Optional<Follow> receiverFollow = repository.findBySender_MnoAndReceiver_Mno(receiverMno, senderMno);
         receiverFollow.ifPresent(repository::delete);
-    }
+    }   
 }
 
   @Override
@@ -120,17 +120,17 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
-    public boolean toggleFollow(long senderMno, long receiverMno) {
+    public boolean toggleFollow(long senderId, long receiverId) {
         // 이미 팔로우 관계가 있는지 확인
-        Optional<Follow> existingFollow = repository.findBySender_MnoAndReceiver_Mno(senderMno, receiverMno);
+        Optional<Follow> existingFollow = repository.findBySender_MnoAndReceiver_Mno(senderId, receiverId);
         if (existingFollow.isPresent()) {
             repository.deleteById(existingFollow.get().getFollowId());
             return true; // 팔로우 관계가 있었고 삭제됨
         } else {
             // 팔로우 관계가 없으면 추가
             repository.save(Follow.builder()
-                .sender(Member.builder().mno(senderMno).build())
-                .receiver(Member.builder().mno(receiverMno).build())
+                .sender(Member.builder().mno(senderId).build())
+                .receiver(Member.builder().mno(receiverId).build())
                 .build());
             return false; // 팔로우 관계가 없었고 추가됨
         }
