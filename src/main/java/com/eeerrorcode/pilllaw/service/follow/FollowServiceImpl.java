@@ -136,6 +136,13 @@ public class FollowServiceImpl implements FollowService {
         }
     }
     
-
+    @Override
+    public boolean existingFollow(long senderMno, long receiverMno) {
+        Optional<Follow> optional = repository.findBySender_MnoAndReceiver_Mno(senderMno, receiverMno);
+        if(optional.isPresent()) {
+            return true;
+        }
+        return false;
+    }
 
 }
