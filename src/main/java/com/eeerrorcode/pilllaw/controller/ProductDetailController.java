@@ -56,7 +56,7 @@ public class ProductDetailController {
 
   }
   
-  // 포스트맨 통과 !!!
+  // 포스트맨 통과 !!!, 관리자 전용
   @GetMapping("/listall")
   public ResponseEntity<?> list(@PageableDefault(size = 10, sort = "regDate", direction = Sort.Direction.DESC) Pageable pageable) {
     log.info("list ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
