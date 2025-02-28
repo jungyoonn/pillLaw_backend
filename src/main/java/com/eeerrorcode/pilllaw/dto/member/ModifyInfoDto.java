@@ -13,4 +13,5 @@ public class ModifyInfoDto {
   private SocialMemberDto socialDto;
   private AddressDto addressDto;
   private String confirmPassword;
+  private String newPassword;
 }
