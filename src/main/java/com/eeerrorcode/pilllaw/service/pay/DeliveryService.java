@@ -8,6 +8,8 @@ import com.eeerrorcode.pilllaw.entity.pay.Delivery;
 public interface DeliveryService {
   DeliveryDto createDelivery(Long ono, Long addrno, String trackingNumber);
 
+  DeliveryDto getDeliveryByOrderNumber(Long ono);
+
   default Delivery toEntity(DeliveryDto deliveryDto) {
     return Delivery.builder()
         .dno(deliveryDto.getDno())

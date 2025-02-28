@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+import com.eeerrorcode.pilllaw.dto.member.AddressDto;
 import com.eeerrorcode.pilllaw.entity.pay.Delivery.DeliveryStatus;
 
 
@@ -26,4 +27,6 @@ public class DeliveryDto {
   private DeliveryStatus deliveryStatus;
   private LocalDateTime regdate;
   private LocalDateTime moddate;
+  private AddressDto address;  // AddressDto는 나중에 서비스에서 설정
+
 }
