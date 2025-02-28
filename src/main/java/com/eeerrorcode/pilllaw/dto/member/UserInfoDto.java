@@ -17,6 +17,8 @@ public class UserInfoDto {
   private String nickname;
   private Integer following;
   private Integer follower;
+  private boolean isfollowing;
+  private boolean followBack;
 
   private List<ProductReviewDto> reviewDto;
   private List<ProductFavoriteDto> favoriteDto;
