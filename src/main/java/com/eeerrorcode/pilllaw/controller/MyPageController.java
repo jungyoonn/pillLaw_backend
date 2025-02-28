@@ -3,6 +3,7 @@ package com.eeerrorcode.pilllaw.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -118,7 +119,13 @@ public class MyPageController {
       addressService.modify(dto.getAddressDto());
     }
 
-    return ResponseEntity.ok("정보 수정 완료!");
+    return ResponseEntity.ok(
+      CommonResponseDto.builder()
+        .msg("수정이 완료되었습니다")
+        .ok(true)
+        .statusCode(HttpStatus.OK.value())
+        .build()
+    );
   }
   
 }
