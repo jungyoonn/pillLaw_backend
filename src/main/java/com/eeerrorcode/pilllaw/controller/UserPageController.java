@@ -29,22 +29,29 @@ public class UserPageController {
   @Autowired
   private FollowService followService;
   
-  @GetMapping("/{mno}")
-  public ResponseEntity<?> getMethodName(@PathVariable("mno") String mno) {
+  @GetMapping("/{mno}/{mymno}")
+  public ResponseEntity<?> getMethodName(@PathVariable("mno") String mno, @PathVariable("mymno") String mymno) {
     log.info("mno => {}", mno);
 
     if(mno == null) {
       return ResponseEntity.notFound().build();
     }
     Long reqMno = Long.valueOf(mno);
+    
+    if(mymno == null) {
+      return ResponseEntity.notFound().build();
+    }
+    Long reqMyMno = Long.valueOf(mymno);
 
     Optional<MemberDto> memberOptional = memberService.get(reqMno);
     Optional<SocialMemberDto> socialOptional = socialMemberService.getByMno(reqMno);
     UserInfoDto infoDto = new UserInfoDto();
 
-    // 팔로잉과 팔로워 숫자 받아오기
+    // 팔로잉과 팔로워 숫자, 나의 팔로잉 여부, 맞팔 여부 받아오기
     infoDto.setFollower(followService.getReceiver_Mno(Long.valueOf(reqMno)).size());
     infoDto.setFollowing(followService.getSender_Mno(Long.valueOf(reqMno)).size());
+    infoDto.setIsfollowing(followService.existingFollow(reqMyMno, reqMno));
+    infoDto.setFollowBack(followService.isFollowBack(reqMyMno, reqMno));
 
     // 소셜 회원
     if(socialOptional.isPresent()) {
