@@ -104,8 +104,8 @@ public class FollowController {
  // 8. 팔로우 토글 API - 새로운 엔드포인트
  @GetMapping("/toggle/{senderMno}/{receiverMno}")
  public ResponseEntity<Map<String, Object>> toggleFollow(
-         @PathVariable long senderMno, 
-         @PathVariable long receiverMno) {
+         @PathVariable("senderMno") long senderMno, 
+         @PathVariable("receiverMno") long receiverMno) {
      boolean result = followService.toggleFollow(senderMno, receiverMno);
      log.info("팔로우 토글 - senderMno: " + senderMno + ", receiverMno: " + receiverMno);
      return ResponseEntity.ok(Map.of("success", true, "followed", result));
