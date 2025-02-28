@@ -66,7 +66,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
         // 4. OrderItem들을 저장
         orderItemRepository.saveAll(orderItems);
-
+        // 5/ cartItem 비우기
         cartService.removeAllItems(cart.getCno());
 
         // 6. 생성된 OrderItem의 ID를 반환

@@ -17,6 +17,7 @@ import com.eeerrorcode.pilllaw.service.order.OrderService;
 import com.eeerrorcode.pilllaw.service.member.MemberAddressService;
 import com.eeerrorcode.pilllaw.service.order.OrderItemService;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -41,24 +42,31 @@ public class OrderController {
         return ResponseEntity.ok(ono);
     }
 
+    @PostMapping("/move")
+    public ResponseEntity<?> moveCartItemsToOrder(@RequestBody Map<String, Long> request) {
+        Long mno = request.get("mno");
+        Long ono = request.get("ono");
+        try {
+            List<Long> orderItemIds = orderItemService.addOrderItems(mno, ono);
+            return ResponseEntity.ok(orderItemIds);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("주문 아이템 이동 실패: " + e.getMessage());
+        }
+    }
+
     // // 주소 추가
     // @PostMapping("/address")
     // public ResponseEntity<?> saveAddress(@RequestBody AddressDto addressDto) {
-    //     try {
-    //         // 2️⃣ 주소 저장
-    //         Long addrno = addressService.register(addressDto);
-    //         return ResponseEntity.ok(addrno);
-    //     } catch (Exception e) {
-    //         log.error("주소 저장 실패", e);
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주소 저장 실패");
-    //     }
+    // try {
+    // // 2️⃣ 주소 저장
+    // Long addrno = addressService.register(addressDto);
+    // return ResponseEntity.ok(addrno);
+    // } catch (Exception e) {
+    // log.error("주소 저장 실패", e);
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주소 저장
+    // 실패");
     // }
-    
-
-
-
-
-
+    // }
 
     // 회원 번호로 주문 리스트 조회
     @GetMapping("/member/{mno}")
@@ -104,8 +112,6 @@ public class OrderController {
         return ResponseEntity.ok(orderItemIds);
     }
 
-    
-    
     // 주문 아이템 삭제
     @DeleteMapping("/items/{oino}")
     public ResponseEntity<Integer> removeOrderItem(@PathVariable("oino") Long oino) {
