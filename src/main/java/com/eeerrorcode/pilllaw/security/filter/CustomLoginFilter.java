@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
 import com.eeerrorcode.pilllaw.dto.member.LoginHistoryDto;
+import com.eeerrorcode.pilllaw.dto.order.CartDto;
 import com.eeerrorcode.pilllaw.entity.member.LoginResult;
 import com.eeerrorcode.pilllaw.entity.member.MemberAccount;
 import com.eeerrorcode.pilllaw.security.dto.AuthMemberDto;
@@ -17,6 +19,7 @@ import com.eeerrorcode.pilllaw.security.dto.LoginDto;
 import com.eeerrorcode.pilllaw.security.util.CustomWebAuthenticationDetails;
 import com.eeerrorcode.pilllaw.security.util.JWTUtil;
 import com.eeerrorcode.pilllaw.service.member.LoginHistoryService;
+import com.eeerrorcode.pilllaw.service.order.CartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
@@ -34,6 +37,9 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
 
   @Autowired
   private LoginHistoryService historyService;
+
+  @Autowired
+  private CartService cartService;
 
   public CustomLoginFilter(String url, JWTUtil jwtUtil) {
     super(url);
@@ -83,6 +89,18 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
     try {
       String email = authResult.getName();
       String token = jwtUtil.generateToken(email);
+
+      // 🔹 장바구니가 있는지 확인 후 없으면 생성(여기가 추가한 부분입니다)
+        Optional<CartDto> existingCart = cartService.getCartByMember(mno);
+        if (existingCart.isEmpty()) {
+            log.info("mno={} 장바구니 없음. 새로 생성합니다.", mno);
+            CartDto newCart = new CartDto();
+            newCart.setMno(mno);
+            Long newCartId = cartService.addCart(newCart);
+            log.info("새 장바구니 생성 완료: cno={}", newCartId);
+        } else {
+            log.info("mno={} 기존 장바구니 존재. cno={}", mno, existingCart.get().getCno());
+        } //여기까지
       
       response.setContentType("application/json");
       response.setCharacterEncoding("UTF-8");
