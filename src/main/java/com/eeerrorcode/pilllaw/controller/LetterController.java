@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,21 +37,30 @@ public class LetterController {
   }
 
   // 2. 받은 쪽지 조회
-  @GetMapping("/{receiverId}")
+  @GetMapping("/received/{receiverId}")
   public ResponseEntity<?> getReceivedLetters(@PathVariable Long receiverId) {
       List<LetterResponseDto> letters = letterService.getReceivedLetters(receiverId);
-      log.info(receiverId);
+      log.info("받은 쪽지 조회 - receiverId: " + receiverId);
       return ResponseEntity.ok(letters);
   }
 
-  // @GetMapping("/{senderId}")
-  // public ResponseEntity<?> getSenderLetters(@PathVariable Long senderId, Long receiverId, String content) {
-  //     List<LetterResponseDto> letters = letterService.getReceivedLetters(senderId);
-  //     log.info(senderId);
-  //     return ResponseEntity.ok(letters);
-  // }
+  // 3. 보낸 쪽지 조회
+  @GetMapping("/sent/{senderId}")
+  public ResponseEntity<?> getSentLetters(@PathVariable Long senderId) {
+      List<LetterResponseDto> letters = letterService.getSentLetters(senderId);
+      log.info("보낸 쪽지 조회 - senderId: " + senderId);
+      return ResponseEntity.ok(letters);
+  }
 
-  // 3. 쪽지 전송 (POST 방식)
+  // 4. 단일 쪽지 상세 조회
+  @GetMapping("/{letterId}")
+  public ResponseEntity<?> getLetter(@PathVariable Long letterId) {
+      LetterResponseDto letter = letterService.getLetter(letterId);
+      log.info("쪽지 상세 조회 - letterId: " + letterId);
+      return ResponseEntity.ok(letter);
+  }
+
+  // 5. 쪽지 전송
   @PostMapping("/send")
   public ResponseEntity<?> sendLetter(@RequestBody LetterRequestDto letterDto) {
       LetterRequestDto savedLetter = letterService.sendLetter(
@@ -61,40 +71,18 @@ public class LetterController {
       return ResponseEntity.ok(savedLetter);
   }
 
-  // private final LetterService letterService;
+  // 6. 받은 쪽지 삭제 (수신자 측에서만 삭제 표시)
+  @PutMapping("/delete/receiver/{letterId}")
+  public ResponseEntity<?> deleteReceivedLetter(@PathVariable Long letterId) {
+      letterService.deleteReceivedLetter(letterId);
+      return ResponseEntity.ok("Received letter marked as deleted");
+  }
 
-  // public LetterController(LetterService letterService) {
-  //     this.letterService = letterService;
-  // }
-
-  // @GetMapping("/{receiverId}")
-  // public ResponseEntity<List<Letter>> getReceivedLetters(@PathVariable Long receiverId) {
-  //     List<Letter> letters = letterService.getReceivedLetters(receiverId);
-  //     return ResponseEntity.ok(letters);
-  // }
-  
-  // }
-
-  // @PostMapping("/send/post")
-  // public ResponseEntity<Letter> sendLetter(@RequestBody LetterRequestDto letterDto) {
-  //     Letter savedLetter = letterService.sendLetter(
-  //         letterDto.getSenderId(), letterDto.getReceiverId(), letterDto.getContent()
-  //     );
-  //     return ResponseEntity.ok(savedLetter);
-  // }
+  // 7. 보낸 쪽지 삭제 (발신자 측에서만 삭제 표시)
+  @PutMapping ("/delete/sender/{letterId}")
+  public ResponseEntity<?> deleteSentLetter(@PathVariable Long letterId) {
+      letterService.deleteSentLetter(letterId);
+      return ResponseEntity.ok("Sent letter marked as deleted");
+  }
 }
-    
-  // @GetMapping
-  // public ResponseEntity<String> getLetter() {
-  //     return ResponseEntity.ok ("Letter API OK");
-  // }
-  // @PostMapping("/send")
-  // public ResponseEntity<LetterResponseDto> sendLetter(@RequestBody LetterRequestDto  req) {
-  //     LetterEntity letter = letterService.sendLetter(
-  //         req.getSender(),
-  //         req.getReceiver(),
-  //         req.getContent()
-  //     );
-  //     return ResponseEntity.ok(new LetterResponseDto(letter));
-  // }
       

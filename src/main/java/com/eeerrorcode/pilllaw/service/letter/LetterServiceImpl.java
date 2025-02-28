@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class LetterServiceImpl implements LetterService{
+public class LetterServiceImpl implements LetterService {
   private final LetterRepository repository;
   private final MemberRepository memberRepository;
   
@@ -28,65 +28,82 @@ public class LetterServiceImpl implements LetterService{
   public LetterRequestDto sendLetter(Long senderId, Long receiverId, String content) {
     Member sender = memberRepository.findById(senderId)
       .orElseThrow(() -> new RuntimeException("Sender not found"));
-      Member receiver = memberRepository.findById(receiverId)
+    Member receiver = memberRepository.findById(receiverId)
       .orElseThrow(() -> new RuntimeException("Receiver not found"));
       
-      LetterRequestDto dto = LetterRequestDto.builder()
+    LetterRequestDto dto = LetterRequestDto.builder()
       .receiverId(receiverId)
       .senderId(senderId)
       .content(content)
       .build();
-      repository.save(requestDtoToEntity(dto));
-      return dto;
-  }
-  @Override
-  public List<LetterResponseDto> getReceivedLetters(long mno) {
-    List<Letter> letters = repository.findByReceiverId(memberRepository.findById(mno).orElse(null));
-    List<LetterResponseDto> responseDtos = letters.stream()
-    .map(letter -> entityToResponseDto(letter)) // entity -> dto 변환
-    .collect(Collectors.toList());
-
-    return responseDtos;
-      
-  }
-  @Override
-  public void deleteReceivedLetter(LetterResponseDto letterDto) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'deleteReceivedLetter'");
-  }
-  @Override
-  public void deleteSendLetter(LetterRequestDto letterDto) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'deleteSendLetter'");
-  }
-
-  
-
-  
-  // @Override
-    // public Letter sendLetter(LetterRequestDto letterDto) {
-    //   Letter letter = sendLetter(letterDto.getSenderId(), letterDto.getReceiverId(), letterDto.getContent());
-    //   return sendLetter(letterDto.getSenderId(), letterDto.getReceiverId(), letterDto.getContent());
-    // }
-    // @Override
-    // public Letter sendLetter(Long senderId, Long receiverId, String content) {
-    //   Member sender = memberRepository.findById(senderId)
-    //   .orElseThrow(() -> new RuntimeException("Sender not found"));
-    //   Member receiver = memberRepository.findById(receiverId)
-    //   .orElseThrow(() -> new RuntimeException("Receiver not found"));
-      
-    //   Letter letter = Letter.builder()
-    //   .senderId(sender)
-    //   .receiverId(receiver)
-    //   .content(content)
-    //   .sentAt(LocalDateTime.now())
-    //   .deletedBySender(false)
-    //   .deletedByReceiver(false)
-    //   .build();
-      
-    //   return repository.save(letter);
-    // }
-
-
+    
+    repository.save(requestDtoToEntity(dto));
+    return dto;
   }
   
+  @Override
+  public List<LetterResponseDto> getReceivedLetters(long receiverId) {
+    Member receiver = memberRepository.findById(receiverId)
+      .orElseThrow(() -> new RuntimeException("Receiver not found"));
+    
+    List<Letter> letters = repository.findByReceiverId(receiver);
+    return letters.stream()
+      .filter(letter -> !letter.isDeletedByReceiver()) // 삭제되지 않은 쪽지만 반환
+      .map(this::entityToResponseDto)
+      .collect(Collectors.toList());
+  }
+  
+  @Override
+  public List<LetterResponseDto> getSentLetters(long senderId) {
+    Member sender = memberRepository.findById(senderId)
+      .orElseThrow(() -> new RuntimeException("Sender not found"));
+    
+    List<Letter> letters = repository.findBySenderId(sender);
+    return letters.stream()
+      .filter(letter -> !letter.isDeletedBySender()) // 삭제되지 않은 쪽지만 반환
+      .map(this::entityToResponseDto)
+      .collect(Collectors.toList());
+  }
+  
+  @Override
+  public LetterResponseDto getLetter(Long letterId) {
+    Letter letter = repository.findById(letterId)
+      .orElseThrow(() -> new RuntimeException("Letter not found"));
+    
+    // 쪽지를 읽었으므로 readAt 시간 업데이트
+    if (letter.getReadAt() == null) {
+      letter.setReadAt(LocalDateTime.now());
+      repository.save(letter);
+    }
+    
+    return entityToResponseDto(letter);
+  }
+  
+  @Override
+  public void deleteReceivedLetter(Long letterId) {
+    Letter letter = repository.findById(letterId)
+      .orElseThrow(() -> new RuntimeException("Letter not found"));
+    
+    letter.setDeletedByReceiver(true);
+    repository.save(letter);
+    
+    // 양쪽 모두 삭제한 경우 물리적으로 삭제
+    if (letter.isDeletedBySender() && letter.isDeletedByReceiver()) {
+      repository.delete(letter);
+    }
+  }
+  
+  @Override
+  public void deleteSentLetter(Long letterId) {
+    Letter letter = repository.findById(letterId)
+      .orElseThrow(() -> new RuntimeException("Letter not found"));
+    
+    letter.setDeletedBySender(true);
+    repository.save(letter);
+    
+    // 양쪽 모두 삭제한 경우 물리적으로 삭제
+    if (letter.isDeletedBySender() && letter.isDeletedByReceiver()) {
+      repository.delete(letter);
+    }
+  }
+}

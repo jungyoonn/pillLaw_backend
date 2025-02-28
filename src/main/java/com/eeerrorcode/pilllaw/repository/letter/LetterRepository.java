@@ -13,12 +13,10 @@ import com.eeerrorcode.pilllaw.entity.member.Member;
 
 @Repository
 public interface LetterRepository extends JpaRepository<Letter, Long> {
-
-    // List<Letter> findByReceiverId(Long receiverId);
+    // 받은 쪽지 조회
     List<Letter> findByReceiverId(Member receiverId);
-    // void findByReceiverId(long l);  
-
     
+    // 보낸 쪽지 조회 (추가 필요)
+    List<Letter> findBySenderId(Member senderId);
 }
-    
     
