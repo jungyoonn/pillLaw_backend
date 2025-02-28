@@ -71,15 +71,17 @@ public class MemberServiceTests {
   
   @Test
   public void modifyTest() {
-    MemberDto dto = service.getByEmail("modTest@test.com").orElse(null);
+    MemberDto dto = service.get(39L).orElse(null);
 
-    dto.setName("유비빔");
-    dto.setNickname("비빔박자");
+    // dto.setName("유비빔");
+    // dto.setNickname("비빔박자");
 
-    List<MemberRole> roles = new ArrayList<>();
-    roles.add(MemberRole.USER);
+    // List<MemberRole> roles = new ArrayList<>();
+    // roles.add(MemberRole.USER);
 
-    dto.setRoles(roles);
+    // dto.setRoles(roles);
+
+    dto.setPassword(encoder.encode("Wjddbs98"));
 
     service.modify(dto);
   }
