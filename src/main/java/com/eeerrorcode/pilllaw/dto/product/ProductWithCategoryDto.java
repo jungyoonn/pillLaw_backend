@@ -16,13 +16,14 @@ import lombok.ToString;
 @Builder
 @ToString
 public class ProductWithCategoryDto {
-  
+
   private ProductDto product;
   private ProductPriceDto productPrice;
-  private List<ProductCategoryDto> categories;
+  private List<CategoryDto> categories; // 수정됨: ProductCategoryDto -> CategoryDto
   private List<ProductReviewDto> reviews;
 
-  public ProductWithCategoryDto(ProductDto product, ProductPriceDto productPrice, List<ProductCategoryDto> categories, List<ProductReviewDto> reviews) {
+  public ProductWithCategoryDto(ProductDto product, ProductPriceDto productPrice, List<CategoryDto> categories,
+      List<ProductReviewDto> reviews) {
     this.product = product;
     this.productPrice = productPrice;
     this.categories = categories;

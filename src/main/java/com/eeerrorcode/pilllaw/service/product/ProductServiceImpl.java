@@ -260,7 +260,7 @@ public class ProductServiceImpl implements ProductService {
         return new ProductWithCategoryDto(
             productDto,
             productPriceService.toDto(price),
-            categories,
+            categoryDtos,  
             reviews);
       })
       .toList();
