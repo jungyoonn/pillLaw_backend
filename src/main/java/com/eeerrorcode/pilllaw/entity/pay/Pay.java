@@ -33,8 +33,8 @@ public class Pay extends BaseEntity {
 
     @Default
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "varchar(10) default '실패'")
-    private PaymentStatus status = PaymentStatus.실패;
+    @Column(nullable = false, columnDefinition = "varchar(10) default 'PENDING'")
+    private PaymentStatus status = PaymentStatus.PENDING;
 
     @Column(nullable = false)
     private int totalPrice;
@@ -43,10 +43,10 @@ public class Pay extends BaseEntity {
     private String impUid;
 
     public enum PaymentMethod {
-        카드, 이체, 무통장
+        CARD, TRANSFER, TOSS
     }
 
     public enum PaymentStatus {
-        완료, 실패
+        PENDING, SUCCESS, FAIL, REFUND 
     }
 }

@@ -57,7 +57,7 @@ public class PointServiceImpl implements PointService {
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
     @Transactional
     public int addPointsForCompletedPayments() {
-        List<Pay> successfulPayments = payRepository.findByStatus(Pay.PaymentStatus.완료);
+        List<Pay> successfulPayments = payRepository.findByStatus(Pay.PaymentStatus.SUCCESS);
         int pointCount = 0;
 
         for (Pay payment : successfulPayments) {

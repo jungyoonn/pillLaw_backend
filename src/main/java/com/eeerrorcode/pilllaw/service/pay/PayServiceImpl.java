@@ -38,7 +38,7 @@ public class PayServiceImpl implements PayService {
                 Pay pay = Pay.builder()
                                 .order(order)
                                 .method(method)
-                                .status(Pay.PaymentStatus.실패) // 기본값은 실패로 설정
+                                .status(Pay.PaymentStatus.PENDING) // 기본값 PENDING
                                 .totalPrice(totalPrice)
                                 .impUid(impUid)
                                 .build();
@@ -73,7 +73,7 @@ public class PayServiceImpl implements PayService {
                                 .no(pay.getNo())
                                 .order(pay.getOrder())
                                 .method(pay.getMethod())
-                                .status(Pay.PaymentStatus.완료) // ✅ 결제 상태 업데이트
+                                .status(Pay.PaymentStatus.SUCCESS) // ✅ 결제 상태 업데이트
                                 .totalPrice(pay.getTotalPrice())
                                 .impUid(pay.getImpUid())
                                 .build();
@@ -93,7 +93,7 @@ public class PayServiceImpl implements PayService {
                                 .no(pay.getNo())
                                 .order(pay.getOrder())
                                 .method(pay.getMethod())
-                                .status(Pay.PaymentStatus.실패) // ✅ 결제 실패 처리
+                                .status(Pay.PaymentStatus.FAIL) // ✅ 결제 실패 처리
                                 .totalPrice(pay.getTotalPrice())
                                 .impUid(pay.getImpUid())
                                 .build();

@@ -74,7 +74,7 @@ public class PayController {
         return ResponseEntity.badRequest().body("결제 검증 실패: 해당 주문의 결제 정보가 없습니다.");
       }
       // 이미 결제 완료된 경우 중복 업데이트 방지
-      if (pay.getStatus() == Pay.PaymentStatus.완료) {
+      if (pay.getStatus() == Pay.PaymentStatus.SUCCESS) {
         return ResponseEntity.ok("이미 완료된 결제입니다.");
       }
       if (pay.getTotalPrice() != paidAmount) {
