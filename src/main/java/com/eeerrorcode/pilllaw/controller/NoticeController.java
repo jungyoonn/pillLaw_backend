@@ -65,6 +65,14 @@ public class NoticeController {
     noticeService.delete(nno);
     return ResponseEntity.ok(nno + "deleted");
   }
+
+  // 조회수 증가
+  @PutMapping("/count/{nno}")
+  public ResponseEntity<Void> clickCnt(@PathVariable Long nno) {
+      noticeService.realView(nno);
+      return ResponseEntity.ok().build();
+  }
+  
   
   
 }

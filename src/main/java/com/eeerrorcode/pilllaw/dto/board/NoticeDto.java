@@ -21,17 +21,19 @@ public class NoticeDto {
   private String title;
   private String content;
   private Long count; 
+  private String writer;
   private LocalDateTime regDate, modDate;
   
   @Default
   private List<FileDto> fileDtos = new ArrayList<>();
 
-  public NoticeDto(Long nno, Long mno, String title, String content, Long count, LocalDateTime regDate, LocalDateTime modDate, List<FileDto> fileDtos) {
+  public NoticeDto(Long nno, Long mno, String title, String content, Long count, String writer, LocalDateTime regDate, LocalDateTime modDate, List<FileDto> fileDtos) {
     this.nno = nno;
     this.mno = mno;
     this.title = title;
     this.content = content;
     this.count = count; 
+    this.writer = writer;
     this.regDate = regDate;
     this.modDate = modDate;
     this.fileDtos = (fileDtos != null) ? fileDtos : new ArrayList<>(); 

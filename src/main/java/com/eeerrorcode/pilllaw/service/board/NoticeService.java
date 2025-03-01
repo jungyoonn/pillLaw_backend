@@ -22,6 +22,8 @@ public interface NoticeService {
 
   Notice view(Long nno);
 
+  void realView(Long nno);
+
   Page<NoticeDto> showList(Pageable pageable);
 
   default Notice toEntity(NoticeDto dto){

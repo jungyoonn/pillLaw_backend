@@ -9,14 +9,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eeerrorcode.pilllaw.dto.board.NoticeDto;
 import com.eeerrorcode.pilllaw.entity.board.Notice;
+import com.eeerrorcode.pilllaw.entity.member.Member;
+import com.eeerrorcode.pilllaw.repository.MemberRepository;
 import com.eeerrorcode.pilllaw.repository.board.NoticeRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @Service
 @AllArgsConstructor
 @Transactional
+@Log4j2
 public class NoticeServiceImpl implements NoticeService{
+
+  @Autowired
+  private final MemberRepository memberRepository;
 
   @Autowired
   private final NoticeRepository noticeRepository;
@@ -70,11 +77,26 @@ public class NoticeServiceImpl implements NoticeService{
     return returnNotice;
   }
 
+
   // 테스트 성공!!
   @Override
   public Page<NoticeDto> showList(Pageable pageable) {
     Page<NoticeDto> returnList = noticeRepository.findAll(pageable).map(this::toDto);
+    returnList.forEach((l)->l.setWriter(memberRepository.findById(l.getMno()).get().getNickname()));
+    returnList.forEach((l)->l.setRegDate(memberRepository.findById(l.getMno()).get().getRegDate()));
+    // returnList.forEach((l)->l.setRegDate(memberRepository.findById(l.getMno()).get().getModDate()));
     return returnList;
   }
+
+
+  @Override
+  @Transactional
+  public void realView(Long nno) {
+      noticeRepository.incrementViewCount(nno);
+      log.info("조회수 증가 + 1 === {}", nno);
+  }
+  
+
+  
   
 }
