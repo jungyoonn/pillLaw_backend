@@ -54,6 +54,7 @@ public class LetterController {
   @GetMapping("/send/{senderId}")
   public ResponseEntity<?> getSentLetters(@PathVariable("senderId") Long senderId) {
       List<LetterResponseDto> letters = letterService.getSentLetters(senderId);
+      letters.forEach(l -> l.setNickName(memberRepository.findById(l.getReceiverId()).get().getNickname()));
       log.info("보낸 쪽지 조회 - senderId: " + senderId);
       return ResponseEntity.ok(letters);
   }

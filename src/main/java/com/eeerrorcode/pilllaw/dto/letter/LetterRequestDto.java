@@ -20,6 +20,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LetterRequestDto {
     private long letterId;
+    private String nickName;
     private long senderId;
     private long receiverId;
     private String content;
