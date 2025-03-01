@@ -39,54 +39,54 @@ public class S3FileController {
 
   private final FileService fileService;
 
-  @PostMapping("/upload")
-  public ResponseEntity<List<FileDto>> uploadFiles(
-      @RequestParam("files") List<MultipartFile> files,
-      @RequestParam(value = "productDetailId", required = false) Long productDetailId,
-      @RequestParam(value = "productReviewId", required = false) Long productReviewId,
-      @RequestParam(value = "noticeId", required = false) Long noticeId   ) {
-      if (Stream.of(productDetailId, productReviewId, noticeId).filter(Objects::nonNull).count() != 1) {
-        return ResponseEntity.badRequest().body(null);
-      }
-
-      log.info("🔹 파일 업로드 요청 - productReviewId={}, productDetailId={}, noticeId={}", 
-      productReviewId, productDetailId, noticeId);
-    List<FileDto> uploadedFiles = new ArrayList<>();
-
-    for (MultipartFile file : files){
-      try{
-        String origin = file.getOriginalFilename();
-        String uuid = UUID.randomUUID().toString();   
-        String ext = getFileExtension(origin);
-        String fileName = uuid + "." + ext;
-        String mimeType = file.getContentType();
-
-        if(productReviewId != null){
-          String folderPath = "uploads/review/" + productReviewId + "/";
-          String key = folderPath + fileName;
-          String fileUrl = s3Service.uploadFile(file, key);
-          FileDto fileDto = FileDto
-          .builder()  
-            .uuid(uuid)
-            .origin(origin)
-            .fname(fileName)
-            .mime(mimeType)
-            .path(folderPath)
-            .url(fileUrl)
-            .ext(ext)
-            .size(file.getSize())
-            .type(FileType.REVIEW)  // ✅ 파일 타입 설정
-            .prno(productReviewId)  // ✅ 리뷰 번호 설정
-          .build();
-          fileService.saveFile(fileDto);
-          uploadedFiles.add(fileDto);
+    @PostMapping("/upload")
+    public ResponseEntity<List<FileDto>> uploadFiles(
+        @RequestParam("files") List<MultipartFile> files,
+        @RequestParam(value = "productDetailId", required = false) Long productDetailId,
+        @RequestParam(value = "productReviewId", required = false) Long productReviewId,
+        @RequestParam(value = "noticeId", required = false) Long noticeId   ) {
+        if (Stream.of(productDetailId, productReviewId, noticeId).filter(Objects::nonNull).count() != 1) {
+          return ResponseEntity.badRequest().body(null);
         }
-      } catch (Exception e){
-        log.error("파일 업로드 실패: {}", e.getMessage());
+
+        log.info("🔹 파일 업로드 요청 - productReviewId={}, productDetailId={}, noticeId={}", 
+        productReviewId, productDetailId, noticeId);
+      List<FileDto> uploadedFiles = new ArrayList<>();
+
+      for (MultipartFile file : files){
+        try{
+          String origin = file.getOriginalFilename();
+          String uuid = UUID.randomUUID().toString();   
+          String ext = getFileExtension(origin);
+          String fileName = uuid + "." + ext;
+          String mimeType = file.getContentType();
+
+          if(productReviewId != null){
+            String folderPath = "uploads/review/" + productReviewId + "/";
+            String key = folderPath + fileName;
+            String fileUrl = s3Service.uploadFile(file, key);
+            FileDto fileDto = FileDto
+            .builder()  
+              .uuid(uuid)
+              .origin(origin)
+              .fname(fileName)
+              .mime(mimeType)
+              .path(folderPath)
+              .url(fileUrl)
+              .ext(ext)
+              .size(file.getSize())
+              .type(FileType.REVIEW)  // ✅ 파일 타입 설정
+              .prno(productReviewId)  // ✅ 리뷰 번호 설정
+            .build();
+            fileService.saveFile(fileDto);
+            uploadedFiles.add(fileDto);
+          }
+        } catch (Exception e){
+          log.error("파일 업로드 실패: {}", e.getMessage());
+        }
       }
+      return ResponseEntity.ok(uploadedFiles);
     }
-    return ResponseEntity.ok(uploadedFiles);
-  }
 
   @GetMapping("/download/{uuid}")
   public ResponseEntity<byte[]> downloadFile(@PathVariable String uuid) {
