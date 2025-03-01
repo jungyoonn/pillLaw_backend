@@ -33,6 +33,8 @@ public class ProductReviewDto {
 
   private Long mno;
 
+  private String nickName;
+
   // @JsonRawValue
   // @JsonDeserialize(using = JsonDeserializer.None.class)
   private String content;
