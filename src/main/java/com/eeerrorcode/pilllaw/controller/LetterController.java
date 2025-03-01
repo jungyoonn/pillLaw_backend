@@ -17,8 +17,6 @@ import com.eeerrorcode.pilllaw.service.letter.LetterService;
 
 import lombok.extern.log4j.Log4j2;
 
-
-
 @Log4j2
 // @RequiredArgsConstructor
 @RestController
@@ -30,6 +28,7 @@ public class LetterController {
       this.letterService = letterService;
   }
 
+
   // 1. 기본 API 테스트 엔드포인트
   @GetMapping
   public ResponseEntity<String> getLetterApiStatus() {
@@ -37,7 +36,7 @@ public class LetterController {
   }
 
   // 2. 받은 쪽지 조회
-  @GetMapping("/receiverId/{receiverId}")
+  @GetMapping("/received/{receiverId}")
   public ResponseEntity<?> getReceivedLetters(@PathVariable("receiverId") Long receiverId) {
       List<LetterResponseDto> letters = letterService.getReceivedLetters(receiverId);
       log.info("받은 쪽지 조회 - receiverId: " + receiverId);
