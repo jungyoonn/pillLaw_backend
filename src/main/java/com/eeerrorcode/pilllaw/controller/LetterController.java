@@ -43,6 +43,7 @@ public class LetterController {
       log.info("받은 쪽지 조회 - receiverId: " + receiverId);
       return ResponseEntity.ok(letters);
   }
+  
 
   // 3. 보낸 쪽지 조회
   @GetMapping("/send/{senderId}")
