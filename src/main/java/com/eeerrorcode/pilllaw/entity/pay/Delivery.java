@@ -32,6 +32,7 @@ public class Delivery extends BaseEntity{
     private String trackingNumber;
     
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private DeliveryStatus deliveryStatus = DeliveryStatus.READY;  
 
     public enum DeliveryStatus {
