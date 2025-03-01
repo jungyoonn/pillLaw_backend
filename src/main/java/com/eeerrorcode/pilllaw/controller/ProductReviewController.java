@@ -10,14 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.eeerrorcode.pilllaw.dto.board.ProductReviewDto;
 import com.eeerrorcode.pilllaw.dto.file.FileDto;
-import com.eeerrorcode.pilllaw.entity.board.ProductReview;
 import com.eeerrorcode.pilllaw.entity.file.FileType;
+import com.eeerrorcode.pilllaw.entity.member.Member;
+import com.eeerrorcode.pilllaw.repository.MemberRepository;
 import com.eeerrorcode.pilllaw.repository.board.ProductReviewRepository;
 import com.eeerrorcode.pilllaw.service.board.ProductReviewService;
 import com.eeerrorcode.pilllaw.service.file.FileService;
@@ -53,6 +53,9 @@ public class ProductReviewController {
 
   @Autowired
   private ProductReviewRepository productReviewRepository;
+
+  @Autowired
+  private MemberRepository memberRepository;
 
   // 포스트맨 통과!!
   @GetMapping(value="list/{pno}")
@@ -91,19 +94,17 @@ public class ProductReviewController {
       // 1️⃣ 리뷰 저장
       Long reviewId = productReviewService.register(
           ProductReviewDto.builder()
-            .pno(pno)
-            .mno(mno)
-            .content(content)
-            .rating(rating)
-          .build()
+              .pno(pno)
+              .mno(mno)
+              .nickName(Member.builder().nickname(memberRepository.findById(mno).get().getNickname()).build().toString())
+              .content(content)
+              .rating(rating)
+              .build()
       );
   
       log.info("✅ 리뷰 등록 완료 - reviewId={}", reviewId);
   
-      // 2️⃣ 등록된 리뷰 조회
-      ProductReview savedReview = productReviewRepository.findById(reviewId).get();
-  
-      // 3️⃣ 파일 업로드 처리
+      // 2️⃣ 파일 업로드 처리
       List<FileDto> uploadedFiles = new ArrayList<>();
       if (files != null && !files.isEmpty()) {
           for (MultipartFile file : files) {
@@ -112,17 +113,17 @@ public class ProductReviewController {
                   String fileUrl = s3Service.uploadFile(file, key);
   
                   FileDto fileDto = FileDto.builder()
-                          .uuid(UUID.randomUUID().toString())
-                          .origin(file.getOriginalFilename())
-                          .fname(file.getOriginalFilename())
-                          .mime(file.getContentType())
-                          .path(key)
-                          .url(fileUrl)
-                          .ext(getFileExtension(file.getOriginalFilename()))
-                          .size(file.getSize())
-                          .type(FileType.REVIEW)
-                          .prno(reviewId)
-                          .build();
+                      .uuid(UUID.randomUUID().toString())
+                      .origin(file.getOriginalFilename())
+                      .fname(file.getOriginalFilename())
+                      .mime(file.getContentType())
+                      .path(key)
+                      .url(fileUrl)
+                      .ext(getFileExtension(file.getOriginalFilename()))
+                      .size(file.getSize())
+                      .type(FileType.REVIEW)  // ✅ 리뷰 타입으로 설정
+                      .prno(reviewId)  // ✅ 리뷰 ID 설정
+                      .build();
   
                   fileService.saveFile(fileDto);
                   uploadedFiles.add(fileDto);
@@ -132,9 +133,9 @@ public class ProductReviewController {
           }
       }
   
-      // 4️⃣ `review` 객체 포함하여 반환
-      return ResponseEntity.ok(Map.of("review", savedReview, "files", uploadedFiles));
+      return ResponseEntity.ok(Map.of("reviewId", reviewId, "files", uploadedFiles));
   }
+  
   
   
   

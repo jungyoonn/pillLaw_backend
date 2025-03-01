@@ -12,6 +12,7 @@ public interface FileService {
   String getFirstUUIDByPNO(Long pno);
   List<String> getImageListByPno(Long pno);
   List<String> getDetailListByPno(Long pno);
+  List<FileDto> getFilesByReviewId(Long prno);
 
   default FileDto toDto(File file){
     return FileDto

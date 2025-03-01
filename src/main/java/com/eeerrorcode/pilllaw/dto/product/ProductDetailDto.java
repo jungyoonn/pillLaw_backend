@@ -30,6 +30,8 @@ public class ProductDetailDto {
 
   private Long count;
 
+  private String detailUrl;
+
   @Default
   private List<FileDto> fileDtos = new ArrayList<>();
 

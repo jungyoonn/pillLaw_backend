@@ -20,6 +20,7 @@ import com.eeerrorcode.pilllaw.service.board.ProductDetailService;
 import com.eeerrorcode.pilllaw.service.board.ProductReviewService;
 import com.eeerrorcode.pilllaw.service.product.ProductPriceService;
 import com.eeerrorcode.pilllaw.service.product.ProductService;
+import com.eeerrorcode.pilllaw.service.s3.S3Service;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -47,6 +48,9 @@ public class ProductController {
   @Autowired
   private ProductReviewService productReviewService;
 
+  @Autowired
+  private S3Service s3Service;
+
   // 포스트맨 통과!
   @GetMapping(value = "/{pno}", produces = "application/json")
   public ResponseEntity<?> showDetail(@PathVariable("pno") Long pno) {
@@ -67,6 +71,7 @@ public class ProductController {
     } catch (NoSuchElementException e) {
         log.warn("No product details found for pno: {}", pno);
     }
+    List<String> detailImage = s3Service.getDetailImages(pno);
 
     List<ProductReviewDto> reviews = productReviewService.showReviewsByProduct(pno);
     if (reviews == null) {
@@ -77,6 +82,7 @@ public class ProductController {
     Map<String, Object> response = new HashMap<>();
     response.put("product", product);
     response.put("detail", detail);
+    response.put("detailUrls", detailImage);
     response.put("reviews", reviews);
 
     return ResponseEntity.ok(response);

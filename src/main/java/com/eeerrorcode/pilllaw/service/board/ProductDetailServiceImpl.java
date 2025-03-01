@@ -13,6 +13,8 @@ import com.eeerrorcode.pilllaw.dto.file.FileDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDetailDto;
 import com.eeerrorcode.pilllaw.entity.product.ProductDetail;
 import com.eeerrorcode.pilllaw.repository.product.ProductDetailRepository;
+import com.eeerrorcode.pilllaw.service.s3.S3Service;
+
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -25,6 +27,9 @@ public class ProductDetailServiceImpl implements ProductDetailService{
   
   @Autowired
   private final ProductDetailRepository productDetailRepository;
+
+  @Autowired
+  private final S3Service s3service;
 
   // 테스트 통과!!
   @Override
@@ -44,6 +49,7 @@ public class ProductDetailServiceImpl implements ProductDetailService{
       .content(productDetail.getContent())
       .count(productDetail.getCount())
       .mno(productDetail.getMember().getMno())
+      .detailUrl(null)
       .fileDtos(fileDtos) // ✅ 파일 DTO 리스트 추가
       .build();
   }
