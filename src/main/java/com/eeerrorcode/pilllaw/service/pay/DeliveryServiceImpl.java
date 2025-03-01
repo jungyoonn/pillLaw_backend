@@ -49,14 +49,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     return toDto(savedDelivery);
   }
 
-  // @Override
-  // @Transactional(readOnly = true)
-  // public DeliveryDto getDeliveryByOrderNumber(Long ono) {
-  // Delivery delivery = deliveryRepository.findByOrderOno(ono)
-  // .orElseThrow(() -> new IllegalArgumentException("배송 정보가 존재하지 않습니다."));
-
-  // return toDto(delivery);
-  // }
+  
 
   @Override
   @Transactional(readOnly = true)

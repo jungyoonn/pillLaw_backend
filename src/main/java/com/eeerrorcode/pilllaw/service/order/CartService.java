@@ -4,7 +4,6 @@ import com.eeerrorcode.pilllaw.dto.order.CartDto;
 import com.eeerrorcode.pilllaw.dto.order.CartItemDto;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 import com.eeerrorcode.pilllaw.entity.order.Cart;
-import com.eeerrorcode.pilllaw.entity.order.CartItem;
 
 import java.util.List;
 import java.util.Optional;

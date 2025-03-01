@@ -37,18 +37,18 @@ public class MemberAddressController {
   @PostMapping("/")
   public ResponseEntity<?> saveAddress(@RequestBody AddressDto addressDto) {
     try {
-      // 1️⃣ 중복된 주소의 addrno 확인
+      // 중복된 주소의 addrno 확인
       Optional<Long> existingAddrno = addressService.findExistingAddrno(addressDto);
 
       if (existingAddrno.isPresent()) {
         log.info("중복된 주소 발견, 기존 addrno 반환: {}", existingAddrno.get());
-        return ResponseEntity.ok(existingAddrno.get()); // ✅ 기존 addrno 반환
+        return ResponseEntity.ok(existingAddrno.get());
       }
 
-      // 2️⃣ 새로운 주소 저장
+      // 새로운 주소 저장
       Long addrno = addressService.register(addressDto);
 
-      // 3️⃣ 새 주소의 addrno 반환
+      // 새 주소의 addrno 반환
       return ResponseEntity.ok(addrno);
     } catch (Exception e) {
       log.error("주소 저장 실패", e);

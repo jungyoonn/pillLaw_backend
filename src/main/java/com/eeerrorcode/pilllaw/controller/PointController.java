@@ -63,7 +63,7 @@ public class PointController {
         return ResponseEntity.ok(deletedCount);
     }
 
-    // ✅ **포인트 적립 스케줄링 강제 실행 API (테스트용)**
+    // 포인트 적립 스케줄링 강제 실행 API (테스트용)
     @GetMapping("/scheduled-add")
     public ResponseEntity<Integer> triggerScheduledPointAddition() {
         int result = pointService.addPointsForCompletedPayments();

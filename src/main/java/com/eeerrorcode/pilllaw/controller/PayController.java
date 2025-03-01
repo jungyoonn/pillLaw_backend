@@ -1,10 +1,8 @@
 package com.eeerrorcode.pilllaw.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eeerrorcode.pilllaw.dto.pay.PayDto;
 import com.eeerrorcode.pilllaw.dto.pay.PayRequestDto;
 import com.eeerrorcode.pilllaw.entity.pay.Pay;
-import com.eeerrorcode.pilllaw.service.order.OrderService;
 import com.eeerrorcode.pilllaw.service.pay.IamportService;
 import com.eeerrorcode.pilllaw.service.pay.PayService;
 
@@ -28,7 +25,6 @@ public class PayController {
 
   private final PayService payService;
   private final IamportService iamportService;
-  private final OrderService orderService;
 
   /**
    * 결제 요청 (Pay 엔티티 생성)
@@ -82,9 +78,6 @@ public class PayController {
       }
       // 결제 성공 처리 (DB 업데이트)
       Pay updatedPay = payService.successPayment(pay.getNo());
-      
-      // 배송상태 추가
-      // orderService.addDelivery(ono);
 
       return ResponseEntity.ok(new PayDto(updatedPay));
 
@@ -93,10 +86,4 @@ public class PayController {
       return ResponseEntity.internalServerError().body("서버 오류: 결제 완료 처리 실패");
     }
   }
-  // @GetMapping
-  // public ResponseEntity<?> Paylist() {
-  //   List<AdminPayDto> pay = payService.findList();
-  //     return ResponseEntity.ok(pay);
-  // }
-  
 }

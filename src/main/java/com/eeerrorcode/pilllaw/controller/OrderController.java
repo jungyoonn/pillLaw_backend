@@ -8,13 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.eeerrorcode.pilllaw.dto.member.AddressDto;
 import com.eeerrorcode.pilllaw.dto.order.OrderDto;
 import com.eeerrorcode.pilllaw.dto.order.OrderItemDto;
-import com.eeerrorcode.pilllaw.entity.member.MemberAddress;
 import com.eeerrorcode.pilllaw.entity.order.Order;
 import com.eeerrorcode.pilllaw.service.order.OrderService;
-import com.eeerrorcode.pilllaw.service.member.MemberAddressService;
 import com.eeerrorcode.pilllaw.service.order.OrderItemService;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +29,6 @@ public class OrderController {
     @Autowired
     private OrderItemService orderItemService;
 
-    // @Autowired
-    // private MemberAddressService addressService;
 
     // 주문 추가
     @PostMapping("/")
@@ -53,20 +48,6 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("주문 아이템 이동 실패: " + e.getMessage());
         }
     }
-
-    // // 주소 추가
-    // @PostMapping("/address")
-    // public ResponseEntity<?> saveAddress(@RequestBody AddressDto addressDto) {
-    // try {
-    // // 2️⃣ 주소 저장
-    // Long addrno = addressService.register(addressDto);
-    // return ResponseEntity.ok(addrno);
-    // } catch (Exception e) {
-    // log.error("주소 저장 실패", e);
-    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주소 저장
-    // 실패");
-    // }
-    // }
 
     // 회원 번호로 주문 리스트 조회
     @GetMapping("/member/{mno}")

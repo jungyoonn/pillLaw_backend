@@ -24,12 +24,6 @@ public class DeliveryController {
       ));
   }
 
-  // @GetMapping("/{ono}")
-  // public ResponseEntity<DeliveryDto> getDeliveryByOrderNumber(@PathVariable("ono") Long ono) {
-  //     DeliveryDto deliveryDto = deliveryService.getDeliveryByOrderNumber(ono);
-  //     return ResponseEntity.ok(deliveryDto);
-  // }
-
   @GetMapping("/{ono}")
     public ResponseEntity<DeliveryDto> getDeliveryByOrderNumber(@PathVariable("ono") Long ono) {
         try {

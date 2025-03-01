@@ -31,11 +31,11 @@ public class CartController {
 public ResponseEntity<Long> getCartCnoByMember(@PathVariable("mno") Long mno) {
     return cartService.getCartByMember(mno)
             .map(cartDto -> {
-                System.out.println("✅ 가져온 cno: " + cartDto.getCno()); // 로그 추가
+                System.out.println("가져온 cno: " + cartDto.getCno()); // 로그 추가
                 return ResponseEntity.ok(cartDto.getCno());
             })
             .orElseGet(() -> {
-                System.out.println("❌ 해당 mno의 장바구니 없음");
+                System.out.println("해당 mno의 장바구니 없음");
                 return ResponseEntity.notFound().build();
             });
 }

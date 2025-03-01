@@ -4,7 +4,6 @@ import com.eeerrorcode.pilllaw.dto.order.CartItemDto;
 import com.eeerrorcode.pilllaw.entity.order.CartItem;
 import com.eeerrorcode.pilllaw.entity.product.ProductPrice;
 import com.eeerrorcode.pilllaw.exception.DuplicateCartItemException;
-//import com.eeerrorcode.pilllaw.repository.product.ProductPriceRepository;
 import com.eeerrorcode.pilllaw.repository.order.CartItemRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductPriceRepository;
 
