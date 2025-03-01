@@ -37,8 +37,8 @@ public class LetterController {
   }
 
   // 2. 받은 쪽지 조회
-  @GetMapping("/received/{receiverId}")
-  public ResponseEntity<?> getReceivedLetters(@PathVariable Long receiverId) {
+  @GetMapping("/receiverId/{receiverId}")
+  public ResponseEntity<?> getReceivedLetters(@PathVariable("receiverId") Long receiverId) {
       List<LetterResponseDto> letters = letterService.getReceivedLetters(receiverId);
       log.info("받은 쪽지 조회 - receiverId: " + receiverId);
       return ResponseEntity.ok(letters);
@@ -46,7 +46,7 @@ public class LetterController {
 
   // 3. 보낸 쪽지 조회
   @GetMapping("/send/{senderId}")
-  public ResponseEntity<?> getSentLetters(@PathVariable Long senderId) {
+  public ResponseEntity<?> getSentLetters(@PathVariable("senderId") Long senderId) {
       List<LetterResponseDto> letters = letterService.getSentLetters(senderId);
       log.info("보낸 쪽지 조회 - senderId: " + senderId);
       return ResponseEntity.ok(letters);
