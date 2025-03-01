@@ -50,7 +50,7 @@ public class FollowController {
  
  // 2. 팔로워 목록 조회 API (나를 팔로우하는 사람들)
  @GetMapping("/{receiverMno}")
- public ResponseEntity<List<Follow>> getFollowers(@PathVariable("receiverMno") long receiverMno) {
+ public ResponseEntity<?> getFollowers(@PathVariable("receiverMno") long receiverMno) {
      List<Follow> followers = followService.getReceiver_Mno(receiverMno);
      log.info("팔로워 목록 조회 - receiverMno: " + receiverMno);
      return ResponseEntity.ok(followers);

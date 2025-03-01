@@ -44,22 +44,35 @@ public class FollowServiceImpl implements FollowService {
   public void insertFollow(long receiverMno, long senderMno) {
       // isFollowBack 기본값은 false
       boolean isFollowBack = false;
-  
-      // 상대방(sender)이 이미 나(receiver)를 팔로우하는지 확인
-      Optional<Follow> existingFollow = repository.findBySender_MnoAndReceiver_Mno(receiverMno, senderMno);
       
-      if (existingFollow.isPresent()) {
-          isFollowBack = true; // 이미 팔로우하고 있다면 맞팔로우로 설정
-      }
-  
-      // 팔로우 관계 객체 생성
-      Follow follow = Follow.builder()
-              .receiver(Member.builder().mno(receiverMno).build())
-              .sender(Member.builder().mno(senderMno).build())
-              .isFollowBack(isFollowBack) // 팔로우 시, 기본값은 false
+      
+      repository.findBySender_MnoAndReceiver_Mno(receiverMno, senderMno);
+      
+    //   상대방(sender)이 이미 나(receiver)를 팔로우하는지 확인
+        Optional<Follow> existingFollow = repository.findBySender_MnoAndReceiver_Mno(receiverMno, senderMno);
+      
+        // 상대방의 isFollowBack true로 업데이트
+        if (existingFollow.isPresent()) {
+              isFollowBack = true; // 이미 팔로우하고 있다면 맞팔로우로 설정
+              Follow getFollow = existingFollow.get();
+
+              Follow follow = Follow.builder()
+                .followId(getFollow.getFollowId())
+                .receiver(Member.builder().mno(getFollow.getReceiver().getMno()).build())
+                .sender(Member.builder().mno(getFollow.getSender().getMno()).build())
+                .isFollowBack(isFollowBack)
               .build();
-  
-      // 팔로우 저장
+              repository.save(follow);
+          }
+        
+        // 팔로우 관계 객체 생성
+        Follow follow = Follow.builder()
+        .receiver(Member.builder().mno(receiverMno).build())
+        .sender(Member.builder().mno(senderMno).build())
+        .isFollowBack(isFollowBack) // 팔로우 시, 기본값은 false
+        .build();
+        
+        // 팔로우 저장
       repository.save(follow);
   }
   
@@ -125,12 +138,33 @@ public class FollowServiceImpl implements FollowService {
         Optional<Follow> existingFollow = repository.findBySender_MnoAndReceiver_Mno(senderId, receiverId);
         if (existingFollow.isPresent()) {
             repository.deleteById(existingFollow.get().getFollowId());
+
+            // 맞팔 관계였을 경우 상대방의 followBack을 false로 바꿈
+            Optional<Follow> existingFollowBack = repository.findBySender_MnoAndReceiver_Mno(receiverId, senderId);
+            if(existingFollowBack.isPresent()) {
+                Follow getFollow = existingFollowBack.get();
+                getFollow.setIsFollowBack(false);
+                repository.save(getFollow);
+            }
             return true; // 팔로우 관계가 있었고 삭제됨
         } else {
             // 팔로우 관계가 없으면 추가
+            boolean followBack = false;
+
+            // 상대도 나를 팔로우하고 있었으면 맞팔이므로 followBack을 true로 바꿈
+            Optional<Follow> existingFollowBack = repository.findBySender_MnoAndReceiver_Mno(receiverId, senderId);
+            if(existingFollowBack.isPresent()) {
+                followBack = true;
+
+                Follow getFollow = existingFollowBack.get();
+                getFollow.setIsFollowBack(followBack);
+                repository.save(getFollow);
+            }
+
             repository.save(Follow.builder()
                 .sender(Member.builder().mno(senderId).build())
                 .receiver(Member.builder().mno(receiverId).build())
+                .isFollowBack(followBack)
                 .build());
             return false; // 팔로우 관계가 없었고 추가됨
         }
