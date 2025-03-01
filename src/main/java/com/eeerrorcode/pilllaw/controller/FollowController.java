@@ -66,7 +66,7 @@ public class FollowController {
  
  // 4. 맞팔 목록 조회 API
  @GetMapping("/followBack/{receiverMno}")
- public ResponseEntity<List<Follow>> getIsFollowBacks(@PathVariable long receiverMno) {
+ public ResponseEntity<List<Follow>> getIsFollowBacks(@PathVariable("receiverMno") long receiverMno) {
      List<Follow> followBackList = followService.findByReceiver_MnoAndIsFollowBackTrue(receiverMno);
      log.info("맞팔 목록 조회 - receiverMno: " + receiverMno);
      return ResponseEntity.ok(followBackList);
