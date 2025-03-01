@@ -18,6 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LetterResponseDto {
     private long letterId;
+    private String nickName;
     private long senderId;  // Member 객체 포함
     private long receiverId; // Member 객체 포함
     private String content;
@@ -25,7 +26,6 @@ public class LetterResponseDto {
     private LocalDateTime readAt;
     private boolean deletedBySender;
     private boolean deletedByReceiver;
-
 
     // public LetterResponseDto(Letter letter) {
     //     this.id = letter.getLetterId(); 

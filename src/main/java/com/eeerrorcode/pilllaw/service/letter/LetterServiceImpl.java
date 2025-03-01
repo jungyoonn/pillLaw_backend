@@ -16,8 +16,9 @@ import com.eeerrorcode.pilllaw.repository.MemberRepository;
 import com.eeerrorcode.pilllaw.repository.letter.LetterRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
-
+@Log4j2
 @Service
 @AllArgsConstructor
 public class LetterServiceImpl implements LetterService {
@@ -68,15 +69,33 @@ public class LetterServiceImpl implements LetterService {
   @Override
   public LetterResponseDto getLetter(Long letterId) {
     Letter letter = repository.findById(letterId)
+      
       .orElseThrow(() -> new RuntimeException("Letter not found"));
+    // Member m = memberRepository.findById(letter.getSenderId());
+
+
     
     // 쪽지를 읽었으므로 readAt 시간 업데이트
     if (letter.getReadAt() == null) {
       letter.setReadAt(LocalDateTime.now());
       repository.save(letter);
     }
+    // LetterResponseDto returnDto = entityToResponseDto(letter);
+    // return entityToResponseDto(letter);
+    LetterResponseDto dto = entityToResponseDto(letter);
     
-    return entityToResponseDto(letter);
+    // 닉네임 설정 추가
+    try {
+        Member sender = memberRepository.findById(letter.getSenderId().getMno())
+            .orElse(null);
+        if (sender != null) {
+            dto.setNickName(sender.getNickname());
+        }
+    } catch (Exception e) {
+        log.error("발신자 정보 조회 실패: " + e.getMessage());
+    }
+    
+    return dto;
   }
   
   @Override

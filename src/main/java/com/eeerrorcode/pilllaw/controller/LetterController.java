@@ -13,20 +13,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eeerrorcode.pilllaw.dto.letter.LetterRequestDto;
 import com.eeerrorcode.pilllaw.dto.letter.LetterResponseDto;
+import com.eeerrorcode.pilllaw.entity.member.Member;
+import com.eeerrorcode.pilllaw.repository.MemberRepository;
 import com.eeerrorcode.pilllaw.service.letter.LetterService;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 // @RequiredArgsConstructor
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/letter")
 public class LetterController {
   private final LetterService letterService;
+    private final MemberRepository memberRepository;
 
-  public LetterController(LetterService letterService) {
-      this.letterService = letterService;
-  }
+//   public LetterController(LetterService letterService) {
+//       this.letterService = letterService;
+//   }
 
 
   // 1. 기본 API 테스트 엔드포인트
@@ -37,12 +42,13 @@ public class LetterController {
 
   // 2. 받은 쪽지 조회
   @GetMapping("/received/{receiverId}")
-  public ResponseEntity<?> getReceivedLetters(@PathVariable("receiverId") Long receiverId) {
-      List<LetterResponseDto> letters = letterService.getReceivedLetters(receiverId);
-      log.info("받은 쪽지 조회 - receiverId: " + receiverId);
-      return ResponseEntity.ok(letters);
-  }
-  
+    public ResponseEntity<?> getReceivedLetters(@PathVariable("receiverId") Long receiverId) {
+    List<LetterResponseDto> letters = letterService.getReceivedLetters(receiverId);
+    letters.forEach(l -> l.setNickName(memberRepository.findById(l.getSenderId()).get().getNickname()));
+    log.info("받은 쪽지 조회 - receiverId: " + receiverId);
+    return ResponseEntity.ok(letters);
+    }
+
 
   // 3. 보낸 쪽지 조회
   @GetMapping("/send/{senderId}")
@@ -53,8 +59,8 @@ public class LetterController {
   }
 
   // 4. 단일 쪽지 상세 조회
-  @GetMapping("/{letterId}")
-  public ResponseEntity<?> getLetter(@PathVariable Long letterId) {
+  @GetMapping("/letterselectview/{letterId}")
+  public ResponseEntity<?> getLetter(@PathVariable("letterId") Long letterId) {
       LetterResponseDto letter = letterService.getLetter(letterId);
       log.info("쪽지 상세 조회 - letterId: " + letterId);
       return ResponseEntity.ok(letter);
@@ -73,14 +79,14 @@ public class LetterController {
 
   // 6. 받은 쪽지 삭제 (수신자 측에서만 삭제 표시)
   @PutMapping("/delete/receiver/{letterId}")
-  public ResponseEntity<?> deleteReceivedLetter(@PathVariable Long letterId) {
+  public ResponseEntity<?> deleteReceivedLetter(@PathVariable("letterId") Long letterId) {
       letterService.deleteReceivedLetter(letterId);
       return ResponseEntity.ok("Received letter marked as deleted");
   }
 
   // 7. 보낸 쪽지 삭제 (발신자 측에서만 삭제 표시)
   @PutMapping ("/delete/sender/{letterId}")
-  public ResponseEntity<?> deleteSentLetter(@PathVariable Long letterId) {
+  public ResponseEntity<?> deleteSentLetter(@PathVariable("letterId") Long letterId) {
       letterService.deleteSentLetter(letterId);
       return ResponseEntity.ok("Sent letter marked as deleted");
   }
