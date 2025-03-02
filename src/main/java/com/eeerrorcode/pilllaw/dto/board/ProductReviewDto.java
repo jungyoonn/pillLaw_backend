@@ -43,6 +43,8 @@ public class ProductReviewDto {
 
   private Long count;
 
+  private List<String> imgUrls;
+
   @Default
   private List<FileDto> fileDtos = new ArrayList<>();
 
