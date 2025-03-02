@@ -38,10 +38,11 @@ public class ProductDto {
     this.keep = product.getKeep();
     this.state = product.isState();
     this.type = (product.getType() != null) ? product.getType() : List.of();
-    this.regDate = product.getRegDate();
-    this.modDate = product.getModDate();
+    this.regDate = (product.getRegDate() != null) ? product.getRegDate() : LocalDateTime.now(); // ✅ NULL 방지
+    this.modDate = (product.getModDate() != null) ? product.getModDate() : LocalDateTime.now(); // ✅ NULL 방지
     this.priceInfo = price;
     this.categories = categories;
-}
+  }
+
 
 }

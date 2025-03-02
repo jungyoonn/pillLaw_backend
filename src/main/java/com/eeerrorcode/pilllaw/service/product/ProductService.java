@@ -69,6 +69,8 @@ public interface ProductService {
       .keep(product.getKeep())
       .effect(product.getEffect())
       .precautions(product.getPrecautions())
+      .regDate(product.getRegDate())
+      .modDate(product.getModDate())
       .state(product.isState())
       .type(product.getTypeSet().stream()
         .map(Enum::name)
