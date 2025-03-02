@@ -12,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +21,8 @@ import lombok.ToString;
 
 
 
-@Entity(name = "tbl_product_favorite")
+@Entity
+@Table(name = "tbl_product_favorite")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
