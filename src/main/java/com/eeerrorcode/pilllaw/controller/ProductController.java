@@ -16,6 +16,7 @@ import com.eeerrorcode.pilllaw.dto.board.ProductReviewDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDetailDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductWithCategoryDto;
+import com.eeerrorcode.pilllaw.repository.order.OrderItemRepository;
 import com.eeerrorcode.pilllaw.service.board.ProductDetailService;
 import com.eeerrorcode.pilllaw.service.board.ProductReviewService;
 import com.eeerrorcode.pilllaw.service.product.ProductPriceService;
@@ -47,6 +48,9 @@ public class ProductController {
 
   @Autowired
   private ProductReviewService productReviewService;
+
+  @Autowired
+  private OrderItemRepository orderItemRepository;
 
   @Autowired
   private S3Service s3Service;
@@ -117,5 +121,12 @@ public class ProductController {
   public List<ProductWithCategoryDto> allListWithCategory() {
     return productService.listAllProductWithCategory();
   }
+
+  @GetMapping("/top-ordered-products")
+public ResponseEntity<List<Long>> getTopOrderedProducts() {
+    List<Long> topProductPnos = orderItemRepository.findTopOrderedProducts(); // ✅ 상위 6개 pno 조회
+    System.out.println("Top Ordered Product PNOs: " + topProductPnos);
+    return ResponseEntity.ok(topProductPnos);
+}
   
 }
