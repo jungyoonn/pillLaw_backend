@@ -62,11 +62,11 @@ public class PointServiceImpl implements PointService {
 
         for (Pay payment : successfulPayments) {
             LocalDateTime paymentDate = payment.getRegDate();
-            LocalDateTime oneDayLater = paymentDate.plusDays(1); // 하루 뒤로 변경
+            LocalDateTime oneDayLater = paymentDate.plusDays(2);
 
             if (LocalDateTime.now().isAfter(oneDayLater)) {
                 Member member = payment.getOrder().getMember();
-                double pointRatio = member.getRoleSet().contains(MemberRole.SUBSCRIBER) ? 0.04 : 0.02;
+                double pointRatio = 0.02;
                 long pointsToAdd = (long) (payment.getTotalPrice() * pointRatio);
 
                 Point point = Point.builder()
