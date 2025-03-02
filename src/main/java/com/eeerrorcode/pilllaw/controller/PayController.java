@@ -86,4 +86,36 @@ public class PayController {
       return ResponseEntity.internalServerError().body("서버 오류: 결제 완료 처리 실패");
     }
   }
+
+  @PostMapping("/cancel")
+public ResponseEntity<?> cancelPayment(@RequestBody Map<String, Object> requestData) {
+    // ono를 받아옵니다.
+    Object onoObj = requestData.get("ono");
+    if (onoObj == null) {
+        return ResponseEntity.badRequest().body("ono 값이 없습니다.");
+    }
+
+    Long ono;
+    try {
+        ono = ((Number) onoObj).longValue();
+    } catch (ClassCastException e) {
+        return ResponseEntity.badRequest().body("ono 값이 올바르지 않습니다.");
+    }
+
+    try {
+        // ono를 통해 결제 정보를 조회
+        Pay pay = payService.getPaymentByOrder(ono);
+        
+        // 결제 취소 처리
+        PayDto canceledPay = new PayDto(payService.cancelPayment(pay.getNo()));
+        return ResponseEntity.ok(canceledPay);
+    } catch (IllegalArgumentException | IllegalStateException e) {
+        log.error("환불 요청 실패: {}", e.getMessage());
+        return ResponseEntity.badRequest().body(e.getMessage());
+    } catch (Exception e) {
+        log.error("환불 처리 중 오류 발생", e);
+        return ResponseEntity.internalServerError().body("서버 오류: 환불 처리 실패");
+    }
+}
+
 }

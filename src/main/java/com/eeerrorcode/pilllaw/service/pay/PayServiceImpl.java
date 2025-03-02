@@ -1,10 +1,14 @@
 package com.eeerrorcode.pilllaw.service.pay;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 import com.eeerrorcode.pilllaw.entity.order.Order;
+import com.eeerrorcode.pilllaw.entity.pay.Delivery;
 import com.eeerrorcode.pilllaw.entity.pay.Pay;
 import com.eeerrorcode.pilllaw.repository.order.OrderRepository;
+import com.eeerrorcode.pilllaw.repository.pay.DeliveryRepository;
 import com.eeerrorcode.pilllaw.repository.pay.PayRepository;
 
 import jakarta.transaction.Transactional;
@@ -18,6 +22,8 @@ public class PayServiceImpl implements PayService {
 
         private final PayRepository payRepository;
         private final OrderRepository orderRepository;
+        private final IamportService iamportService;
+        private final DeliveryRepository deliveryRepository;
 
         // 결제 요청
         @Transactional
@@ -91,5 +97,39 @@ public class PayServiceImpl implements PayService {
         public Pay getPaymentByOrder(Long ono) {
                 return payRepository.findByOrderOno(ono)
                                 .orElseThrow(() -> new IllegalArgumentException("해당 주문에 대한 결제 정보가 없습니다."));
+        }
+
+
+        //결제 취소
+        @Transactional
+        @Override
+        public Pay cancelPayment(Long payNo) {
+            Pay pay = payRepository.findById(payNo).orElseThrow(() ->
+                    new IllegalArgumentException("해당 결제 정보를 찾을 수 없습니다."));
+        
+            if (pay.getStatus() == Pay.PaymentStatus.REFUND) {
+                throw new IllegalStateException("이미 환불된 결제입니다.");
+            }
+        
+            // IAMPORT API를 통해 환불 요청
+            Map<String, Object> cancelResponse = iamportService.cancelPayment(pay.getImpUid(), "결제 취소");
+        
+            if (cancelResponse == null) {
+                throw new RuntimeException("환불 처리 실패: IAMPORT 응답이 없습니다.");
+            }
+        
+            // 결제 상태를 REFUND로 변경
+            pay.setStatus(Pay.PaymentStatus.REFUND);
+            payRepository.save(pay);
+        
+            // 배송 상태를 CANCELLED로 변경
+            deliveryRepository.findByOrderOno(pay.getOrder().getOno())
+                    .ifPresent(delivery -> {
+                        delivery.setDeliveryStatus(Delivery.DeliveryStatus.CANCELLED);
+                        deliveryRepository.save(delivery);
+                    });
+        
+            log.info("결제 환불 완료 - PayNo: {}, ImpUid: {}", payNo, pay.getImpUid());
+            return pay;
         }
 }

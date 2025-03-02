@@ -14,6 +14,8 @@ public interface PayService {
   Pay failPayment(Long payNo);
 
   Pay getPaymentByOrder(Long ono);
+
+  Pay cancelPayment(Long payNo);
   
   // List<AdminPayDto> findList();
 }

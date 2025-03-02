@@ -3,7 +3,6 @@ package com.eeerrorcode.pilllaw.entity.pay;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 import com.eeerrorcode.pilllaw.entity.BaseEntity;
 import com.eeerrorcode.pilllaw.entity.member.MemberAddress;
@@ -12,6 +11,7 @@ import com.eeerrorcode.pilllaw.entity.order.Order;
 @Entity
 @Table(name = "tbl_delivery")
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
