@@ -30,8 +30,19 @@ public class CategoryDto {
   public CategoryDto(Category category) {
     this.cno = category.getCno();
     this.cname = category.getCname();
-    this.type = category.getTypeSet().stream().map(Enum::name).collect(Collectors.toList());
+    this.type = (category.getTypeSet() != null)
+        ? category.getTypeSet().stream().map(Enum::name).collect(Collectors.toList())
+        : List.of(); 
     this.products = List.of();
   }
+
+  public CategoryDto(Long cno, String cname, List<String> type) {
+    this.cno = cno;
+    this.cname = cname;
+    this.type = type;
+    this.products = List.of(); 
+}
+
+
 
 }

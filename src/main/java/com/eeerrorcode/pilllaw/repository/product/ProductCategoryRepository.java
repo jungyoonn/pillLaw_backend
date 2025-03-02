@@ -16,7 +16,9 @@ import java.util.Set;
 
 @Repository
 public interface ProductCategoryRepository extends JpaRepository<ProductCategory, ProductCategoryId>{
-  List<ProductCategory> findByProduct(Product product);
+  @Query("SELECT pc FROM ProductCategory pc JOIN FETCH pc.category WHERE pc.product = :product")
+  List<ProductCategory> findByProduct(@Param("product") Product product);
+  
   List<ProductCategory> findByCategory(Category category);
   
   @Query("SELECT c FROM ProductCategory pc JOIN pc.category c WHERE pc.product.pno = :pno")
@@ -34,8 +36,12 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
 
   List<ProductCategory> findByCategoryIn(Set<Category> categories);
   @Query("""
-    SELECT pc FROM ProductCategory pc
+    SELECT pc FROM ProductCategory pc 
+    LEFT JOIN FETCH pc.category 
     WHERE pc.product.pno = :pno
   """)
   List<ProductCategory> findByProductPno(@Param("pno") Long pno);
+  
+  
+  
 }

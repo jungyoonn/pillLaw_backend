@@ -21,4 +21,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long>{
   
   List<Category> findByCnameIn(Set<String> cnames);
 
+  @Query("SELECT c FROM tbl_category c LEFT JOIN FETCH c.typeSet WHERE c.cno = :cno")
+  Optional<Category> findCategoryWithTypes(@Param("cno") Long cno);
+
 }

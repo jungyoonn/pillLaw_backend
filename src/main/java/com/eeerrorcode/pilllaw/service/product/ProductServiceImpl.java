@@ -217,65 +217,67 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public List<ProductWithCategoryDto> listAllProductWithCategory() {
-    return productRepository.findByState(true).stream()
-      .map(product -> {
-        List<ProductCategoryDto> categories = productCategoryRepository.findByProduct(product)
-          .stream()
-          .map(ProductCategoryDto::new)
+      return productRepository.findByState(true).stream()
+          .map(product -> {
+              // ✅ product와 연결된 categories 가져오기 (JOIN FETCH 적용)
+              List<CategoryDto> categoryDtos = productCategoryRepository.findByProduct(product)
+                  .stream()
+                  .map(pc -> new CategoryDto(
+                    pc.getCategory().getCno(),
+                    pc.getCategory().getCname(),
+                    Optional.ofNullable(pc.getCategory().getTypeSet())
+                        .orElse(Collections.emptySet())
+                        .stream()
+                        .map(Enum::name)
+                        .toList() 
+                ))
+                  .toList();
+  
+              log.info("📢 PNO: {} | 조회된 카테고리 개수: {}", product.getPno(), categoryDtos.size());
+  
+              ProductPrice price = productPriceRepository.findByProductPno(product.getPno())
+                  .orElse(null);
+  
+              List<ProductReviewDto> reviews;
+              try {
+                  log.info("📢 리뷰 조회 시작: PNO: {}", product.getPno());
+                  reviews = productReviewService.showReviewsByProduct(product.getPno());
+                  log.info("📢 리뷰 개수: {} | PNO: {}", reviews.size(), product.getPno());
+              } catch (Exception e) {
+                  log.error("❌ 리뷰 조회 중 오류 발생! PNO: {} | 오류 메시지: {}", product.getPno(), e.getMessage(), e);
+                  reviews = Collections.emptyList();
+              }
+  
+              ProductDto productDto = new ProductDto(toDto(product), productPriceService.toDto(price), categoryDtos);
+  
+              String imageUUID = fileService.getFirstUUIDByPNO(product.getPno());
+              String imageUrl = (imageUUID != null) ? s3Service.generateProductImageUrl(product.getPno(), imageUUID) : null;
+              productDto.setImageUrl(imageUrl);
+  
+              log.info("대표 이미지 설정: PNO: {}, UUID: {}, URL: {}", product.getPno(), imageUUID, imageUrl);
+  
+              return new ProductWithCategoryDto(
+                  productDto,
+                  productPriceService.toDto(price),
+                  categoryDtos.isEmpty() ? Collections.emptyList() : categoryDtos, // ✅ 올바른 타입 사용
+                  reviews
+              );
+          })
           .toList();
-
-        ProductPrice price = productPriceRepository.findByProductPno(product.getPno())
-          .orElse(null);
-
-        List<CategoryDto> categoryDtos = categories.stream().map(c -> {
-          List<String> categoryTypeList = new ArrayList<>();
-          if (c.getCategoryType() != null) {
-            categoryTypeList.add(c.getCategoryType());
-          }
-          return CategoryDto.builder()
-            .cno(c.getCno())
-            .cname(c.getCname())
-            .type(categoryTypeList)
-            .build();
-        }).toList();
-
-        List<ProductReviewDto> reviews;
-        try {
-          log.info("📢 리뷰 조회 시작: PNO: {}", product.getPno());
-          reviews = productReviewService.showReviewsByProduct(product.getPno());
-          log.info("📢 리뷰 개수: {} | PNO: {}", reviews.size(), product.getPno());
-        } catch (Exception e) {
-          log.error("❌ 리뷰 조회 중 오류 발생! PNO: {} | 오류 메시지: {}", product.getPno(), e.getMessage(), e);
-          reviews = Collections.emptyList();
-        }
-
-        ProductDto productDto = new ProductDto(toDto(product), productPriceService.toDto(price), categoryDtos);
-
-        String imageUUID = fileService.getFirstUUIDByPNO(product.getPno());
-        String imageUrl = (imageUUID != null) ? s3Service.generateProductImageUrl(product.getPno(), imageUUID) : null;
-        productDto.setImageUrl(imageUrl);
-
-        log.info("대표 이미지 설정: PNO: {}, UUID: {}, URL: {}", product.getPno(), imageUUID, imageUrl);
-
-        return new ProductWithCategoryDto(
-            productDto,
-            productPriceService.toDto(price),
-            categoryDtos,  
-            reviews);
-      })
-      .toList();
   }
   
-
-
-  
-  
-  
-  
-
-
-  
-  
-  
-
 }
+
+  
+  
+
+
+  
+  
+  
+  
+
+
+  
+  
+  

@@ -19,7 +19,7 @@ public class ProductWithCategoryDto {
 
   private ProductDto product;
   private ProductPriceDto productPrice;
-  private List<CategoryDto> categories; // 수정됨: ProductCategoryDto -> CategoryDto
+  private List<CategoryDto> categories;
   private List<ProductReviewDto> reviews;
 
   public ProductWithCategoryDto(ProductDto product, ProductPriceDto productPrice, List<CategoryDto> categories,
