@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductInfoViewDto;
+import com.eeerrorcode.pilllaw.dto.product.ProductRatingDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductWithCategoryDto;
 import com.eeerrorcode.pilllaw.entity.product.CategoryType;
 import com.eeerrorcode.pilllaw.entity.product.Product;
@@ -80,4 +81,5 @@ public interface ProductService {
     return dto;
   }
 
+  List<ProductRatingDto> getTopRatedProducts();
 }

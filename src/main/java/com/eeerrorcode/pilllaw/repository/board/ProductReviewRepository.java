@@ -14,5 +14,5 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, Lo
   @Query("SELECT r FROM ProductReview r WHERE r.member.mno = :mno ORDER BY r.regDate DESC")
   List<ProductReview> findReviewsByMember(@Param("mno") Long mno);
   
-
+  List<ProductReview> findTop2ByOrderByCountDesc();
 }

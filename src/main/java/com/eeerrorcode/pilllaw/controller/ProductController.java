@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eeerrorcode.pilllaw.dto.board.ProductReviewDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDetailDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductDto;
+import com.eeerrorcode.pilllaw.dto.product.ProductRatingDto;
 import com.eeerrorcode.pilllaw.dto.product.ProductWithCategoryDto;
 import com.eeerrorcode.pilllaw.repository.order.OrderItemRepository;
 import com.eeerrorcode.pilllaw.service.board.ProductDetailService;
@@ -33,9 +34,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
-@RestController 
+@RestController
 @RequestMapping("api/v1/product")
 @Log4j2
 public class ProductController {
@@ -63,23 +62,23 @@ public class ProductController {
     Optional<ProductDto> optionalProduct = productService.viewProduct(pno);
     if (optionalProduct.isEmpty()) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        .body("Product not found: " + pno);
+          .body("Product not found: " + pno);
     }
     ProductDto product = optionalProduct.get();
     log.info("product => {}", product);
 
     ProductDetailDto detail = null;
     try {
-        detail = productDetailService.showDetailsByPno(pno);
-        log.info("detail => {}", detail);
+      detail = productDetailService.showDetailsByPno(pno);
+      log.info("detail => {}", detail);
     } catch (NoSuchElementException e) {
-        log.warn("No product details found for pno: {}", pno);
+      log.warn("No product details found for pno: {}", pno);
     }
     List<String> detailImage = s3Service.getDetailImages(pno);
 
     List<ProductReviewDto> reviews = productReviewService.showReviewsByProduct(pno);
     if (reviews == null) {
-        reviews = new ArrayList<>(); 
+      reviews = new ArrayList<>();
     }
     log.info("reviews => {}", reviews);
 
@@ -91,19 +90,19 @@ public class ProductController {
 
     return ResponseEntity.ok(response);
   }
-  
+
   // 포스트맨 통과!
   @PostMapping("")
   public ResponseEntity<?> register(@RequestBody ProductDto productDto) {
-    log.info("register::::::::::::::::::::::::::::::::::::::::::::::::::::"); 
+    log.info("register::::::::::::::::::::::::::::::::::::::::::::::::::::");
     productService.registerProduct(productDto);
-    return new ResponseEntity<>(productDto.getPname() + "registered" ,HttpStatus.OK);
+    return new ResponseEntity<>(productDto.getPname() + "registered", HttpStatus.OK);
   }
 
   // 포스트맨 통과!
   @PutMapping(value = "/{pno}")
   public ResponseEntity<?> modify(@RequestBody ProductDto productDto) {
-    log.info("modify::::::::::::::::::::::::::::::::::::::::::::::::::::"); 
+    log.info("modify::::::::::::::::::::::::::::::::::::::::::::::::::::");
     productService.modifyProduct(productDto);
     log.info(productDto);
     return new ResponseEntity<>(productDto.getPname() + "modified", HttpStatus.OK);
@@ -111,22 +110,29 @@ public class ProductController {
 
   // 포스트맨 통과!
   @DeleteMapping(value = "/{pno}")
-  public ResponseEntity<?> remove(@PathVariable("pno") Long pno){
-    log.info("delete::::::::::::::::::::::::::::::::::::::::::::::::::::"); 
+  public ResponseEntity<?> remove(@PathVariable("pno") Long pno) {
+    log.info("delete::::::::::::::::::::::::::::::::::::::::::::::::::::");
     productService.deleteProduct(pno);
     return new ResponseEntity<>(pno + "removed", HttpStatus.OK);
   }
-  
+
   @GetMapping("/list")
   public List<ProductWithCategoryDto> allListWithCategory() {
     return productService.listAllProductWithCategory();
   }
 
   @GetMapping("/top-ordered-products")
-public ResponseEntity<List<Long>> getTopOrderedProducts() {
+  public ResponseEntity<List<Long>> getTopOrderedProducts() {
     List<Long> topProductPnos = orderItemRepository.findTopOrderedProducts(); // ✅ 상위 6개 pno 조회
     System.out.println("Top Ordered Product PNOs: " + topProductPnos);
     return ResponseEntity.ok(topProductPnos);
-}
-  
+  }
+
+  @GetMapping("/top-rated")
+  public ResponseEntity<List<ProductRatingDto>> getTopRatedProducts() {
+    log.info("제품 3개 조회 API 호출");
+    List<ProductRatingDto> topRatedProducts = productService.getTopRatedProducts();
+    return ResponseEntity.ok(topRatedProducts);
+  }
+
 }

@@ -25,6 +25,8 @@ public interface ProductReviewService {
 
   List<ProductReviewDto> showReviewsByProduct(Long pno);
 
+  List<ProductReviewDto> getPopularReviews();
+
   // 좋아요 추가
   void addLike(ProductReviewLikeDto dto);
 

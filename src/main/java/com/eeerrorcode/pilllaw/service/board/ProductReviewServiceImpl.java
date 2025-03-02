@@ -272,6 +272,35 @@ public class ProductReviewServiceImpl implements ProductReviewService {
           .collect(Collectors.toList());
   }
   
+  @Override
+  public List<ProductReviewDto> getPopularReviews() {
+      log.info("📌 인기 리뷰 가져오기");
 
+      // 좋아요 개수가 많은 순으로 정렬된 리뷰 3개 가져오기
+      List<ProductReview> reviews = productReviewRepository.findTop2ByOrderByCountDesc();
+
+      // 리뷰가 없을 경우 빈 리스트 반환
+      if (reviews.isEmpty()) {
+          log.warn("⚠️ 인기 리뷰 없음");
+          return Collections.emptyList();
+      }
+
+      return reviews.stream().limit(2) // 3개만 가져오기
+          .map(review -> {
+              List<FileDto> fileDtos = fileService.getFilesByReviewId(review.getPrno());
+
+              return ProductReviewDto.builder()
+                  .prno(review.getPrno())
+                  .pno(review.getProduct().getPno())
+                  .nickName(review.getMember().getNickname())
+                  .content(review.getContent())
+                  .rating(review.getRating())
+                  .count(review.getCount())
+                  .fileDtos(fileDtos)
+                  .regDate(review.getRegDate())
+                  .build();
+          })
+          .collect(Collectors.toList());
+  }
 
 }

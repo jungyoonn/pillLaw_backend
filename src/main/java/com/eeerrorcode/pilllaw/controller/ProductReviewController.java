@@ -168,5 +168,12 @@ public ResponseEntity<List<ProductReviewDto>> getMyReviews(@PathVariable("mno") 
     productReviewService.delete(prno);
     return ResponseEntity.ok(prno + "deleted");
   }
+
+  @GetMapping("/popular")
+    public ResponseEntity<List<ProductReviewDto>> getPopularReviews() {
+        log.info("인기리뷰");
+        List<ProductReviewDto> popularReviews = productReviewService.getPopularReviews();
+        return ResponseEntity.ok(popularReviews);
+  } 
   
 }
