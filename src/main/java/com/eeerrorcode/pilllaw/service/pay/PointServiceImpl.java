@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eeerrorcode.pilllaw.dto.pay.PointDto;
 import com.eeerrorcode.pilllaw.entity.member.Member;
-import com.eeerrorcode.pilllaw.entity.member.MemberRole;
 import com.eeerrorcode.pilllaw.entity.pay.Pay;
 import com.eeerrorcode.pilllaw.entity.pay.Point;
 import com.eeerrorcode.pilllaw.entity.pay.Point.PointStatus;
@@ -20,7 +19,9 @@ import com.eeerrorcode.pilllaw.repository.pay.PayRepository;
 import com.eeerrorcode.pilllaw.repository.pay.PointRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class PointServiceImpl implements PointService {
@@ -57,6 +58,7 @@ public class PointServiceImpl implements PointService {
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
     @Transactional
     public int addPointsForCompletedPayments() {
+        log.info("포인트 적립 스케줄 작업이 시작되었습니다."); // 스케줄 실행 시작 로그 추가
         List<Pay> successfulPayments = payRepository.findByStatus(Pay.PaymentStatus.SUCCESS);
         int pointCount = 0;
 
@@ -69,14 +71,18 @@ public class PointServiceImpl implements PointService {
                 double pointRatio = 0.02;
                 long pointsToAdd = (long) (payment.getTotalPrice() * pointRatio);
 
+                
                 Point point = Point.builder()
-                        .member(member)
-                        .point(pointsToAdd)
-                        .status(PointStatus.EARNED)
-                        .endDate(LocalDateTime.now().plusYears(1))
-                        .build();
-
+                .member(member)
+                .point(pointsToAdd)
+                .status(PointStatus.EARNED)
+                .endDate(LocalDateTime.now().plusYears(1))
+                .build();
+                
                 pointRepository.save(point);
+
+                log.info("회원 mno: {}, 결제일: {}, oneDayLater: {}, 현재시간: {}", member.getMno(), paymentDate, oneDayLater, LocalDateTime.now());
+
                 pointCount++;
             }
         }
