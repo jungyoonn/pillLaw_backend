@@ -138,9 +138,21 @@ public class ProductReviewController {
   
   
   
-  
-  
-  
+  @GetMapping("/mine/{mno}")
+public ResponseEntity<List<ProductReviewDto>> getMyReviews(@PathVariable("mno") Long mno) {
+    log.info("📢 내가 쓴 리뷰 요청: mno = {}", mno);
+
+    List<ProductReviewDto> reviews = productReviewService.getReviewsByMember(mno);
+
+    if (reviews.isEmpty()) {
+        log.warn("⚠ 내가 쓴 리뷰 없음: mno = {}", mno);
+        return ResponseEntity.noContent().build();
+    }
+
+    log.info("✅ 내가 쓴 리뷰 개수: {}개", reviews.size());
+    return ResponseEntity.ok(reviews);
+}
+
 
   private String getFileExtension(String fileName) {
     if (fileName == null || !fileName.contains(".")) {

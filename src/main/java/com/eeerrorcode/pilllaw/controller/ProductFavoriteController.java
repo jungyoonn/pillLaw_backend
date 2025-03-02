@@ -1,5 +1,6 @@
 package com.eeerrorcode.pilllaw.controller;
 
+import com.eeerrorcode.pilllaw.dto.product.ProductDto;
 import com.eeerrorcode.pilllaw.service.product.ProductFavoriteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,10 +47,10 @@ public class ProductFavoriteController {
   }
 
   @GetMapping("/{mno}/liked")
-  public ResponseEntity<List<Long>> getLikedProducts(@PathVariable Long mno) {
-    List<Long> likedProductPnos = productFavoriteService.getLikedProductPnosByMno(mno);
-    return likedProductPnos.isEmpty()
-        ? ResponseEntity.noContent().build()
-        : ResponseEntity.ok(likedProductPnos);
+  public ResponseEntity<List<ProductDto>> getLikedProducts(@PathVariable Long mno) {
+      List<ProductDto> likedProducts = productFavoriteService.getLikedProducts(mno);
+      return likedProducts.isEmpty()
+              ? ResponseEntity.noContent().build()
+              : ResponseEntity.ok(likedProducts);
   }
 }

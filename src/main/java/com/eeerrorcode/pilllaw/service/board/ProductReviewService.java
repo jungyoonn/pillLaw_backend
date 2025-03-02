@@ -20,6 +20,8 @@ public interface ProductReviewService {
 
   void modify(ProductReviewDto dto);
 
+  List<ProductReviewDto> getReviewsByMember(Long mno);
+
   List<ProductReviewDto> showReviewsByProduct(Long pno);
 
   default ProductReview toEntity(ProductReviewDto dto) {

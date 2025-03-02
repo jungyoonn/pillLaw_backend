@@ -154,25 +154,49 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     log.info("📌 리뷰 개수: {} | PNO: {}", reviews.size(), pno);
 
     return reviews.stream()
-    .map(review -> {
-      List<FileDto> fileDtos = fileService.getFilesByReviewId(review.getPrno());
+        .map(review -> {
+          List<FileDto> fileDtos = fileService.getFilesByReviewId(review.getPrno());
 
-      log.info("📌 리뷰 ID: {} - 파일 개수: {}", review.getPrno(), fileDtos.size());
+          log.info("📌 리뷰 ID: {} - 파일 개수: {}", review.getPrno(), fileDtos.size());
 
-      return ProductReviewDto
-      .builder()
-        .prno(review.getPrno())
-        .pno(review.getProduct().getPno())
-        .mno(review.getMember().getMno())
-        .nickName(review.getMember().getNickname())
-        .content(review.getContent())
-        .rating(review.getRating())
-        .count(review.getCount())
-        .fileDtos(fileDtos)
-        .regDate(review.getRegDate())
-      .build();
-    })
-    .collect(Collectors.toList());
+          return ProductReviewDto
+              .builder()
+              .prno(review.getPrno())
+              .pno(review.getProduct().getPno())
+              .mno(review.getMember().getMno())
+              .nickName(review.getMember().getNickname())
+              .content(review.getContent())
+              .rating(review.getRating())
+              .count(review.getCount())
+              .fileDtos(fileDtos)
+              .regDate(review.getRegDate())
+              .build();
+        })
+        .collect(Collectors.toList());
+  }
+
+  public List<ProductReviewDto> getReviewsByMember(Long mno) {
+    log.info(" getReviewsByMember 호출 - mno = {}", mno);
+    try {
+      return productReviewRepository.findReviewsByMember(mno).stream()
+          .map(review -> {
+            log.info(" 리뷰 데이터 확인 - pno: {}, 닉네임: {}, 내용: {}",
+                review.getProduct().getPno(),
+                review.getMember().getNickname(),
+                review.getContent() == null ? "NULL" : review.getContent()); 
+
+            return ProductReviewDto.builder()
+                .pno(review.getProduct().getPno())
+                .nickName(review.getMember().getNickname())
+                .regDate(review.getRegDate())
+                .content(review.getContent() != null ? review.getContent() : "내용 없음") 
+                .build();
+          })
+          .collect(Collectors.toList());
+    } catch (Exception e) {
+      log.error(" 리뷰 가져오기 중 오류 발생: {}", e.getMessage(), e);
+      throw new RuntimeException("리뷰 조회 실패", e);
+    }
   }
 
 }
