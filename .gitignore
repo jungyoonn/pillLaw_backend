@@ -41,3 +41,4 @@ application-jwt.yml
 application-oauth.yml
 application-s3.yml
 application-iamport.yml
+application-database.yml
