@@ -47,7 +47,7 @@ public class ProductFavoriteController {
   }
 
   @GetMapping("/{mno}/liked")
-  public ResponseEntity<List<ProductDto>> getLikedProducts(@PathVariable("pno") Long mno) {
+  public ResponseEntity<List<ProductDto>> getLikedProducts(@PathVariable("mno") Long mno) {
       List<ProductDto> likedProducts = productFavoriteService.getLikedProducts(mno);
       return likedProducts.isEmpty()
           ? ResponseEntity.noContent().build()
