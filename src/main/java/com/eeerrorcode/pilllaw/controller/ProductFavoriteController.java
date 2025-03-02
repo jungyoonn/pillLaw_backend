@@ -19,7 +19,7 @@ public class ProductFavoriteController {
   private final ProductFavoriteService productFavoriteService;
 
   @PostMapping("/{pno}/like")
-  public ResponseEntity<?> likeProduct(@PathVariable Long pno, @RequestParam Long mno) {
+  public ResponseEntity<?> likeProduct(@PathVariable("pno") Long pno, @RequestParam Long mno) {
     boolean result = productFavoriteService.likeProduct(mno, pno);
     return result
         ? ResponseEntity.ok("좋아요가 등록되었습니다.")
@@ -27,7 +27,7 @@ public class ProductFavoriteController {
   }
 
   @PostMapping("/{pno}/unlike")
-  public ResponseEntity<?> unlikeProduct(@PathVariable Long pno, @RequestParam Long mno) {
+  public ResponseEntity<?> unlikeProduct(@PathVariable("pno") Long pno, @RequestParam Long mno) {
     boolean result = productFavoriteService.unlikeProduct(mno, pno);
     return result
         ? ResponseEntity.ok("좋아요가 취소되었습니다.")
@@ -35,22 +35,22 @@ public class ProductFavoriteController {
   }
 
   @GetMapping("/{pno}/isLiked")
-  public ResponseEntity<Boolean> isProductLikedByUser(@PathVariable Long pno, @RequestParam Long mno) {
+  public ResponseEntity<Boolean> isProductLikedByUser(@PathVariable("pno") Long pno, @RequestParam Long mno) {
     boolean isLiked = productFavoriteService.isProductLikedByUser(mno, pno);
     return ResponseEntity.ok(isLiked);
   }
 
   @GetMapping("/{pno}/likes")
-  public ResponseEntity<Long> countProductLikes(@PathVariable Long pno) {
+  public ResponseEntity<Long> countProductLikes(@PathVariable("pno") Long pno) {
     long likeCount = productFavoriteService.countProductLikes(pno);
     return ResponseEntity.ok(likeCount);
   }
 
   @GetMapping("/{mno}/liked")
-  public ResponseEntity<List<ProductDto>> getLikedProducts(@PathVariable Long mno) {
+  public ResponseEntity<List<ProductDto>> getLikedProducts(@PathVariable("pno") Long mno) {
       List<ProductDto> likedProducts = productFavoriteService.getLikedProducts(mno);
       return likedProducts.isEmpty()
-              ? ResponseEntity.noContent().build()
-              : ResponseEntity.ok(likedProducts);
+          ? ResponseEntity.noContent().build()
+          : ResponseEntity.ok(likedProducts);
   }
 }

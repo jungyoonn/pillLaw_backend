@@ -4,19 +4,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.eeerrorcode.pilllaw.dto.board.ProductReviewDto;
+import com.eeerrorcode.pilllaw.dto.board.ProductReviewLikeDto;
 import com.eeerrorcode.pilllaw.dto.file.FileDto;
 import com.eeerrorcode.pilllaw.entity.board.ProductReview;
+import com.eeerrorcode.pilllaw.entity.board.ProductReviewLike;
 import com.eeerrorcode.pilllaw.entity.file.File;
 import com.eeerrorcode.pilllaw.entity.file.FileType;
+import com.eeerrorcode.pilllaw.entity.id.ProductReviewLikeId;
 import com.eeerrorcode.pilllaw.entity.member.Member;
 import com.eeerrorcode.pilllaw.entity.product.Product;
 import com.eeerrorcode.pilllaw.repository.MemberRepository;
+import com.eeerrorcode.pilllaw.repository.board.ProductReviewLikeRepository;
 import com.eeerrorcode.pilllaw.repository.board.ProductReviewRepository;
 import com.eeerrorcode.pilllaw.repository.product.ProductRepository;
 import com.eeerrorcode.pilllaw.service.file.FileService;
@@ -41,6 +49,8 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
   private final MemberRepository memberRepository;
 
+  private final ProductReviewLikeRepository productReviewLikeRepository;
+
   // 테스트 통과!
   @Override
   public List<ProductReviewDto> showReviews() {
@@ -49,6 +59,54 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         .stream().map(this::toDto)
         .toList();
     return returnList;
+  }
+
+  @Override
+  @Transactional
+  public void addLike(ProductReviewLikeDto dto) {
+    log.info("✅ 좋아요 추가 요청 - mno={}, prno={}", dto.getMno(), dto.getPrno());
+
+    // ✅ 회원 및 리뷰 엔티티 조회
+    Member member = memberRepository.findById(dto.getMno())
+        .orElseThrow(() -> new NoSuchElementException("❌ 회원을 찾을 수 없습니다: mno=" + dto.getMno()));
+
+    ProductReview productReview = productReviewRepository.findById(dto.getPrno())
+        .orElseThrow(() -> new NoSuchElementException("❌ 리뷰를 찾을 수 없습니다: prno=" + dto.getPrno()));
+
+    // ✅ 중복 체크
+    ProductReviewLikeId likeId = new ProductReviewLikeId(dto.getMno(), dto.getPrno());
+    if (productReviewLikeRepository.existsById(likeId)) {
+      log.warn("⚠️ 이미 좋아요를 눌렀습니다. - mno={}, prno={}", dto.getMno(), dto.getPrno());
+      return;
+    }
+
+    // ✅ 회원과 리뷰 객체를 포함한 좋아요 객체 생성
+    ProductReviewLike like = ProductReviewLike.builder()
+        .id(likeId)
+        .member(member) // ✅ 반드시 넣어야 함
+        .productReview(productReview) // ✅ 반드시 넣어야 함
+        .build();
+
+    productReviewLikeRepository.save(like);
+    log.info("👍 좋아요 추가 완료 - mno={}, prno={}", dto.getMno(), dto.getPrno());
+  }
+
+  @Override
+  public void removeLike(ProductReviewLikeDto dto) {
+    ProductReviewLikeId likeId = new ProductReviewLikeId(dto.getMno(), dto.getPrno());
+    Optional<ProductReviewLike> like = productReviewLikeRepository.findById(likeId);
+    if (like.isPresent()) {
+      productReviewLikeRepository.delete(like.get());
+      log.info("❌ 좋아요 취소 완료 - mno={}, prno={}", dto.getMno(), dto.getPrno());
+    } else {
+      log.warn("⚠️ 좋아요 기록이 없습니다. - mno={}, prno={}", dto.getMno(), dto.getPrno());
+    }
+  }
+
+  @Override
+  public boolean isLikedByMember(Long mno, Long prno) {
+    ProductReviewLikeId likeId = new ProductReviewLikeId(mno, prno);
+    return productReviewLikeRepository.existsById(likeId);
   }
 
   // 테스트 통과!
@@ -141,6 +199,11 @@ public class ProductReviewServiceImpl implements ProductReviewService {
   }
 
   @Override
+  public Long countLikes(Long prno) {
+    return productReviewLikeRepository.countByProductReview_Prno(prno);
+  }
+
+  @Override
   public List<ProductReviewDto> showReviewsByProduct(Long pno) {
     log.info("📌 showReviewsByProduct 실행: PNO: {}", pno);
 
@@ -183,13 +246,13 @@ public class ProductReviewServiceImpl implements ProductReviewService {
             log.info(" 리뷰 데이터 확인 - pno: {}, 닉네임: {}, 내용: {}",
                 review.getProduct().getPno(),
                 review.getMember().getNickname(),
-                review.getContent() == null ? "NULL" : review.getContent()); 
+                review.getContent() == null ? "NULL" : review.getContent());
 
             return ProductReviewDto.builder()
                 .pno(review.getProduct().getPno())
                 .nickName(review.getMember().getNickname())
                 .regDate(review.getRegDate())
-                .content(review.getContent() != null ? review.getContent() : "내용 없음") 
+                .content(review.getContent() != null ? review.getContent() : "내용 없음")
                 .build();
           })
           .collect(Collectors.toList());
