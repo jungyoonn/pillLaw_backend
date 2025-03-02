@@ -69,7 +69,11 @@ public class SecurityConfig {
     CorsConfiguration config = new CorsConfiguration();
 
     config.setAllowCredentials(true);
-    config.setAllowedOrigins(List.of("http://localhost:3000"));
+    config.setAllowedOrigins(List.of(
+    "http://localhost:3000",  // 개발 환경용 (필요시 유지)
+    "http://eeerrorcode.com",  // EC2 퍼블릭 IP 또는 도메인
+    "https://pilllaw.eeerrorcode.com"  // 실제 도메인이 있다면 추가
+  ));
     config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
     config.setExposedHeaders(List.of("*"));

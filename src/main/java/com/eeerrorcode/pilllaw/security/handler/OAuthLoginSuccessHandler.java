@@ -49,7 +49,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     log.info("email => {}", email);
 
     if (targetUrl == null || targetUrl.isEmpty()) {
-      targetUrl = "http://localhost:3000/pilllaw/oauth2/redirect";  // 기본 리다이렉트 URL
+      targetUrl = "https://pilllaw.eeerrorcode.com/pilllaw/oauth2/redirect";  // 기본 리다이렉트 URL
     }
 
     // 리다이렉트 URI에 토큰과 이메일 추가

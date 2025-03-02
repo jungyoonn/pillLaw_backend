@@ -55,7 +55,7 @@ public class MailServiceImpl implements MailService{
     repository.save(toEntity(dto));
 
     // String verificationLink = appDomain + "/api/mail/verify?token=" + verification.getToken();
-    String verificationLink = "http://localhost:3000/pilllaw/mypage/email/verify?token=" + dto.getToken();
+    String verificationLink = "https://pilllaw.eeerrorcode.com/pilllaw/mypage/email/verify?token=" + dto.getToken();
 
     String title = "PILL LAW 이메일 인증 링크";
     String content = "<h3 style='color:#7DA9A7'>안녕하세요, PILL LAW입니다!</h3>" +
