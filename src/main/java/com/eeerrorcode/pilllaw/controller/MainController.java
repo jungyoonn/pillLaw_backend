@@ -22,8 +22,8 @@ public class MainController {
   private MemberService memberService;
   @Autowired SocialMemberService socialMemberService;
 
-  @GetMapping("")
-  public ResponseEntity<?> index(@RequestParam("mno") String mno, @RequestParam("email") String email) {
+  @GetMapping("/{mno}")
+  public ResponseEntity<?> index(@PathVariable("mno") String mno) {
     log.info("mno => {}", mno);
     log.info("findById => {}", memberService.get(Long.valueOf(mno)));
 
