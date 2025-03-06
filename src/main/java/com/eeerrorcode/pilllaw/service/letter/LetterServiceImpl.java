@@ -39,7 +39,7 @@ public class LetterServiceImpl implements LetterService {
       .build();
     
       
-      Letter savedLetter = repository.save(requestDtoToEntity(dto));
+    // Letter savedLetter = repository.save(requestDtoToEntity(dto));
     
     // 쪽지 저장
     Letter letter = requestDtoToEntity(dto);
